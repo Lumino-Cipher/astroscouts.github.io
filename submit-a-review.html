@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Park Accessibility & Sustainability Rating Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Adobe Caslon (via Typekit or fallback) -->
+    <link rel="stylesheet" href="https://use.typekit.net/gkm8mik.css">
+
+    <!-- Optional fallback fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Scrollbar Styles */
+        body {
+            background-color: #000; /* Ensure black background for video fade transition */
+            scrollbar-color: #1a7f1a #0d250d; /* Firefox scrollbar color */
+        }
+        /* Webkit (Chrome, Safari, Edge) scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d250d; /* Dark green track */
+            border-radius: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1a7f1a; /* Green thumb */
+            border-radius: 6px;
+            border: 2px solid #0d250d; /* Border around thumb */
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2ee62e; /* Lighter green on hover */
+        }
+        .solid-text-color {
+          color: #e0c29a;
+        }
+        .font-adobe-caslon {
+          font-family: 'adobe-caslon-pro', serif;
+        }
+
+        :root {
+            --primary-dark-green: #1B5E20; /* Deep Forest Green */
+            --secondary-green: #388E3C;  /* Medium Forest Green */
+            --accent-green: #4CAF50;    /* Bright Green for highlights */
+            --text-color-light: #E8F5E9; /* Light text for dark backgrounds */
+            --text-color-dark: #212121;  /* Dark text for light backgrounds */
+            --background-dark: #0A3614;  /* Very dark green background */
+            --form-bg-light: #F1F8E9;    /* Very light green for form background */
+            --border-color-dark: #424242; /* Darker border for contrast */
+            --star-gold: #FFD700;
+            --button-blue: #1976D2;      /* For expand button */
+
+            /* Gradients */
+            --gradient-text-green: linear-gradient(90deg, #00703C 0%, #8DB600 100%); /* Adjusted as per your request */
+            --gradient-form-bg: linear-gradient(145deg, #F1F8E9 0%, #E0F2F7 100%); /* Light green to light blue for form */
+            --gradient-button-green: linear-gradient(45deg, #1B5E20 0%, #388E3C 100%);
+            --gradient-button-blue: linear-gradient(45deg, #1976D2 0%, #2196F3 100%);
+            --gradient-input-bg: linear-gradient(90deg, #ffffff 0%, #f0f0f0 100%);
+            --gradient-rating-group: linear-gradient(180deg, #E8F5E9 0%, #DCE7D4 100%);
+        }
+
+        html, body {
+            height: 100%; /* Ensure html and body take full height for particles.js */
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color-light);
+            background: url('https://images.unsplash.com/photo-1750409221671-d925a6d7126c?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+
+        /* particles.js container */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 0; /* Behind the form */
+        }
+
+        .container {
+            background: var(--gradient-form-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            max-width: 800px !important; /* Change this value */
+            width: 90%; /* Adjusted for responsiveness, allows it to be smaller than 600px but not exceed it */
+            margin: 20px auto; /* Centers the container and adds vertical margin */
+            z-index: 1;
+            position: relative;
+            color: var(--text-color-dark);
+            overflow: visible;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 700;
+            background: var(--gradient-text-green);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            color: var(--primary-dark-green); /* Fallback color if gradient text clip fails */
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            line-height: 1.2; /* Added to improve vertical spacing of headings */
+        }
+
+        h1 {
+            font-size: 2.5em;
+        }
+
+        h2 {
+            border-bottom: 2px solid var(--secondary-green); /* Border remains solid for definition */
+            padding-bottom: 10px;
+            margin-top: 40px;
+            font-size: 1.8em;
+        }
+
+        h3 {
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            font-size: 1.4em;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding-top: 15px; /* Added padding to ensure vertical spacing between sections */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--primary-dark-green); /* Keep labels solid dark green for readability */
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid var(--secondary-green);
+            border-radius: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background: var(--gradient-input-bg); /* Gradient background for inputs */
+            color: var(--text-color-dark);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--accent-green);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3), inset 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .rating-group {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid var(--secondary-green);
+            border-radius: 8px;
+            background: var(--gradient-rating-group); /* Gradient background for rating groups */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .rating-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .stars {
+            display: inline-block;
+            font-size: 2rem;
+            white-space: nowrap;
+            margin-top: 5px;
+        }
+
+        .stars.stars-10 i {
+            font-size: 1.5rem;
+        }
+
+        .stars i {
+            color: var(--border-color-dark); /* Default star color */
+            cursor: pointer;
+            transition: color 0.2s ease, transform 0.1s ease;
+        }
+
+        .stars i:hover {
+            transform: scale(1.1);
+        }
+
+        .stars i.selected {
+            color: var(--star-gold);
+        }
+
+        .explain-toggle {
+            display: block;
+            margin-top: 10px;
+            color: var(--button-blue);
+            cursor: pointer;
+            font-size: 0.9em;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .explain-toggle:hover {
+            color: #1565C0;
+        }
+
+        .explanation-textarea {
+            display: none;
+            margin-top: 10px;
+        }
+
+        .sub-rating-group {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px dashed var(--secondary-green);
+        }
+
+        /* Styles for the example visual gallery */
+        .example-visuals {
+            font-size: 0.9em;
+            color: var(--primary-dark-green);
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #dcedc8;
+            border-left: 4px solid var(--accent-green);
+            border-radius: 4px;
+        }
+
+        .example-visuals strong {
+            color: var(--primary-dark-green);
+        }
+
+        .image-reference-gallery {
+            display: flex;
+            justify-content: space-between; /* Distribute items evenly */
+            gap: 15px; /* Space between images */
+            margin-top: 15px;
+        }
+
+        .image-container {
+          /* Use aspect-ratio for modern, reliable square sizing */
+          aspect-ratio: 1 / 1;
+          /* Set a base width, max-width, or min-width for responsiveness */
+          width: 150px; /* Adjust as needed for desired size */
+          max-width: 100%; /* Ensure it doesn't overflow its parent */
+          flex-shrink: 0; /* Prevent from shrinking in a flex container */
+          flex-grow: 0; /* Prevent from growing in a flex container */
+
+          overflow: hidden; /* Crucial for rounded corners, but won't crop image with 'contain' */
+          position: relative; /* For absolute positioning of img and overlay */
+          border-radius: 10px;
+          border: 2px solid var(--accent-green);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+          background-color: #f0f0f0; /* Default background for the container itself, fills 'contain' gaps */
+        }
+
+        .image-container:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .image-container img {
+          position: absolute; /* Take full control of its position and size within the container */
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: contain; /* ✨ THIS IS THE KEY CHANGE FOR UNCROPPED IMAGES ✨ */
+          display: block; /* Ensures no extra space around the image */
+          /* Remove background-color here as it should be on the container now */
+        }
+
+        .image-overlay-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6); /* Semi-transparent background for text */
+            color: white;
+            padding: 8px 5px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-align: center;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-bottom-left-radius: 10px; /* Match container border-radius */
+            border-bottom-right-radius: 10px; /* Match container border-radius */
+        }
+
+        .image-reference-intro {
+            font-size: 0.9em;
+            color: var(--primary-dark-green);
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .checkbox-group label,
+        .radio-group label {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 20px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            color: var(--text-color-dark);
+        }
+
+        .checkbox-group input[type="checkbox"],
+        .radio-group input[type="radio"] {
+            margin-right: 8px;
+            transform: scale(1.2);
+            accent-color: var(--accent-green);
+        }
+
+        .tag-select {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tag-select button {
+            background-color: var(--secondary-green);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .tag-select button.selected {
+            background-color: var(--primary-dark-green);
+            transform: scale(1.05);
+        }
+
+        .tag-select button:hover:not(.selected) {
+            background-color: var(--accent-green);
+        }
+
+        .file-upload-area {
+            border: 2px dashed var(--secondary-green);
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+            background-color: #F1F8E9;
+            color: var(--primary-dark-green);
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--primary-dark-green);
+            background-color: #E8F5E9;
+        }
+
+        .file-upload-area input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-area p {
+            margin: 0;
+            color: inherit;
+            font-weight: 500;
+        }
+
+        .file-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+
+        .file-preview div {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border: 1px solid var(--secondary-green);
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .file-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .file-preview button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(229, 57, 53, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            font-size: 0.8em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s ease;
+        }
+
+        .file-preview button:hover {
+            background-color: rgba(198, 40, 40, 0.9);
+        }
+
+        .button-group {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        button[type="submit"] {
+            background: var(--gradient-button-green);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        button[type="submit"]:hover {
+            background: linear-gradient(45deg, #388E3C 0%, #4CAF50 100%); /* Lighter green on hover */
+            transform: translateY(-2px);
+        }
+
+        .info-text {
+            font-size: 0.85em;
+            color: var(--primary-dark-green);
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+
+        .info-text a {
+            color: var(--accent-green);
+            text-decoration: none;
+        }
+
+        .info-text a:hover {
+            text-decoration: underline;
+        }
+
+        #expandPhase2 {
+            display: none; /* Hide the expand button */
+            margin: 30px auto;
+            padding: 15px 25px;
+            background: var(--gradient-button-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        }
+
+        #expandPhase2:hover {
+            background: linear-gradient(45deg, #2196F3 0%, #1976D2 100%); /* Swapped gradient for hover */
+            transform: translateY(-2px);
+        }
+
+        #phase2Section {
+            display: block; /* Show Phase 2 by default */
+        }
+
+        .optional-note {
+            background-color: #fff3cd; /* Light yellow background */
+            border-left: 5px solid #ffc107; /* Yellow border */
+            padding: 15px;
+            margin-top: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            color: #856404; /* Dark yellow text */
+            font-weight: 500;
+            font-size: 0.95em;
+            text-align: center;
+        }
+
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                max-width: 95%; /* Adjust for smaller screens */
+                width: auto; /* Allow auto width within max-width on smaller screens */
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+            .stars {
+                font-size: 1.5rem;
+            }
+            .stars.stars-10 i {
+                font-size: 1.2rem;
+            }
+            .rating-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .rating-header label {
+                margin-bottom: 10px;
+            }
+            .file-preview div {
+                width: 80px;
+                height: 80px;
+            }
+            .image-reference-gallery {
+                flex-direction: column; /* Stack images vertically on small screens */
+            }
+            .image-container {
+                width: 100%; /* Full width when stacked */
+                aspect-ratio: 1 / 1;
+                /* For stacked, if you want different ratio than square, adjust padding-bottom */
+                padding-bottom: 100%; /* Keep square for consistent look */
+            }
+            .image-overlay-text {
+                font-size: 0.9em;
+            }
+        }
+        .image-checkbox-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Default to responsive columns */
+            gap: 20px; /* Spacing between items */
+            margin-top: 20px;
+        }
+
+        /* Specific layout for 3 then 2, adjusting for different screen sizes */
+        @media (min-width: 768px) { /* Adjust breakpoint as needed */
+            .image-checkbox-gallery {
+                grid-template-columns: repeat(3, 1fr); /* 3 columns for larger screens */
+            }
+            .image-checkbox-gallery label:nth-child(4),
+            .image-checkbox-gallery label:nth-child(5) {
+                grid-column: span 1; /* Ensure these also span 1 column */
+            }
+        }
+        @media (min-width: 1024px) { /* For larger screens, explicitly set 3 then 2 */
+            .image-checkbox-gallery {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .image-checkbox-gallery label:nth-child(4) {
+                grid-column: 2 / span 1; /* Start 4th item in second column */
+            }
+            .image-checkbox-item:nth-child(4) { /* Corrected selector */
+                grid-column: 2 / span 1;
+            }
+            .image-checkbox-item:nth-child(5) { /* Corrected selector */
+                grid-column: 3 / span 1;
+            }
+        }
+
+
+        .image-checkbox-item {
+            position: relative;
+            cursor: pointer;
+            border: 3px solid transparent; /* Border for unchecked state */
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: border-color 0.2s ease-in-out;
+        }
+
+        .image-checkbox-item img {
+            width: 100%;
+            height: 200px; /* Fixed height for consistency, adjust as needed */
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .image-checkbox-item:hover img {
+            transform: scale(1.05); /* Slight zoom on hover */
+        }
+
+        .image-checkbox-item .hidden-checkbox {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            pointer-events: none; /* Make sure the input itself isn't directly interacted with */
+        }
+
+        .image-checkbox-item .image-overlay-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--text-color-light); /* Or white */
+            background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background for text */
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: 600;
+            font-size: 1.1em;
+            pointer-events: none; /* Ensure text doesn't block click on label */
+            opacity: 1; /* Always visible */
+        }
+
+        /* Style for checked state */
+        .image-checkbox-item input.hidden-checkbox:checked + img {
+            border-color: var(--accent-green); /* Highlight color when checked */
+            box-shadow: 0 0 0 4px var(--accent-green); /* A more prominent highlight */
+        }
+        /* Optional: Change overlay text color or background when checked */
+        .image-checkbox-item input.hidden-checkbox:checked + img + .image-overlay-text {
+            background-color: var(--accent-green);
+        }
+
+        /* Prevent container overflow */
+        * {
+          box-sizing: border-box;
+        }
+
+        .container {
+          overflow-x: hidden;
+        }
+
+        /* Ensure form doesn't get forced wide */
+        .image-container {
+          flex: 1 1 30%;
+          max-width: 150px;
+          min-width: 100px;
+        }
+
+        /* Ensure heading text fits and aligns nicely */
+        .container h1, .container h2, .container h3 {
+          font-family: 'Montserrat', sans-serif;
+          max-width: 100%;
+          line-height: 1.2;
+          word-break: break-word;
+        }
+
+        /* Patch text size uniformity if Tailwind interferes */
+        .container label,
+        .container p,
+        .container textarea,
+        .container select,
+        .container input,
+        .container .stars {
+          font-size: 1rem;
+        }
+
+        /* GLOBAL REPAIR */
+        html, body {
+          box-sizing: border-box;
+          width: 100%;
+          max-width: 100vw;
+          overflow-x: hidden;
+        }
+
+        *, *::before, *::after {
+          box-sizing: inherit;
+        }
+
+        /* FIX IMAGE GALLERY STRETCHING */
+        .image-reference-gallery {
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 10px;
+        }
+
+        /* IMAGE CONTAINER SAFEGUARD */
+        .image-container {
+          flex: 0 0 auto;
+          width: 140px;
+          height: 140px;
+        }
+
+        /* HEADINGS SIZE FIX */
+        .container h1 {
+          font-size: 2rem;
+        }
+
+        .container h2 {
+          font-size: 1.6rem;
+        }
+
+        .container h3 {
+          font-size: 1.25rem;
+        }
+
+        /* Make sure headings aren't inherited oddly */
+        h1, h2, h3 {
+          font-family: 'Montserrat', sans-serif !important;
+          line-height: 1.3;
+          color: var(--primary-dark-green);
+          text-align: center;
+          margin-bottom: 1rem;
+        }
+
+        /* STAR ICON SIZE FIX */
+        .stars i {
+          font-size: 1.5rem;
+        }
+
+        /* Disable scroll inside form container */
+        .container {
+          overflow-y: visible !important;
+        }
+
+        /* Ensure form sections don't overflow */
+        .form-section {
+          overflow: visible;
+        }
+        #asciiCanvas {
+          position: absolute; /* Changed from fixed to absolute */
+          top: 0;
+          left: 0;
+          z-index: -1; /* behind footer content */
+          width: 100%; /* Cover parent (footer) width */
+          height: 100%; /* Cover parent (footer) height */
+          background: transparent; /* Footer will provide the black background */
+          display: block;
+        }
+
+        #footer {
+          position: relative; /* This is crucial for positioning the canvas absolutely within it */
+          color: #e4f5e9;
+          padding: 40px 20px;
+          z-index: 2; /* ABOVE canvas */
+          font-family: 'Segoe UI', sans-serif;
+          opacity: 0.85; /* Keep this if you want the footer content to be semi-transparent */
+          background-color: black; /* Set default footer background to black */
+          overflow: hidden; /* Crucial to clip the canvas if it extends beyond footer bounds */
+        }
+
+        .footer-content {
+          max-width: 1000px;
+          margin: auto;
+          text-align: center;
+          background-color: rgba(0, 128, 128, 0.5); /* Transparent teal */
+          position: relative; /* Ensure z-index works relative to footer-content's children */
+          z-index: 1; /* Make sure content is above the canvas */
+        }
+
+        .signature, .email, .existential {
+          margin-bottom: 12px;
+          font-size: 0.95em;
+        }
+
+        .email a {
+          color: #e0ffe0;
+          text-decoration: underline dotted;
+        }
+
+        .footer-nav {
+          margin: 20px 0;
+        }
+
+        .footer-nav a {
+          margin: 0 12px;
+          color: #ffffffcc;
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.3s;
+        }
+
+        .footer-nav a:hover {
+          color: #b9ffca;
+        }
+
+        .socials {
+          margin-top: 16px;
+        }
+
+        .socials img {
+          width: 22px;
+          height: 22px;
+          margin: 0 8px;
+          opacity: 0.8;
+          transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .socials img:hover {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+
+        @media (max-width: 768px) {
+          .image-reference-gallery {
+            display: flex;
+            flex-direction: row !important; /* override column setting */
+            overflow-x: auto;
+            gap: 12px;
+            padding-bottom: 10px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            justify-content: flex-start;
+            flex-wrap: nowrap;
+          }
+
+          .image-container {
+            flex: 0 0 auto;
+            width: 140px !important;
+            height: 140px !important;
+            scroll-snap-align: start;
+            border: 2px solid var(--accent-green);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            background-color: #f0f0f0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-right: 8px;
+            padding-bottom: 0px !important;
+          }
+
+          .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            background-color: #fff;
+            display: block;
+          }
+
+          .image-overlay-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 6px 4px;
+            font-size: 0.85em;
+            text-align: center;
+          }
+        }
+
+
+
+    </style>
+</head>
+<body>
+    <header class="relative bg-cover bg-center flex items-center justify-between px-4 py-0.5 sm:py-1 rounded-b-lg shadow-lg sticky top-0 z-50" style="background-image: url('assets/header-image.jpg');">
+      <div class="flex items-center space-x-2">
+        <img src="assets/icon.png" alt="AstroScouts Icon" class="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-full flex-shrink-0">
+        <div>
+          <h1 class="text-xl sm:text-2xl font-adobe-caslon solid-text-color whitespace-nowrap flex-shrink-0">AstroScouts</h1>
+          <p class="text-sm sm:text-base font-adobe-caslon solid-text-color leading-tight">Where nature meets accessibility</p>
+        </div>
+      </div>
+
+      <button id="menu-button" class="sm:hidden text-white focus:outline-none p-2 rounded-md hover:bg-gray-700 transition duration-300">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+
+      <nav id="main-nav-container" class="hidden absolute top-full left-0 w-full bg-black bg-opacity-80 sm:relative sm:top-auto sm:left-auto sm:w-auto sm:bg-transparent sm:bg-opacity-100 p-4 sm:p-0 z-20 sm:block">
+        <ul id="main-nav" class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6 items-center sm:items-stretch">
+          <li><a href="index.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Home</a></li>
+          <li><a href="parks-directory.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Parks Directory</a></li>
+          <li><a href="submit-a-review.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Submit a Review</a></li>
+          <li><a href="blog.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Blog</a></li>
+          <li><a href="about-us.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">About Us</a></li>
+        </ul>
+      </nav>
+    </header>
+    <div id="particles-js"></div> 
+    
+    <div class="container">
+        <h1 class="mb-8 leading-relaxed font-bold">Rate Your Park Experience</h1>
+        <p class="info-text">Help us conserve parks by sharing your observations!</p>
+
+        <form id="parkRatingForm">
+            <div class="form-section">
+                <label for="parkName">Park Name:</label>
+                <div id="placeAutocompleteContainer"></div>
+                <span class="info-text">or <a href="#" id="gpsDetect">GPS Auto-Detect</a></span>
+            </div>
+            <h2 class="mb-8 leading-relaxed font-bold">Phase 1: The Essentials</h2>
+            <p class="info-text">Quick ratings (1-5 stars, where 5 is excellent - click on a star to rate):</p>
+
+            <div class="rating-group">
+                <div class="rating-header">
+                    <label>Accessibility:</label>
+                    <div class="stars" data-rating="0" data-name="accessibility" data-max-stars="5"></div>
+                </div>
+                <a href="#" class="explain-toggle">Click below to explain why you chose this (optional)</a>
+                <div class="explanation-textarea">
+                    <textarea name="accessibilityExplanation" placeholder="e.g., Wide, smooth trails; accessible restrooms."></textarea>
+                </div>
+            </div>
+
+            <div class="rating-group">
+                <div class="rating-header">
+                    <label>Cleanliness:</label>
+                    <div class="stars" data-rating="0" data-name="cleanliness" data-max-stars="5"></div>
+                </div>
+                <a href="#" class="explain-toggle">Click below to explain why you chose this (optional)</a>
+                <div class="explanation-textarea">
+                    <textarea name="cleanlinessExplanation" placeholder="e.g., No litter; clean facilities."></textarea>
+                </div>
+            </div>
+
+            <div class="rating-group">
+                <div class="rating-header">
+                    <label>Sustainability:</label>
+                    <div class="stars" data-rating="0" data-name="sustainability" data-max-stars="5"></div>
+                </div>
+                <a href="#" class="explain-toggle">Click below to explain why you chose this (optional)</a>
+                <div class="explanation-textarea">
+                    <textarea name="sustainabilityExplanation" placeholder="e.g., Visible recycling bins; native plant gardens."></textarea>
+                </div>
+            </div>
+
+            <!-- The expand button is removed as Phase 2 is always visible -->
+            <!-- <button type="button" id="expandPhase2">Expand for Detailed Rating</button> -->
+
+            <div id="phase2Section">
+                <h2>Phase 2: Expansion</h2>
+                <div class="optional-note">
+                    <strong>Note:</strong> This section is optional to complete. Feel free to skip any questions if you lack information or prefer not to answer.
+                </div>
+                <p class="info-text">Provide more detailed feedback (1-10 stars, where 10 is excellent - click on a star to rate). You can also click on the reference images to set the rating for that category.</p>
+
+                <div class="form-section">
+                    <h3>🌳 1. Park Accessibility</h3>
+                    <div class="sub-rating-group rating-group" data-rating-target="trailSmoothness">
+                        <label>Trail Smoothness & Safety:</label>
+                        <div class="stars stars-10" data-rating="0" data-name="trailSmoothness" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://i.postimg.cc/T2Jr6JY0/OIG1.jpg" alt="1 Star Trail Smoothness">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=1PK8HRLv5TTj3pEtsrlMXvy1CRb-beW0t" alt="5 Stars Trail Smoothness">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1TDmNJIVzk5blXN1CzZxA8iBj5dTDjaYa" alt="10 Stars Trail Smoothness">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-rating-group rating-group" data-rating-target="wheelchairAccessibility">
+                        <label>Wheelchair/Stroller Accessibility:</label>
+                        <div class="stars stars-10" data-rating="0" data-name="wheelchairAccessibility" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1YiRHfOH8zI93Y9smfa8pCaqyBuY1stAl" alt="1 Star Wheelchair Accessibility">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=1X1AhKXUR_WiG8GwZMfEYttIg_aTeY__A" alt="5 Stars Wheelchair Accessibility">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1Qhuu8cZy8gj6BrgCzHSCZlVTvyZQKgK4" alt="10 Stars Wheelchair Accessibility">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-rating-group rating-group" data-rating-target="signageClarity">
+                        <label>Signage Clarity / Multilingual Signs:</label>
+                        <div class="stars stars-10" data-rating="0" data-name="signageClarity" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://i.postimg.cc/cLBRs7m0/unnamed1.png" alt="1 Star Signage Clarity">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://i.postimg.cc/WFcdsf3B/unnamed-399.png" alt="5 Stars Signage Clarity">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://i.postimg.cc/Z0cWhHhQ/unnamed-37.png" alt="10 Stars Signage Clarity">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-rating-group rating-group" data-rating-target="parkingAccessibility">
+                        <label>Parking Accessibility:</label>
+                        <div class="stars stars-10" data-rating="0" data-name="parkingAccessibility" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1C15aMTajP6tChQBdIpUClst5xHwrMhun" alt="1 Star Parking Accessibility">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=1gvV0f6q5QmhtEaT52ZMleyczM4e9_mO4" alt="5 Stars Parking Accessibility">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1glbN2vodgaYESAGwi076yOM-aqaFKN04" alt="10 Stars Parking Accessibility">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-rating-group rating-group" data-rating-target="restroomAvailability">
+                        <label>Restroom Availability & Condition:</label>
+                        <div class="stars stars-10" data-rating="0" data-name="restroomAvailability" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1h4Fii0UlhwBud5wsgeaS_WV1y2PStjoc" alt="1 Star Restroom Condition">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=1RwbK6R6aXj-TXyFrTs9S1J5shlADjufm" alt="5 Stars Restroom Condition">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1JV3njDxBggQ9GiGTEct9di7If03x3aO4" alt="10 Stars Restroom Condition">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>🧼 2. Cleanliness / Maintenance</h3>
+                    <div class="sub-rating-group rating-group" data-rating-target="trailCleanliness">
+                        <label>Trail Cleanliness (trash, debris, etc.):</label>
+                        <div class="stars stars-10" data-rating="0" data-name="trailCleanliness" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1ry7d_fLA3f9d8DrPNFXuvuuK1I4Xe0LW" alt="1 Star Trail Cleanliness">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=1gLcHj44KFYdPHKRl8QxurCQIZAJmjjvy" alt="5 Stars Trail Cleanliness">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1NeopBMV_ObM0Q3dsiT-iEhwpeibDGb49" alt="10 Stars Trail Cleanliness">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-rating-group rating-group" data-rating-target="facilityCleanliness">
+                        <label>Facility Cleanliness (bathrooms, benches, shelters):</label>
+                        <div class="stars stars-10" data-rating="0" data-name="facilityCleanliness" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1U425DTiiQPBRiMlgM8yn4US1CzlEywSQ" alt="1 Star Facility Cleanliness">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=13LstedCo5XyNZrYrfjPjJQppjNvOP6Lt" alt="5 Stars Facility Cleanliness">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1MJIsPEhlrSXAI90HW-lzqhrF9fCfImyN" alt="10 Stars Facility Cleanliness">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-rating-group rating-group" data-rating-target="graffitiPresence">
+                        <label>Graffiti / Vandalism Presence:</label>
+                        <div class="stars stars-10" data-rating="0" data-name="graffitiPresence" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1L1k_lFIJRgbLiWZTvhyKFtb0LdR9cqTn" alt="1 Star Graffiti Presence">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=1r7JLmuWyedktd3LeijpZaIhnLVkQuak9" alt="5 Stars Graffiti Presence">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1PFlVBoyXPS962pAqqv2ra-VJZdqxGhui" alt="10 Stars Graffiti Presence">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-rating-group rating-group" data-rating-target="litterControl">
+                        <label>Litter Control / Trash Bin Availability:</label>
+                        <div class="stars stars-10" data-rating="0" data-name="litterControl" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=112RoRb-ZW40Sujxx-ExhtwvMna7H378n" alt="1 Star Litter Control">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=168EF5gz_QLfeCKIzATFgPsicT8h9nb97" alt="5 Stars Litter Control">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1PRiw7c327hUiigvVs1iDultPB7TO2K_o" alt="10 Stars Litter Control">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>🌱 3. Sustainability & Environmental Health</h3>
+                    <div class="sub-rating-group rating-group" data-rating-target="nativePlant">
+                        <label>Native Plant Preservation:</label>
+                        <div class="stars stars-10" data-rating="0" data-name="nativePlant" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1RYGjd9_bLxNHb_qzq2xuSamVLUi4JbA-" alt="1 Star Native Plant Preservation">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=1bo-NuoXGsf6iXlRWilCneGVODbFeKnjn" alt="5 Stars Native Plant Preservation">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1WZ_Qvgy8b5VRQFt-N_eQgXQgm4klKnms" alt="10 Stars Native Plant Preservation">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-rating-group rating-group" data-rating-target="waterCleanliness">
+                        <label>Water Source Cleanliness (streams, ponds):</label>
+                        <div class="stars stars-10" data-rating="0" data-name="waterCleanliness" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1-AHGW6vC5_JXuqPQDdiu0oToJmSz2mQV" alt="1 Star Water Source Cleanliness">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=1HiLhZN2swbHa-p3AYfqcZBa-p3T61BYw" alt="5 Stars Water Source Cleanliness">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1QUYvMzh0GyruV-vYmNeQmr9BgzFcpNls" alt="10 Stars Water Source Cleanliness">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-rating-group rating-group" data-rating-target="compostingOptions">
+                        <label>Composting / Recycling Options:</label>
+                        <div class="stars stars-10" data-rating="0" data-name="compostingOptions" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1Gk68PBiSbWA3Hxs1Vn-Iil78XU-JQgJ_" alt="1 Star Composting/Recycling">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=1KWfutQTTp9hOCGiM40ds-1qKOSgeb9Ug" alt="5 Stars Composting/Recycling">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1ZpP43AB84X93JfIMdp3rPo75gzspJr0n" alt="10 Stars Composting/Recycling">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-rating-group rating-group" data-rating-target="educationSignage">
+                        <label>Education Signage (ecology info, endangered species):</label>
+                        <div class="stars stars-10" data-rating="0" data-name="educationSignage" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1zhbzs5PD092s2lD8pcWw-zqppeH4qTO9" alt="1 Star Education Signage">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=1OhOhtD9NyY74CPn-GKGTKCsHRM5mtgrT" alt="5 Stars Education Signage">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1AjmeDIVN-KZqMNb76RPfATGPORjMa03x" alt="10 Stars Education Signage">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>🧭 4. Navigation & Layout</h3>
+                    <div class="sub-rating-group rating-group" data-rating-target="trailMarkings">
+                        <label>Trail Markings & Maps:</label>
+                        <div class="stars stars-10" data-rating="0" data-name="trailMarkings" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1uDdRNaqCSn_53Sviw70oMqO-TzuG_gJM" alt="1 Star Trail Markings">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=1OWqCq0u2BUgvlM2ypdaKkVINYjidAaS7" alt="5 Stars Trail Markings">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1Yn9ub_Qkc1XMM5SjHkYNCeDS-U33dGqz" alt="10 Stars Trail Markings">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-rating-group rating-group" data-rating-target="emergencyInfo">
+                        <label>Emergency Contact Info Signage:</label>
+                        <div class="stars stars-10" data-rating="0" data-name="emergencyInfo" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1QcgfOa48tfi9daZT2qZSq0gJ9g2pManj" alt="1 Star Emergency Info">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=1PZl1i4HzDz5e_hVT1LpTb5zU7AnggMyn" alt="5 Stars Emergency Info">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1od3BUkWksHpx0SRPXqZlMc0agKKGD-RV" alt="10 Stars Emergency Info">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-rating-group rating-group" data-rating-target="cellSignal">
+                        <label>Cell Signal / Safety Info Access:</label>
+                        <div class="stars stars-10" data-rating="0" data-name="cellSignal" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1s74i2nhn1v6vR8To-ujXFONEedQy5Pt4" alt="1 Star Cell Signal">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=1evhVCFdsOP01k_DJDJQdGHEBo6oDMSqw" alt="5 Stars Cell Signal">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1Lr3JeFY-HwWt3lNdPryCxuDj6csqtl5S" alt="10 Stars Cell Signal">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-rating-group rating-group" data-rating-target="findingKeyAreas">
+                        <label>Ease of Finding Key Areas (picnic, restrooms, parking, etc.):</label>
+                        <div class="stars stars-10" data-rating="0" data-name="findingKeyAreas" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <p class="image-reference-intro">
+                                <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent. Click an image to set the rating.
+                            </p>
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1xBrjSxbs5sjS-1ZM6pBjxrJdn4AyZpWN" alt="1 Star Finding Areas">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=18cLMeSBzfczdN464zFs4qnsueFYmua4r" alt="5 Stars Finding Areas">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1s8K6J0l-WiT2k4HArWzYu75_zTXEcijD" alt="10 Stars Finding Areas">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>🧍‍♂️ 5. Crowd Level (Optional / Contextual)</h3>
+                    <label for="crowdLevel">How Many Visitors Were Present?</label>
+                    <select id="crowdLevel" name="crowdLevel">
+                        <option value="">Select an option</option>
+                        <option value="none">None</option>
+                        <option value="very_few">Very Few</option>
+                        <option value="some">Some</option>
+                        <option value="many">Many</option>
+                        <option value="extremely_crowded">Extremely Crowded</option>
+                    </select>
+
+                    <label for="timeOfVisit">Time of Visit:</label>
+                    <select id="timeOfVisit" name="timeOfVisit">
+                        <option value="">Select time</option>
+                        <option value="morning">Morning</option>
+                        <option value="afternoon">Afternoon</option>
+                        <option value="evening">Evening</option>
+                        <option value="night">Night</option>
+                    </select>
+                </div>
+                <div class="form-section">
+                    <h3>📸 6. Visual / Aesthetic Beauty</h3>
+                    <div class="sub-rating-group rating-group">
+                        <label>Nature Appeal:</label>
+                        <div class="stars stars-10" data-rating="0" data-name="natureAppeal" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1at9CVBcovEakNwESRSZK_N2Wr6kb9mTG" alt="1 Star Nature Appeal">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=138dM28sGMb_Q73w80fZ0DT4gpDyR87oQ" alt="5 Stars Nature Appeal">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1hpnG6ap0Di5UKpG4CuiSM-sMb00Hb7XS" alt="10 Stars Nature Appeal">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-rating-group rating-group" data-rating-target="wildlifeSpotted">
+                        <label>Wildlife Spotted:</label>
+                        <div class="stars stars-10" data-rating="0" data-name="wildlifeSpotted" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1-PQ4kY6Ap6Eoy9S4OuwzkBPtCZf3OmaA" alt="1 Star Wildlife Spotted">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=1yNm_pvwj6t4cWzzPEN7UNdDCWpPYERun" alt="5 Stars Wildlife Spotted">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=19t-K1pxM5bTGVw5n_7I4-_JPOozNd9CN" alt="10 Stars Wildlife Spotted">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sub-rating-group rating-group">
+                        <label>Seasonal Uniqueness (flowers in spring, foliage in fall):</label>
+                        <div class="stars stars-10" data-rating="0" data-name="seasonalUniqueness" data-max-stars="10"></div>
+                        <div class="example-visuals">
+                            <div class="image-reference-gallery">
+                                <div class="image-container" data-rating-value="1">
+                                    <img src="https://drive.google.com/thumbnail?id=1CmQkzekaZQB4Zdp1qQ_jHgUvopDWTVqx" alt="1 Star Seasonal Uniqueness">
+                                    <div class="image-overlay-text">1 Star</div>
+                                </div>
+                                <div class="image-container" data-rating-value="5">
+                                    <img src="https://drive.google.com/thumbnail?id=1FALtOFYc3B0ALeeo4YOkjKuvd_95d34u" alt="5 Stars Seasonal Uniqueness">
+                                    <div class="image-overlay-text">5 Stars</div>
+                                </div>
+                                <div class="image-container" data-rating-value="10">
+                                    <img src="https://drive.google.com/thumbnail?id=1wy8aQDhxh7zypBI3d3oWLrKUGZg9273Z" alt="10 Stars Seasonal Uniqueness">
+                                    <div class="image-overlay-text">10 Stars</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-section" id="nightSkySection">
+                        <h2>Night Sky Clarity & Light Pollution <span style="font-size: 0.8em; color: #777;">(Optional)</span></h2>
+                        <p>Please rate the clarity of the night sky and the extent of light pollution experienced during your visit. This section is optional as not all visitors may have been at the park during nighttime hours.</p>
+                        <div class="sub-rating-group rating-group">
+                            <label>Night Sky Clarity:</label>
+                            <div class="stars stars-10" data-rating="0" data-name="nightSkyClarity" data-max-stars="10"></div>
+                            <div class="example-visuals">
+                                <div class="image-reference-gallery">
+                                    <div class="image-container" data-rating-value="1">
+                                        <img src="https://i.postimg.cc/bJwdTxyY/sky1.png" alt="1 Star Night Sky Clarity - Severe Light Pollution">
+                                        <div class="image-overlay-text">1 Star (Severe Light Pollution)</div>
+                                    </div>
+                                    <div class="image-container" data-rating-value="5">
+                                        <img src="https://i.postimg.cc/PJLJGdvB/sky2.png" alt="5 Stars Night Sky Clarity - Moderate Light Pollution">
+                                        <div class="image-overlay-text">5 Stars (Moderate Light Pollution)</div>
+                                    </div>
+                                    <div class="image-container" data-rating-value="10">
+                                        <img src="https://i.postimg.cc/tRf73nLy/sky3.png" alt="10 Stars Night Sky Clarity - No Light Pollution / Milky Way Visible">
+                                        <div class="image-overlay-text">10 Stars (No Light Pollution / Milky Way Visible)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <h3>🦌 6. Wildlife Spotted (Types)</h3>
+                        <p class="image-reference-intro">
+                            <strong>Reference Guide:</strong> Click on an image to select the type of wildlife spotted.
+                        </p>
+                        <div class="image-checkbox-gallery">
+                            <label class="image-checkbox-item">
+                                <input type="checkbox" name="wildlifeType" value="birds" class="hidden-checkbox">
+                                <img src="https://i.postimg.cc/HxvKcgvW/birds.png" alt="Birds">
+                                <span class="image-overlay-text">Birds</span>
+                            </label>
+                            <label class="image-checkbox-item">
+                                <input type="checkbox" name="wildlifeType" value="deer" class="hidden-checkbox">
+                                <img src="https://i.postimg.cc/d1VpV1BS/deers.png" alt="Deer">
+                                <span class="image-overlay-text">Deer</span>
+                            </label>
+                            <label class="image-checkbox-item">
+                                <input type="checkbox" name="wildlifeType" value="raccoons" class="hidden-checkbox">
+                                <img src="https://i.postimg.cc/7hpW9Nyp/raccoons.png" alt="Raccoons">
+                                <span class="image-overlay-text">Raccoons</span>
+                            </label>
+                            <label class="image-checkbox-item">
+                                <input type="checkbox" name="wildlifeType" value="cryptids" class="hidden-checkbox">
+                                <img src="https://i.postimg.cc/wvx8RF62/cryptids.png" alt="Cryptids">
+                                <span class="image-overlay-text">Cryptids</span>
+                            </label>
+                            <label class="image-checkbox-item">
+                                <input type="checkbox" name="wildlifeType" value="other" class="hidden-checkbox">
+                                <img src="https://i.postimg.cc/Pq40HZmw/other.png" alt="Other Wildlife">
+                                <span class="image-overlay-text">Other</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>🚨 7. Concerns / Issues Noticed</h3>
+                    <label>Select any concerns:</label>
+                    <div class="tag-select" id="concernsTags">
+                        <button type="button" data-tag="trail_blocked">Trail blocked</button>
+                        <button type="button" data-tag="dangerous_animals">Dangerous animals</button>
+                        <button type="button" data-tag="unsafe_mobility">Unsafe for mobility needs</button>
+                        <button type="button" data-tag="restrooms_broken">Restrooms broken</button>
+                        <button type="button" data-tag="park_construction">Park under construction</button>
+                        <button type="button" data-tag="no_shade_water">No shade / water</button>
+                        <button type="button" data-tag="other_concern">Other</button>
+                    </div>
+                    <textarea id="otherConcernText" name="otherConcernText" placeholder="Please specify 'Other' concerns here." style="display: none;"></textarea>
+                    <input type="hidden" name="selectedConcerns" id="selectedConcernsInput">
+                </div>
+
+                <div class="form-section">
+                    <h3>💬 8. Additional Comments</h3>
+                    <label for="additionalComments">Any thoughts you’d like to share? Describe one thing you loved or one thing that could be improved.</label>
+                    <textarea id="additionalComments" name="additionalComments" placeholder="Share your story here..."></textarea>
+                </div>
+
+                <div class="form-section">
+                    <h3>📸 9. Photo Uploads (Optional)</h3>
+                    <label>Share what you saw – good or bad. (Up to 5 photos)</label>
+                    <div class="file-upload-area" id="dropArea">
+                        <input type="file" id="photoUpload" name="photos" accept=".jpg, .png, .webp" multiple>
+                        <p>Drag & Drop your photos here or <strong>Click to Browse</strong></p>
+                    </div>
+                    <div class="file-preview" id="filePreview"></div>
+                    <div class="checkbox-group" style="margin-top: 15px;">
+                        <label><input type="checkbox" name="agreePublicFeature" value="yes"> I agree to let these images be featured publicly on the park page.</label>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>👨‍🌾 10. Park Observer Info (Optional)</h3>
+                    <label for="observerRole">Role:</label>
+                    <select id="observerRole" name="observerRole">
+                        <option value="">Select role</option>
+                        <option value="visitor">Visitor</option>
+                        <option value="scout">Scout</option>
+                        <option value="ranger">Ranger</option>
+                        <option value="staff">Staff</option>
+                        <option value="volunteer">Volunteer</option>
+                        <option value="maintenance">Maintenance</option>
+                        <option value="other">Other</option>
+                    </select>
+
+                    <label for="observerName">Name (optional):</label>
+                    <input type="text" id="observerName" name="observerName">
+
+                    <label for="observerContact">Contact (optional):</label>
+                    <input type="text" id="observerContact" name="observerContact" placeholder="Email or Phone">
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button type="submit">Submit Park Review</button>
+            </div>
+        </form>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-storage-compat.js"></script>
+    <!-- Modular Loader for Google Maps JS API -->
+    <script>
+      (g => {
+        var h, a, k, p = "The Google Maps JavaScript API", c = "google", l = "importLibrary", q = "__ib__", m = document, b = window;
+        b = b[c] || (b[c] = {});
+        var d = b.maps || (b.maps = {}), r = new Set, e = new URLSearchParams, u = () => h || (h = new Promise(async (f, n) => {
+          await (a = m.createElement("script"));
+          e.set("libraries", [...r] + "");
+          for (k in g)
+            e.set(k.replace(/[A-Z]/g, t => "_" + t[0].toLowerCase()), g[k]);
+          e.set("callback", c + ".maps." + q);
+          a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+          d[q] = f;
+          a.onerror = () => h = n(Error(p + " could not load."));
+          a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+          m.head.append(a);
+        }));
+        d[l] ? console.warn(p + " only loads once. Ignoring:", g) : d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n));
+      })({ key: "AIzaSyD5npjBdaj3aa7sOhBmE-EZPHAjo2n-vO0", v: "beta" });
+    </script>
+    <script src="js/script.js"></script>
+    <script>
+      document.getElementById("menu-button").addEventListener("click", function () {
+        const nav = document.getElementById("main-nav-container");
+        nav.classList.toggle("hidden");
+      });
+    </script>
+
+    <footer id="footer">
+      <canvas id="asciiCanvas"></canvas>
+      <div class="footer-content">
+        <p class="signature">Created by <strong>Andrew Cameron</strong> as part of Eagle Scout Project, Troop 443</p>
+        <p class="email">📬 Contact: <a href="mailto:ryuseicameron@gmail.com">ryuseicameron@gmail.com</a></p>
+        
+        <nav class="footer-nav">
+          <a href="index.html">Home</a>
+          <a href="parks-directory.html">Explore Parks</a>
+          <a href="submit-a-review.html">Submit Review</a>
+          <a href="about-us.html">Scout Info</a>
+        </nav>
+
+        <p class="existential">Made with heart, sunlight, and a deep sense of existential urgency.</p>
+        
+        <div class="socials">
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" /></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram" /></a>
+        </div>
+      </div>
+    </footer>
+    <script>
+
+        const footer = document.getElementById('footer'); // Get the footer element
+        const canvas = document.getElementById('asciiCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas to footer size
+        function setCanvasSize() {
+          canvas.width = footer.offsetWidth;
+          canvas.height = footer.offsetHeight;
+        }
+
+        setCanvasSize(); // Initial set
+
+        const characters = 'ASTROSCOUTS*+-.=/!@#$%^&~'.split('');
+        const fontSize = 12;
+        let columns = Math.floor(canvas.width / fontSize);
+        let drops = Array(columns).fill(1); // initial Y positions for each column
+
+        // --- Animation Speed Control ---
+        const animationSpeed = 2;
+        let frameCount = 0;
+
+        function drawASCII() {
+          requestAnimationFrame(drawASCII);
+
+          frameCount++;
+          if (frameCount < animationSpeed) {
+            return;
+          }
+          frameCount = 0;
+
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          ctx.fillStyle = '#00ffcc';
+          ctx.font = `${fontSize}px monospace`;
+
+          for (let i = 0; i < drops.length; i++) {
+            const char = characters[Math.floor(Math.random() * characters.length)];
+            const x = i * fontSize;
+            const y = drops[i] * fontSize;
+
+            ctx.fillText(char, x, y);
+
+            if (y * fontSize > canvas.height && Math.random() > 0.975) {
+              drops[i] = 0;
+            }
+
+            drops[i]++;
+          }
+        }
+
+        drawASCII();
+
+        // Handle window resize: also adjust canvas size to footer size
+        window.addEventListener('resize', () => {
+          setCanvasSize();
+          // Recalculate columns and reset drops on resize to adapt animation to new size
+          columns = Math.floor(canvas.width / fontSize);
+          drops = Array(columns).fill(1);
+        });
+    </script>
+</body>
+</html>

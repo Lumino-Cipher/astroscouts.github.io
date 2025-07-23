@@ -1,0 +1,2019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstroScouts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://use.typekit.net/gkm8mik.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Scrollbar Styles */
+        body {
+            background-color: #000; /* Ensure black background for video fade transition */
+            scrollbar-color: #1a7f1a #0d250d; /* Firefox scrollbar color */
+        }
+        /* Webkit (Chrome, Safari, Edge) scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d250d; /* Dark green track */
+            border-radius: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1a7f1a; /* Green thumb */
+            border-radius: 6px;
+            border: 2px solid #0d250d; /* Border around thumb */
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2ee62e; /* Lighter green on hover */
+        }
+
+        /* Solid text color - slightly lighter yellow */
+        .solid-text-color {
+            color: #e0c29a; /* Lighter yellow */
+        }
+        /* Ensure video covers the entire section */
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1; /* Place video behind content */
+            opacity: 0; /* Start with opacity 0 for fade-in effect */
+            transition: opacity 1s ease-in-out; /* Smooth fade transition */
+        }
+        /* Ensure the main section takes up the remaining viewport height */
+        .full-screen-minus-header {
+            min-height: calc(100vh - 80px); /* Adjust based on actual header height */
+        }
+        /* Custom font for header texts and main heading */
+        .font-adobe-caslon {
+            font-family: 'adobe-caslon-pro', serif;
+        }
+        /* Custom font for Playfair Display */
+        .font-playfair-display {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom font for Railway */
+        .font-railway {
+            font-family: 'Raleway', sans-serif;
+        }
+
+        /* Epic Button Styles (existing) */
+        .epic-button {
+            position: relative;
+            font-size: 1.1em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #d4ffd4;
+            background: linear-gradient(135deg, #0f3d0f, #1a7f1a);
+            border: 2px solid #2ee62e;
+            border-radius: 12px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            z-index: 1;
+            font-family: 'adobe-caslon-pro', serif; /* Apply Adobe Caslon to button text */
+            display: inline-flex; /* Allow content to flex and center */
+            justify-content: center;
+            align-items: center;
+            text-align: center; /* Ensure text is centered if it wraps */
+        }
+
+        .epic-button::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 180deg at 50% 50%, #0f3d0f, #1a7f1a, #0f3d0f);
+            animation: rotate 4s linear infinite;
+            z-index: -1;
+            filter: blur(12px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .epic-button:hover::before {
+            opacity: 1;
+        }
+
+        .epic-button::after {
+            content: "";
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            right: 3px;
+            bottom: 3px;
+            background: #0d250d;
+            border-radius: 10px;
+            z-index: -1;
+        }
+
+        .epic-button:hover {
+            color: #e1ffe1;
+            box-shadow: 0 0 20px #2ee62e, 0 0 40px #1a7f1a;
+            transform: scale(1.05);
+        }
+
+        /* New button style for "Browse Parks" */
+        .browse-button {
+            position: relative;
+            font-size: 1em; /* Slightly smaller font */
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ffffff; /* White text */
+            background: linear-gradient(135deg, #1a202c, #2d3748); /* Dark blue/gray gradient */
+            border: 4px solid #60B2E5; /* Muted blue border */
+            border-radius: 8px; /* Slightly less rounded */
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            z-index: 1;
+            font-family: 'Raleway', sans-serif; /* Apply Railway font */
+            display: inline-flex; /* Allow content to flex and center */
+            justify-content: center;
+            align-items: center;
+            text-align: center; /* Ensure text is centered if it wraps */
+        }
+
+        .browse-button::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 180deg at 50% 50%, #2d3748, #4a5568, #2d3748);
+            animation: rotate 4s linear infinite;
+            z-index: -1;
+            filter: blur(10px); /* Slightly less blur */
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .browse-button:hover::before {
+            opacity: 1;
+        }
+
+        .browse-button::after {
+            content: "";
+            position: absolute;
+            top: 4px; /* Adjust inner border based on new border width */
+            left: 4px;
+            right: 4px;
+            bottom: 4px;
+            background: #1a202c; /* Inner background color */
+            border-radius: 6px;
+            z-index: -1;
+        }
+
+        .browse-button:hover {
+            color: #e2e8f0; /* Lighter white on hover */
+            box-shadow: 0 0 15px #4a5568, 0 0 30px #2d3748; /* Darker shadow */
+            transform: scale(1.03); /* Slightly less scale */
+        }
+
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Active navigation link style */
+        .active-nav-link {
+            color: #e0c29a !important; /* Lighter yellow for active link */
+        }
+
+        /* Section 2 specific styles for diagonal cut */
+        .section-2-right-side {
+            position: relative;
+            background-color: white; /* Default background for the right side */
+            min-height: 300px; /* Adjusted height to make section smaller */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            z-index: 1;
+            overflow: hidden; /* Hide overflow for the curved corner */
+        }
+
+        @media (min-width: 768px) { /* md breakpoint and up for desktop layout */
+            .section-2-right-side {
+                /* Apply clip-path directly to create the diagonal left edge */
+                clip-path: polygon(10% 0%, 100% 0%, 100% 100%, 0% 100%);
+            }
+        }
+
+        /* Curved black line for the right section's bottom right corner */
+        .section-2-right-side::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100px; /* Size of the curved black area */
+            height: 100px; /* Size of the curved black area */
+            background-color: black;
+            border-bottom-left-radius: 100%; /* Creates a quarter circle, curved opposite way */
+            z-index: 0; /* Behind the content */
+        }
+
+        /* Transition styles for sections */
+        .section-hidden {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .section-visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        /* Styles for the new "Why This Matters" section */
+        .why-matters-left-side {
+            position: relative;
+            background-color: white;
+            min-height: 450px; /* Adjusted height for the section */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow: hidden; /* For the curved corner */
+        }
+
+        @media (min-width: 768px) {
+            .why-matters-left-side {
+                /* Diagonal cut on the right side for desktop */
+                clip-path: polygon(0% 0%, 90% 0%, 100% 100%, 0% 100%);
+            }
+        }
+
+        /* Curved black line for the left section's bottom right corner (opposite curve) */
+        .why-matters-left-side::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background-color: black;
+            border-top-left-radius: 100%; /* Curved opposite way */
+            z-index: 0;
+        }
+
+        /* Stats Section Styles */
+        #stats-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Centered content horizontally */
+            align-items: center; /* Centered content vertically if flex-direction is column */
+            background: linear-gradient(90deg, #f0f9ff, #e0f7fa);
+            padding: 20px;
+            border-radius: 20px;
+            font-family: 'Segoe UI', sans-serif;
+            gap: 30px;
+            margin-top: 30px; /* Space below text */
+            width: 100%; /* Ensure it takes full width of its container */
+            max-width: 600px; /* Limit max width for better readability */
+            margin-left: auto; /* Center the block itself */
+            margin-right: auto; /* Center the block itself */
+        }
+
+        .stat {
+            flex: 1;
+            min-width: 250px;
+            max-width: 33%;
+            text-align: center;
+        }
+
+        @media (max-width: 767px) { /* Adjust for mobile */
+            .stat {
+                min-width: 100%; /* Stack on small screens */
+                max-width: 100%;
+            }
+        }
+
+        .label {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #444;
+        }
+
+        .bar-container {
+            background: #e0e0e0;
+            border-radius: 100px;
+            height: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .bar {
+            height: 100%;
+            width: 0%;
+            border-radius: 100px;
+            background-size: 200% 200%;
+            animation: fillBar 2s ease-out forwards, gradientShift 5s infinite linear;
+        }
+
+        .fill1 {
+            background-image: linear-gradient(270deg, #00c6ff, #0072ff);
+        }
+
+        .fill2 {
+            background-image: linear-gradient(270deg, #f2709c, #ff9472);
+        }
+
+        .fill3 {
+            background-image: linear-gradient(270deg, #a1ffce, #faffd1);
+        }
+
+        .number {
+            margin-top: 5px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #333;
+            animation: popIn 1s ease forwards;
+        }
+
+        @keyframes fillBar {
+            from { width: 0%; }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* How It Works Section Styles */
+        #how-it-works-section {
+            position: relative;
+            width: 100%;
+            min-height: 100vh; /* Use min-height for responsiveness */
+            overflow: hidden;
+            background: black;
+            display: flex; /* Use flexbox for centering content */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem; /* Add some padding */
+            text-align: center; /* Center text by default */
+        }
+
+        #bg-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.8; /* Increased opacity for brighter video */
+        }
+
+        #how-steps {
+            position: relative; /* Changed from absolute to relative to flow with content */
+            z-index: 1;
+            color: white;
+            text-align: center;
+            transition: opacity 2s ease, transform 1s ease; /* Added transform for slide-up */
+            opacity: 0;
+            transform: translateY(20px); /* Initial state for slide-up */
+            max-width: 1200px; /* Limit width of content */
+            margin: 0 auto; /* Center content block */
+        }
+
+        #how-steps.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #how-steps h2 {
+            font-size: 3.5rem; /* Larger heading */
+            margin-bottom: 2rem;
+            font-family: 'adobe-caslon-pro', serif;
+            color: #e0c29a; /* Consistent color */
+        }
+
+        .steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Center steps */
+            margin-top: 30px;
+            gap: 20px; /* Gap between steps */
+        }
+
+        .step {
+            flex: 1;
+            min-width: 280px; /* Increased min-width for better mobile readability */
+            max-width: 350px; /* Adjusted max-width */
+            background: rgba(255, 255, 255, 0.08); /* More opaque background */
+            padding: 25px; /* Increased padding */
+            border-radius: 15px; /* More rounded */
+            backdrop-filter: blur(8px); /* Increased blur */
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); /* Subtle shadow */
+            transition: transform 0.3s ease, background 0.3s ease;
+            text-align: center; /* Ensure text within step is centered */
+        }
+
+        .step:hover {
+            transform: translateY(-5px); /* Lift effect on hover */
+            background: rgba(255, 255, 255, 0.15); /* Slightly brighter on hover */
+        }
+
+        .step h3 {
+            font-size: 1.8em; /* Larger heading */
+            margin-bottom: 10px;
+            font-family: 'adobe-caslon-pro', serif;
+            color: #e0c29a; /* Consistent color */
+        }
+
+        .step p {
+            font-size: 1em; /* Adjusted font size */
+            font-family: 'Raleway', sans-serif;
+            color: #f0f0f0; /* Lighter text color */
+        }
+
+        @media (max-width: 768px) {
+            #how-steps h2 {
+                font-size: 2.5rem; /* Smaller heading on mobile */
+            }
+            .step {
+                min-width: 90%; /* Take more width on mobile */
+                margin: 10px auto; /* Center steps on mobile */
+            }
+        }
+
+        /* Featured Parks Section Styles */
+        #featured-parks-section {
+            width: 100%;
+            background: #f4f9f5;
+            padding: 60px 40px;
+            display: flex; /* Use flexbox for two columns */
+            flex-direction: column; /* Stack on mobile */
+            gap: 40px; /* Gap between columns */
+        }
+
+        @media (min-width: 768px) {
+            #featured-parks-section {
+                flex-direction: row; /* Side-by-side on desktop */
+            }
+        }
+
+        .parks-cards {
+            flex: 1 1 500px; /* Grow and shrink, base width 500px */
+            max-width: 100%; /* Ensure it doesn't overflow on small screens */
+        }
+
+        .parks-cards h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #2c4b36;
+            font-family: 'adobe-caslon-pro', serif; /* Consistent font */
+            text-align: center; /* Center the title */
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .park-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0; /* Initial state for fade-in */
+            transform: translateY(30px); /* Initial state for slide-up */
+        }
+
+        .park-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .park-card h3 {
+            margin-bottom: 8px;
+            color: #1d3b29;
+            font-family: 'adobe-caslon-pro', serif; /* Consistent font */
+        }
+
+        .park-card p {
+            font-size: 0.95em;
+            color: #444;
+            margin-bottom: 10px;
+            font-family: 'Raleway', sans-serif; /* Consistent font */
+        }
+
+        .stars {
+            font-size: 1.2em;
+            color: #ffaa33;
+            margin-bottom: 12px;
+        }
+
+        .view-btn {
+            background: #2d5b47;
+            color: white;
+            padding: 8px 14px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            display: inline-block;
+            transition: background 0.2s;
+            font-family: 'Raleway', sans-serif; /* Consistent font */
+        }
+
+        .view-btn:hover {
+            background: #3f765d;
+        }
+
+        .globe-column {
+            flex: 1 1 450px;
+            min-height: 400px; /* Ensure it has some height even if empty */
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            background-color: #e0f7fa; /* Placeholder background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #4a5568;
+            font-family: 'Raleway', sans-serif;
+            text-align: center;
+        }
+
+        /* Fade-in animation for park cards */
+        .park-card.fade-in-visible {
+            animation: fadeUp 1s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Get Involved Section Styles */
+        #get-involved-section {
+            position: relative;
+            background-image: url('https://images.unsplash.com/photo-1526779259212-939e64788e3c?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8ZnJlZSUyMGltYWdlc3xlbnwwfHwwfHx8MA%3D%3D');
+            background-size: cover;
+            background-position: center;
+            min-height: 80vh; /* Use min-height for responsiveness */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 2rem; /* Add padding for mobile */
+        }
+
+        #get-involved-section::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: inherit;
+            background-size: 110%;
+            background-position: center;
+            filter: brightness(0.8); /* Keep brightness filter */
+            z-index: 1;
+            animation: zoomInBG 10s ease-in-out forwards;
+        }
+
+        .cta-overlay {
+            background: rgba(0, 0, 0, 0.6); /* Slightly more opaque overlay for readability */
+            padding: 60px 40px;
+            text-align: center;
+            color: #f5f5f5;
+            max-width: 800px;
+            border-radius: 20px;
+            z-index: 2;
+            opacity: 0; /* Initial state for fade-in */
+            transform: translateY(20px); /* Initial state for slide-up */
+            transition: opacity 1.5s ease-in, transform 1.5s ease-in; /* Transition for fade-in */
+        }
+
+        #get-involved-section.section-visible .cta-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .cta-overlay h2 {
+            font-size: 2.8rem; /* Adjusted font size for impact */
+            margin-bottom: 20px;
+            font-family: 'adobe-caslon-pro', serif; /* Consistent font */
+            color: #e0c29a; /* Consistent color */
+        }
+
+        .cta-overlay p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-family: 'Raleway', sans-serif; /* Consistent font */
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            background: linear-gradient(135deg, #1a7f1a, #2ee62e); /* Green gradient */
+            color: white;
+            padding: 12px 24px;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease;
+            font-family: 'Raleway', sans-serif; /* Consistent font */
+            border: 2px solid #e0c29a; /* Subtle border matching accent color */
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05); /* Slightly less aggressive scale */
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #2ee62e, #1a7f1a); /* Reverse gradient on hover */
+            animation: none; /* Remove bounce on hover, let transition handle it */
+        }
+
+        /* Fade-in and zoom background animation */
+        @keyframes zoomInBG {
+            0% { background-size: 110%; }
+            100% { background-size: 100%; }
+        }
+
+        /* Removed fadeIn from global, applied to .cta-overlay */
+        @keyframes bounce {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); } /* Adjusted bounce height */
+            100% { transform: scale(1.05); } /* Adjusted final scale */
+        }
+
+        @media (max-width: 640px) { /* Smaller font sizes for very small screens */
+            .cta-overlay h2 {
+                font-size: 2rem;
+            }
+            .cta-overlay p {
+                font-size: 0.95rem;
+            }
+            .cta-btn {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+        }
+
+        /* Latest Posts Section Styles */
+        #latest-posts-section {
+            background-color: white;
+            padding: 60px 40px;
+            min-height: 400px; /* Ensure some height even when empty */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative; /* For pseudo-elements */
+            overflow: hidden; /* Hide overflow of shapes */
+        }
+
+        #latest-posts-section::before,
+        #latest-posts-section::after {
+            content: '';
+            position: absolute;
+            background-color: rgba(200, 200, 200, 0.1); /* Light gray shapes */
+            border-radius: 50%; /* Make them circular */
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        #latest-posts-section::before {
+            width: 150px;
+            height: 150px;
+            top: 10%;
+            left: 5%;
+            transform: rotate(20deg);
+        }
+
+        #latest-posts-section::after {
+            width: 200px;
+            height: 200px;
+            bottom: 15%;
+            right: 8%;
+            transform: rotate(-30deg);
+        }
+
+        #latest-posts-section h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            color: #2c4b36;
+            font-family: 'adobe-caslon-pro', serif;
+            position: relative; /* Ensure title is above shapes */
+            z-index: 1;
+        }
+
+        #latest-posts-section p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #444;
+            font-family: 'Raleway', sans-serif;
+            max-width: 600px;
+            position: relative; /* Ensure text is above shapes */
+            z-index: 1;
+        }
+
+        /* Image Gallery Section Styles - Re-positioned and corrected */
+        #image-gallery-section {
+            background-color: #f4f9f5; /* Bring back the light background */
+            padding: 60px 20px;
+            text-align: center; /* Center the text and button */
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center items horizontally in the flex container */
+            justify-content: center;
+            overflow-x: hidden; /* Hide horizontal overflow on the section level */
+        }
+
+        #image-gallery-section h2 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: #2c4b36;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+            padding: 0 10px;
+            box-sizing: border-box;
+            text-align: center; /* Explicitly center the heading */
+        }
+
+        #image-gallery-section p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #444;
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            padding: 0 10px;
+            box-sizing: border-box;
+            text-align: center; /* Explicitly center the paragraph */
+        }
+
+        .gallery-content {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex; /* Make gallery-content a flex container */
+            flex-direction: column; /* Stack its children vertically */
+            align-items: center; /* Center its children horizontally */
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        .image-item {
+            /* No specific width/height here, let the grid handle it */
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: block;
+            border-radius: 12px;
+        }
+
+        .image-item img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Adjustments for smaller screens */
+        @media (max-width: 768px) {
+            #image-gallery-section {
+                padding: 40px 10px;
+            }
+
+            #image-gallery-section h2 {
+                font-size: 2rem;
+                padding: 0 5px;
+            }
+
+            #image-gallery-section p {
+                font-size: 0.95rem;
+                padding: 0 5px;
+            }
+
+            .image-grid {
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+                gap: 10px;
+                padding: 0 5px;
+            }
+
+            .image-item img {
+                height: 140px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            #image-gallery-section {
+                padding: 30px 5px;
+            }
+            #image-gallery-section h2 {
+                font-size: 1.8rem;
+                padding: 0 5px;
+            }
+            #image-gallery-section p {
+                font-size: 0.9rem;
+                padding: 0 5px;
+            }
+            .image-grid {
+                grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+                gap: 8px;
+                padding: 0 5px;
+            }
+            .image-item img {
+                height: 120px;
+            }
+        }
+
+        /* General text containment for all sections (good practice) */
+        .section-hidden h2, .section-hidden p,
+        .section-visible h2, .section-visible p {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+        }
+
+        /* ASCII Canvas Styles */
+        #asciiCanvas {
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: -1; /* behind everything */
+          width: 100vw;
+          height: 100vh;
+          background: black;
+          display: block;
+        }
+
+        /* Footer Styles */
+        #footer {
+          position: relative;
+          color: #e4f5e9;
+          padding: 40px 20px;
+          z-index: 2; /* ABOVE canvas */
+          font-family: 'Segoe UI', sans-serif;
+          opacity: 0.7;
+        }
+
+        .footer-content {
+          max-width: 1000px;
+          margin: auto;
+          text-align: center;
+        }
+
+        .signature, .email, .existential {
+          margin-bottom: 12px;
+          font-size: 0.95em;
+        }
+
+        .email a {
+          color: #e0ffe0;
+          text-decoration: underline dotted;
+        }
+
+        .footer-nav {
+          margin: 20px 0;
+        }
+
+        .footer-nav a {
+          margin: 0 12px;
+          color: #ffffffcc;
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.3s;
+        }
+
+        .footer-nav a:hover {
+          color: #b9ffca;
+        }
+
+        .socials {
+          margin-top: 16px;
+        }
+
+        .socials img {
+          width: 22px;
+          height: 22px;
+          margin: 0 8px;
+          opacity: 0.8;
+          transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .socials img:hover {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+        #globe-container {
+            width: 100vw;
+            height: 100vh;
+        }
+        .park-label {
+            position: absolute;
+            background: linear-gradient(45deg, rgba(0, 50, 100, 0.8), rgba(0, 100, 200, 0.8));
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 15px 15px 15px 0; /* Speech bubble shape */
+            font-size: 14px;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transform: translate(-50%, -100%); /* Position above the marker */
+            transition: opacity 0.3s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            z-index: 10; /* Ensure it's above other elements */
+        }
+        .park-label.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-gray-800">
+    <script id="vertexShader" type="x-shader/x-vertex">
+        varying vec3 vNormal;
+        void main() {
+            vNormal = normalize(normalMatrix * normal);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+    </script>
+
+    <script id="fragmentShader" type="x-shader/x-fragment">
+        uniform float c;
+        uniform float p;
+        varying vec3 vNormal;
+        void main() {
+            float intensity = pow(c - dot(vNormal, vec3(0.0, 0.0, 1.0)), p);
+            gl_FragColor = vec4(0.0, 0.3, 0.5, 1.0) * intensity;
+        }
+    </script>
+    <canvas id="asciiCanvas"></canvas>
+    <header class="relative bg-cover bg-center flex items-center justify-between px-4 py-0.5 sm:py-1 rounded-b-lg shadow-lg sticky top-0 z-50" style="background-image: url('assets/header-image.jpg');">
+        <div class="flex items-center space-x-2">
+            <img src="assets/icon.png" alt="AstroScouts Icon" class="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-full flex-shrink-0">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-adobe-caslon solid-text-color whitespace-nowrap flex-shrink-0">AstroScouts</h1>
+                <p class="text-sm sm:text-base font-adobe-caslon solid-text-color leading-tight">Where nature meets accessibility</p>
+            </div>
+        </div>
+
+        <button id="menu-button" class="sm:hidden text-white focus:outline-none p-2 rounded-md hover:bg-gray-700 transition duration-300">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+
+        <nav id="main-nav-container" class="hidden absolute top-full left-0 w-full bg-black bg-opacity-80 sm:relative sm:top-auto sm:left-auto sm:w-auto sm:bg-transparent sm:bg-opacity-100 p-4 sm:p-0 z-20 sm:block">
+            <ul id="main-nav" class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6 items-center sm:items-stretch">
+                <li><a href="index.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Home</a></li>
+                <li><a href="parks-directory.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Parks Directory</a></li>
+                <li><a href="submit-a-review.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Submit a Review</a></li>
+                <li><a href="blog.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Blog</a></li>
+                <li><a href="about-us.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="relative flex items-center justify-center text-center overflow-hidden full-screen-minus-header">
+        <video id="background-video" class="video-background" autoplay muted playsinline></video>
+
+        <div class="relative z-10 p-6 sm:p-8 bg-black bg-opacity-40 rounded-lg shadow-2xl mx-4 sm:mx-8 md:mx-16 lg:mx-32">
+            <h2 class="text-white text-3xl sm:text-4xl md:text-5xl lg:text-[63px] font-adobe-caslon leading-tight mb-6 sm:mb-8">
+                Discover Parks. Share Experiences.<br>Build a Greener Tomorrow.
+            </h2>
+            <a href="submit-a-review.html">
+                <button class="epic-button px-4 py-2 sm:px-6 sm:py-3">Submit a Review</button>
+            </a>
+        </div>
+    </main>
+
+    <section id="park-insight-section" class="flex flex-col md:flex-row min-h-[400px] bg-black section-hidden">
+        <div class="relative w-full md:w-1/2 bg-cover bg-center flex items-center justify-center p-8" style="background-image: url('assets/welcome.jpg'); min-height: 300px;">
+            <div class="relative z-10 p-6 bg-black bg-opacity-40 rounded-lg text-left">
+                <h3 class="text-4xl sm:text-5xl font-playfair-display font-bold mb-4 text-white">
+                    Welcome to<br>Park Insight<br>Project
+                </h3>
+                <a href="#" class="text-xl font-bold font-railway hover:underline text-white">Read More</a>
+            </div>
+        </div>
+
+        <div class="w-full md:w-1/2 bg-white text-gray-800 flex flex-col items-center justify-center p-8 relative section-2-right-side">
+            <div class="relative z-10 max-w-lg text-center">
+                <p class="text-xl sm:text-2xl font-railway leading-relaxed mb-6">
+                    Youth-led, scout-informed, and publicly crowdsourced. AstroScouts is a park-rating ecosystem
+                    <span class="font-bold">by the people who walk the trails.</span> not just the ones who pave them.
+                </p>
+                <a href="parks-directory.html">
+                    <button class="browse-button px-4 py-2 sm:px-6 sm:py-3">Browse Parks</button>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="why-this-matters-section" class="flex flex-col md:flex-row min-h-[500px] bg-black section-hidden">
+        <div class="w-full md:w-1/2 bg-white text-gray-800 flex flex-col items-center justify-center p-8 relative why-matters-left-side">
+            <div class="relative z-10 max-w-lg text-center">
+                <h3 class="text-[54px] font-adobe-caslon text-center mb-6">Why This matters</h3>
+                <p class="text-lg sm:text-xl font-railway leading-relaxed mb-8 text-center">
+                    Parks are more than just green spaces—they are community sanctuaries, places of healing, and<br>
+                    <span class="font-bold">reflections of how we care</span><br>
+                    for each other and the planet.
+                    <br><br>
+                    But not every park is equally accessible, clean, or sustainable.
+                    <br><br>
+                    That’s why we’re building a platform powered by Scouts and public voices to evaluate and elevate the places we love.
+                </p>
+                <div id="stats-section">
+                    <div class="stat">
+                        <div class="label">Parks Reviewed</div>
+                        <div class="bar-container">
+                            <div class="bar fill1"></div>
+                        </div>
+                        <div class="number" data-target="12">0</div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="label">Visitor Submissions</div>
+                        <div class="bar-container">
+                            <div class="bar fill2"></div>
+                        </div>
+                        <div class="number" data-target="40">0</div>
+                    </div>
+
+                    <div class="stat">
+                        <div class="label">Scouts Involved</div>
+                        <div class="bar-container">
+                            <div class="bar fill3"></div>
+                        </div>
+                        <div class="number" data-target="10">0</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full md:w-1/2 bg-cover bg-center" style="background-image: url('assets/why-this-matters.jpg'); min-height: 450px;">
+        </div>
+    </section>
+
+    <section id="how-it-works-section" class="section-hidden">
+        <video autoplay muted playsinline id="bg-video"></video>
+        <div id="how-steps">
+            <h2>How It Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <h3>1. Visit a Park</h3>
+                    <p>Walk the trails. Observe. Take photos. Listen to the space.</p>
+                </div>
+                <div class="step">
+                    <h3>2. Submit Your Review</h3>
+                    <p>Use our form to share accessibility ratings, sustainability insights, and personal impressions.</p>
+                </div>
+                <div class="step">
+                    <h3>3. Help the Community</h3>
+                    <p>Your review helps others explore—and helps parks improve.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="featured-parks-section" class="section-hidden">
+        <div class="parks-layout flex flex-col md:flex-row w-full max-w-screen-xl mx-auto gap-10 p-4">
+            <div class="parks-cards w-full md:w-1/2">
+                <h2 class="text-center md:text-left">Explore Parks Near You</h2>
+                <div class="card-grid">
+                    <div class="park-card">
+                        <h3>Whispering Pines Sanctuary</h3>
+                        <p>A quiet forest trail with surprisingly modern accessibility paths.</p>
+                        <div class="stars">★★★★★</div>
+                        <a href="#" class="view-btn">View More</a>
+                    </div>
+
+                    <div class="park-card">
+                        <h3>Willowbend Reserve</h3>
+                        <p>A sustainability-focused park with native plants and composting stations.</p>
+                        <div class="stars">★★★★☆</div>
+                        <a href="#" class="view-btn">View More</a>
+                    </div>
+
+                    <div class="park-card">
+                        <h3>Meadowglow Preserve</h3>
+                        <p>Rolling hills and meadows with seasonal wildlife-watching spots.</p>
+                        <div class="stars">★★★★☆</div>
+                        <a href="#" class="view-btn">View More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="globe-column w-full md:w-1/2">
+                <div id="globe-container"></div>
+
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+                    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            const container = document.getElementById('globe-container');
+                            const width = container.offsetWidth;
+                            const height = container.offsetHeight;
+
+                            // Set up the scene, camera, and renderer
+                            const scene = new THREE.Scene();
+                            const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+                            const renderer = new THREE.WebGLRenderer({ antialias: true });
+                            renderer.setSize(width, height);
+                            container.appendChild(renderer.domElement);
+
+                            // Create the globe
+                            const geometry = new THREE.SphereGeometry(5, 64, 64); // Increased segments for smoother globe
+                            const textureLoader = new THREE.TextureLoader();
+                            const textureURL = 'https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg';
+
+                            textureLoader.load(
+                                textureURL,
+                                (texture) => {
+                                    const material = new THREE.MeshBasicMaterial({ map: texture });
+                                    const globe = new THREE.Mesh(geometry, material);
+                                    scene.add(globe);
+
+                                    // Atmosphere
+                                    const atmosphereMaterial = new THREE.ShaderMaterial({
+                                        uniforms: {
+                                            c: { value: 0.1 },
+                                            p: { value: 4.0 }
+                                        },
+                                        vertexShader: document.getElementById('vertexShader').textContent,
+                                        fragmentShader: document.getElementById('fragmentShader').textContent,
+                                        blending: THREE.AdditiveBlending,
+                                        side: THREE.BackSide,
+                                    });
+                                    const atmosphere = new THREE.Mesh(geometry, atmosphereMaterial);
+                                    atmosphere.scale.set(1.05, 1.05, 1.05);
+                                    scene.add(atmosphere);
+
+                                    // Position the camera
+                                    camera.position.z = 10;
+
+                                    // Add lights
+                                    const ambientLight = new THREE.AmbientLight(0x404040); // Softer ambient light
+                                    scene.add(ambientLight);
+
+                                    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7); // Directional light for better shading
+                                    directionalLight.position.set(5, 5, 5).normalize();
+                                    scene.add(directionalLight);
+
+                                    // Example park markers
+                                    const parks = [
+                                        { lat: 40.78, lon: -73.97, name: "Central Park, NY" },
+                                        { lat: 51.50, lon: 0.12, name: "Hyde Park, London" },
+                                        { lat: 37.77, lon: -122.47, name: "Golden Gate Park, San Francisco" },
+                                        { lat: 35.70, lon: 139.77, name: "Ueno Park, Tokyo" },
+                                        { lat: 52.50, lon: 13.37, name: "Tiergarten, Berlin" },
+                                        { lat: 40.41, lon: -3.69, name: "Retiro Park, Madrid" },
+                                        { lat: 49.28, lon: -123.11, name: "Stanley Park, Vancouver" },
+                                        { lat: 52.28, lon: 4.52, name: "Keukenhof Gardens, Netherlands" },
+                                        { lat: 48.42, lon: -123.41, name: "Butchart Gardens, Canada" },
+                                        { lat: 37.8, lon: -119.6, name: "Yosemite National Park, California" },
+                                        { lat: 44.6, lon: -110.5, name: "Yellowstone National Park, Wyoming" },
+                                        { lat: 36.1, lon: -112.1, name: "Grand Canyon National Park, Arizona" },
+                                        { lat: 51.17, lon: -115.76, name: "Banff National Park, Canada" },
+                                        { lat: -24.35, lon: 31.47, name: "Kruger National Park, South Africa" },
+                                        { lat: -51.0, lon: -72.5, name: "Torres del Paine National Park, Chile" },
+                                        { lat: -25.12, lon: -54.58, name: "Iguaçu National Park, Brazil/Argentina" },
+                                        { lat: -25.34, lon: 130.98, name: "Uluru-Kata Tjuta National Park, Australia" },
+                                        { lat: -44.4, lon: 168.6, name: "Fiordland National Park, New Zealand" },
+                                        { lat: -12.83, lon: 132.72, name: "Kakadu National Park, Australia" },
+                                        { lat: 51.82, lon: -9.50, name: "Killarney National Park, Ireland" },
+                                        { lat: 44.86, lon: 15.60, name: "Plitvice Lakes National Park, Croatia" },
+                                        { lat: 50.92, lon: 14.12, name: "Saxon Switzerland National Park, Germany" },
+                                        { lat: 18.57, lon: 98.56, name: "Doi Inthanon National Park, Thailand" },
+                                        { lat: 35.36, lon: 138.73, name: "Mount Fuji, Japan" },
+                                        { lat: 15.58, lon: -89.13, name: "Semuc Champey, Guatemala" },
+                                        { lat: 4.32, lon: 103.38, name: "Taman Negara National Park, Malaysia" },
+                                        { lat: 59.5, lon: -151.0, name: "Kenai Fjords National Park, Alaska" },
+                                        { lat: 48.8, lon: -114.1, name: "Glacier National Park, Montana" },
+                                        { lat: 35.6, lon: -83.0, name: "Great Smoky Mountains National Park, NC & TN" },
+                                        { lat: 37.2, lon: -113.0, name: "Zion National Park, Utah" },
+                                        { lat: 37.6, lon: -112.1, name: "Bryce Canyon National Park, Utah" },
+                                        { lat: 25.1, lon: -80.8, name: "Everglades National Park, Florida" },
+                                        { lat: 47.0, lon: -123.4, name: "Olympic National Park, Washington" },
+                                        { lat: 40.4, lon: -105.7, name: "Rocky Mountain National Park, Colorado" },
+                                        { lat: 35.68, lon: 139.71, name: "Shinjuku Gyoen National Garden, Tokyo" },
+                                        { lat: 30.8, lon: 118.1, name: "Hengshan Park, China" },
+                                        { lat: 48.85, lon: 2.33, name: "Jardin du Luxembourg, Paris" },
+                                        { lat: 51.50, lon: 0.12, name: "St. James's Park, London" },
+                                        { lat: 43.77, lon: 11.26, name: "Boboli Gardens, Italy" },
+                                        { lat: 48.18, lon: 16.37, name: "Schönbrunn Palace Park, Austria" },
+                                        { lat: 55.67, lon: 12.56, name: "Tivoli Gardens, Denmark" },
+                                        { lat: 48.84, lon: 2.22, name: "Bois de Boulogne, Paris" },
+                                        { lat: 53.33, lon: -6.2, name: "Phoenix Park, Ireland" },
+                                        { lat: 51.53, lon: -0.13, name: "Regent's Park, London" },
+                                        { lat: 29.38, lon: 47.98, name: "Al Shaheed Park, Kuwait City" },
+                                        { lat: 34.02, lon: -118.49, name: "Griffith Park, Los Angeles" },
+                                        { lat: -33.86, lon: 151.20, name: "Royal Botanic Garden, Sydney" },
+                                        { lat: 34.05, lon: -118.24, name: "Exposition Park, Los Angeles" },
+                                        { lat: 41.90, lon: 12.45, name: "Villa Borghese, Rome" },
+                                        { lat: -22.90, lon: -43.19, name: "Parque Lage, Rio de Janeiro" },
+                                        { lat: -26.20, lon: 28.04, name: "Johannesburg Botanical Garden, South Africa" },
+                                        { lat: 39.90, lon: 116.39, name: "Temple of Heaven Park, Beijing" },
+                                        { lat: 55.75, lon: 37.61, name: "Gorky Park, Moscow" },
+                                        { lat: 28.61, lon: 77.20, name: "Lodhi Garden, Delhi" },
+                                        { lat: 30.27, lon: 120.16, name: "West Lake Scenic Area, Hangzhou" },
+                                        { lat: 34.69, lon: 135.50, name: "Osaka Castle Park, Osaka" },
+                                        { lat: 25.07, lon: 121.56, name: "Daan Forest Park, Taipei" },
+                                        { lat: 37.56, lon: 126.97, name: "Namsan Park, Seoul" },
+                                        { lat: 31.22, lon: 121.47, name: "Yu Garden, Shanghai" },
+                                        { lat: 33.58, lon: -7.61, name: "Arab League Park, Casablanca" },
+                                        { lat: 31.78, lon: 35.22, name: "Jerusalem Botanical Gardens, Israel" },
+                                        { lat: 33.30, lon: 44.36, name: "Zawraa Park, Baghdad" },
+                                        { lat: 23.68, lon: 90.35, name: "Ramna Park, Dhaka" },
+                                        { lat: 13.75, lon: 100.50, name: "Lumpini Park, Bangkok" },
+                                        { lat: 14.59, lon: 120.97, name: "Rizal Park, Manila" },
+                                        { lat: 1.35, lon: 103.81, name: "Gardens by the Bay, Singapore" },
+                                        { lat: 3.13, lon: 101.68, name: "KLCC Park, Kuala Lumpur" },
+                                        { lat: 6.92, lon: 79.86, name: "Viharamahadevi Park, Colombo" },
+                                        { lat: 34.68, lon: 33.04, name: "Limassol Municipal Park, Cyprus" },
+                                        { lat: 38.72, lon: -9.13, name: "Parque Eduardo VII, Lisbon" },
+                                        { lat: 41.38, lon: 2.17, name: "Parc de la Ciutadella, Barcelona" },
+                                        { lat: 45.46, lon: 9.18, name: "Parco Sempione, Milan" },
+                                        { lat: 50.08, lon: 14.43, name: "Letná Park, Prague" },
+                                        { lat: 47.49, lon: 19.04, name: "Margaret Island, Budapest" },
+                                        { lat: 50.45, lon: 30.52, name: "Mariinsky Park, Kyiv" },
+                                        { lat: 52.22, lon: 21.01, name: "Łazienki Park, Warsaw" },
+                                        { lat: 59.32, lon: 18.06, name: "Djurgården, Stockholm" },
+                                        { lat: 60.16, lon: 24.93, name: "Esplanadi, Helsinki" },
+                                        { lat: 64.13, lon: -21.92, name: "Hallgrímskirkja Garden, Reykjavik" },
+                                        { lat: 33.51, lon: -7.58, name: "Parc de la Ligue Arabe, Casablanca" },
+                                        { lat: 30.04, lon: 31.23, name: "Al-Azhar Park, Cairo" },
+                                        { lat: -33.92, lon: 18.42, name: "Kirstenbosch National Botanical Garden, Cape Town" },
+                                        { lat: -26.19, lon: 28.03, name: "Walter Sisulu National Botanical Garden, Johannesburg" },
+                                        { lat: -1.28, lon: 36.81, name: "Nairobi National Park, Kenya" },
+                                        { lat: -3.07, lon: 29.36, name: "Rusizi National Park, Burundi" },
+                                        { lat: -16.29, lon: 28.72, name: "Lower Zambezi National Park, Zambia" },
+                                        { lat: -18.87, lon: 47.50, name: "Isalo National Park, Madagascar" },
+                                        { lat: -18.17, lon: 178.44, name: "Colo-I-Suva Forest Park, Fiji" },
+                                        { lat: -27.47, lon: 153.02, name: "South Bank Parklands, Brisbane" },
+                                        { lat: -37.81, lon: 144.96, name: "Royal Botanic Gardens Victoria, Melbourne" },
+                                        { lat: -41.28, lon: 174.77, name: "Zealandia, Wellington" },
+                                        { lat: -43.53, lon: 172.63, name: "Christchurch Botanic Gardens, New Zealand" },
+                                        { lat: -34.92, lon: 138.59, name: "Adelaide Botanic Garden, Australia" },
+                                        { lat: -31.95, lon: 115.86, name: "Kings Park and Botanic Garden, Perth" },
+                                        { lat: -17.73, lon: 177.05, name: "Garden of the Sleeping Giant, Fiji" },
+                                        { lat: 10.48, lon: -66.86, name: "Parque del Este, Caracas" },
+                                        { lat: -34.60, lon: -58.38, name: "Parque Tres de Febrero, Buenos Aires" },
+                                        { lat: -33.44, lon: -70.66, name: "Parque Metropolitano de Santiago, Chile" },
+                                        { lat: 19.43, lon: -99.13, name: "Chapultepec Park, Mexico City" },
+                                        { lat: 9.92, lon: -84.09, name: "La Sabana Metropolitan Park, San Jose" },
+                                        { lat: 8.98, lon: -79.51, name: "Parque Natural Metropolitano, Panama City" },
+                                        { lat: 14.07, lon: -87.19, name: "La Tigra National Park, Honduras" },
+                                        { lat: 13.69, lon: -89.19, name: "Boquerón National Park, El Salvador" },
+                                        { lat: 12.13, lon: -86.25, name: "Masaya Volcano National Park, Nicaragua" },
+                                        { lat: 10.64, lon: -61.52, name: "Royal Botanic Gardens, Trinidad and Tobago" },
+                                        { lat: 18.47, lon: -69.93, name: "Mirador Sur Park, Santo Domingo" },
+                                        { lat: 18.00, lon: -76.78, name: "Blue and John Crow Mountains National Park, Jamaica" },
+                                        { lat: 18.34, lon: -64.93, name: "Virgin Islands National Park, USVI" }
+                                    ];
+
+                                    const markers = [];
+                                    const markerData = {}; // To store marker mesh and its associated data
+
+                                    parks.forEach((park, index) => {
+                                        const marker = createGlowingMarker();
+                                        const { x, y, z } = latLonToVector3(park.lat, park.lon, 5.01); // Slightly above globe
+                                        marker.position.set(x, y, z);
+                                        globe.add(marker);
+                                        marker.userData = { name: park.name, index: index, connections: 0 };
+                                        markers.push(marker);
+                                        markerData[index] = { mesh: marker, info: park };
+                                    });
+
+                                    // Add stars background
+                                    function createStars() {
+                                        const starGeometry = new THREE.BufferGeometry();
+                                        const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5, sizeAttenuation: true });
+
+                                        const starVertices = [];
+                                        for (let i = 0; i < 5000; i++) {
+                                            const x = (Math.random() - 0.5) * 2000;
+                                            const y = (Math.random() - 0.5) * 2000;
+                                            const z = -Math.random() * 2000; // Stars appear behind
+                                            starVertices.push(x, y, z);
+                                        }
+
+                                        starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+                                        const stars = new THREE.Points(starGeometry, starMaterial);
+                                        scene.add(stars);
+                                    }
+
+                                    createStars();
+
+                                    // Animation loop
+                                    function animate() {
+                                        requestAnimationFrame(animate);
+                                        globe.rotation.y += 0.003; // Increased rotation speed
+                                        renderer.render(scene, camera);
+                                    }
+
+                                    animate();
+
+                                    // Handle window resize
+                                    window.addEventListener('resize', () => {
+                                        const width = container.offsetWidth;
+                                        const height = container.offsetHeight;
+                                        renderer.setSize(width, height);
+                                        camera.aspect = width / height;
+                                        camera.updateProjectionMatrix();
+                                    });
+
+                                    // Function to create glowing markers
+                                    function createGlowingMarker() {
+                                        const markerGroup = new THREE.Group();
+
+                                        // Core sphere (brighter)
+                                        const coreGeometry = new THREE.SphereGeometry(0.08, 16, 16);
+                                        const coreMaterial = new THREE.MeshBasicMaterial({ color: 0x00e6ff }); // Bright blue
+                                        const coreSphere = new THREE.Mesh(coreGeometry, coreMaterial);
+                                        markerGroup.add(coreSphere);
+
+                                        // Outer glow (subtle, transparent)
+                                        const glowGeometry = new THREE.SphereGeometry(0.15, 16, 16);
+                                        const glowMaterial = new THREE.MeshBasicMaterial({
+                                            color: 0x00e6ff,
+                                            transparent: true,
+                                            opacity: 0.3,
+                                            blending: THREE.AdditiveBlending // Additive blending for glow effect
+                                        });
+                                        const glowSphere = new THREE.Mesh(glowGeometry, glowMaterial);
+                                        markerGroup.add(glowSphere);
+
+                                        return markerGroup;
+                                    }
+
+                                    // Function to convert lat/lon to 3D coordinates
+                                    function latLonToVector3(lat, lon, radius) {
+                                        const phi = (90 - lat) * (Math.PI / 180);
+                                        const theta = (lon + 180) * (Math.PI / 180);
+
+                                        const x = -((radius) * Math.sin(phi) * Math.cos(theta));
+                                        const z = ((radius) * Math.sin(phi) * Math.sin(theta));
+                                        const y = ((radius) * Math.cos(phi));
+
+                                        return new THREE.Vector3(x, y, z);
+                                    }
+
+                                    // --- Connection Line Animation ---
+                                    const activeConnections = [];
+                                    const maxConnectionsPerPoint = 2;
+                                    const minSimultaneousConnections = 140; // At least 50 connections at any given time
+                                    const minPopUpConnections = 0; // At least 2 connections with pop-ups
+
+                                    function createConnectionLine(startPoint, endPoint) {
+                                        const curve = new THREE.CatmullRomCurve3([
+                                            startPoint,
+                                            startPoint.clone().lerp(endPoint, 0.5).setLength(5.5), // Arc point slightly above globe
+                                            endPoint
+                                        ]);
+
+                                        const points = curve.getPoints(100); // More points for smoother animation
+                                        const geometry = new THREE.BufferGeometry();
+                                        geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(points.length * 3), 3));
+                                        geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(points.length * 3), 3)); // For gradient
+
+                                        const colors = [];
+                                        const startColor = new THREE.Color(getRandomHexColor());
+                                        const endColor = new THREE.Color(getRandomHexColor());
+
+                                        for (let i = 0; i < points.length; i++) {
+                                            const color = startColor.clone().lerp(endColor, i / (points.length - 1));
+                                            colors.push(color.r, color.g, color.b);
+                                        }
+                                        geometry.attributes.color.array.set(colors);
+
+                                        // Single gradient line with blending for glow
+                                        const lineMaterial = new THREE.LineBasicMaterial({
+                                            vertexColors: true, // Enable vertex colors for gradient
+                                            linewidth: 16, // Thicker line
+                                            transparent: true,
+                                            opacity: 0,
+                                            blending: THREE.AdditiveBlending // Additive blending for glow effect
+                                        });
+                                        const line = new THREE.Line(geometry, lineMaterial);
+                                        globe.add(line);
+
+                                        // Animate the drawing of the line
+                                        const tempPoints = [];
+                                        const tempColors = [];
+                                        let currentPointIndex = 0;
+                                        const drawDuration = 4; // Seconds to draw the line
+                                        const holdDuration = 19.0; // Seconds to hold after drawing
+                                        const fadeDuration = 1.0; // Seconds to fade out
+
+                                        const drawTween = gsap.to({ progress: 0 }, {
+                                            progress: 1,
+                                            duration: drawDuration,
+                                            ease: "power1.inOut",
+                                            onUpdate: function() {
+                                                const p = this.progress();
+                                                const numPointsToDraw = Math.floor(points.length * p);
+
+                                                if (numPointsToDraw > currentPointIndex) {
+                                                    for (let i = currentPointIndex; i < numPointsToDraw; i++) {
+                                                        tempPoints.push(points[i].x, points[i].y, points[i].z);
+                                                        tempColors.push(colors[i * 3], colors[i * 3 + 1], colors[i * 3 + 2]);
+                                                    }
+                                                    line.geometry.attributes.position.set(tempPoints);
+                                                    line.geometry.attributes.color.set(tempColors);
+                                                    line.geometry.setDrawRange(0, tempPoints.length / 3);
+                                                    line.geometry.attributes.position.needsUpdate = true;
+                                                    line.geometry.attributes.color.needsUpdate = true;
+                                                    currentPointIndex = numPointsToDraw;
+                                                }
+
+                                                // Fade in as it draws
+                                                lineMaterial.opacity = p;
+                                            },
+                                            onComplete: () => {
+                                                // Once drawn, hold then fade out
+                                                gsap.to(lineMaterial, {
+                                                    opacity: 0,
+                                                    duration: fadeDuration,
+                                                    delay: holdDuration,
+                                                    onComplete: () => {
+                                                        globe.remove(line);
+                                                        // Remove from active connections
+                                                        const index = activeConnections.findIndex(conn => conn.line === line);
+                                                        if (index !== -1) {
+                                                            const removedConnection = activeConnections.splice(index, 1)[0];
+                                                            markers[removedConnection.park1Index].userData.connections--;
+                                                            markers[removedConnection.park2Index].userData.connections--;
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        });
+
+                                        return { line, drawTween };
+                                    }
+
+                                    function getRandomHexColor() {
+                                        const letters = '0123456789ABCDEF';
+                                        let color = '0x';
+                                        for (let i = 0; i < 6; i++) {
+                                            color += letters[Math.floor(Math.random() * 16)];
+                                        }
+                                        return parseInt(color, 16);
+                                    }
+
+                                    function initiateRandomConnection() {
+                                        // Keep adding connections until we reach the minimum desired amount
+                                        if (markers.length < 2 || activeConnections.length >= minSimultaneousConnections) {
+                                            return;
+                                        }
+
+                                        // Filter parks that haven't reached max connections
+                                        const availableParks = markers.filter(m => m.userData.connections < maxConnectionsPerPoint);
+
+                                        if (availableParks.length < 2) return;
+
+                                        let park1, park2;
+                                        let attempts = 0;
+                                        const maxAttempts = 50; // Prevent infinite loops if all parks are connected
+                                        do {
+                                            park1 = availableParks[Math.floor(Math.random() * availableParks.length)];
+                                            park2 = availableParks[Math.floor(Math.random() * availableParks.length)];
+                                            attempts++;
+                                        } while ((park1 === park2 || isConnectionActive(park1, park2)) && attempts < maxAttempts);
+
+                                        if (attempts >= maxAttempts) {
+                                            return; // Couldn't find a suitable pair
+                                        }
+
+                                        // Increment connection count for these parks immediately
+                                        park1.userData.connections++;
+                                        park2.userData.connections++;
+
+                                        const connection = createConnectionLine(
+                                            park1.position,
+                                            park2.position
+                                        );
+                                        activeConnections.push({
+                                            line: connection.line,
+                                            drawTween: connection.drawTween,
+                                            park1Index: park1.userData.index,
+                                            park2Index: park2.userData.index
+                                        });
+                                    }
+
+                                    function isConnectionActive(p1, p2) {
+                                        return activeConnections.some(conn =>
+                                            (conn.park1Index === p1.userData.index && conn.park2Index === p2.userData.index) ||
+                                            (conn.park1Index === p2.userData.index && conn.park1Index === p1.userData.index)
+                                        );
+                                    }
+
+                                    // Periodically initiate new connections.
+                                    setInterval(initiateRandomConnection, 500); // Try to add a new connection every 0.5 seconds
+
+                                    // --- Park Name Pop-up ---
+                                    const currentlyVisibleLabels = new Map(); // Use a Map to track multiple visible labels
+
+                                    function showParkLabel(parkName, markerMesh, markerIndex) {
+                                        // If a label for this marker is already visible, don't create a new one
+                                        if (currentlyVisibleLabels.has(markerIndex)) {
+                                            return;
+                                        }
+
+                                        const labelDiv = document.createElement('div');
+                                        labelDiv.className = 'park-label';
+                                        labelDiv.textContent = parkName;
+                                        document.body.appendChild(labelDiv);
+
+                                        currentlyVisibleLabels.set(markerIndex, labelDiv); // Add to map
+
+                                        // Update label position in the animation loop
+                                        const updateLabelPosition = () => {
+                                            // Convert 3D marker position to 2D screen position
+                                            const markerPositionInWorld = new THREE.Vector3().copy(markerMesh.position).applyMatrix4(globe.matrixWorld);
+                                            const vector = markerPositionInWorld.clone();
+                                            vector.project(camera);
+
+                                            // Check if the marker is on the visible side of the globe
+                                            const cameraDirection = new THREE.Vector3().subVectors(markerPositionInWorld, camera.position).normalize();
+                                            const globeNormal = new THREE.Vector3().copy(markerMesh.position).normalize();
+
+                                            if (cameraDirection.dot(globeNormal) < -0.2) { // Only show if visible
+                                                labelDiv.style.display = 'block';
+                                                const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+                                                const y = (-vector.y * 0.5 + 0.5) * window.innerHeight;
+
+                                                labelDiv.style.left = `${x}px`;
+                                                labelDiv.style.top = `${y}px`;
+                                            } else {
+                                                labelDiv.style.display = 'none'; // Hide if not visible
+                                            }
+
+                                            // If label is still in DOM and active, request next frame
+                                            if (currentlyVisibleLabels.has(markerIndex) && labelDiv.parentNode) {
+                                                requestAnimationFrame(updateLabelPosition);
+                                            }
+                                        };
+
+                                        updateLabelPosition(); // Start updating position
+
+                                        // Animate in
+                                        gsap.to(labelDiv, { opacity: 1, duration: 0.3, onComplete: () => {
+                                            labelDiv.classList.add('show');
+                                        }});
+
+                                        // Hide after a few seconds
+                                        gsap.to(labelDiv, { opacity: 0, delay: 5, duration: 0.5, onComplete: () => { // Increased delay
+                                            labelDiv.classList.remove('show');
+                                            if (labelDiv.parentNode) {
+                                                labelDiv.parentNode.removeChild(labelDiv);
+                                            }
+                                            currentlyVisibleLabels.delete(markerIndex); // Remove from map
+                                        }});
+                                    }
+
+                                    // Keep track of which markers currently have active pop-ups
+                                    const markersWithPopups = new Set();
+                                    const popupAttemptInterval = 1000; // Check every 1 second
+
+                                    setInterval(() => {
+                                        // Remove markers whose pop-ups have faded out
+                                        markersWithPopups.forEach(index => {
+                                            if (!currentlyVisibleLabels.has(index)) {
+                                                markersWithPopups.delete(index);
+                                            }
+                                        });
+
+                                        // If we have fewer than minPopUpConnections, try to add more
+                                        if (markersWithPopups.size < minPopUpConnections) {
+                                            const availableMarkers = markers.filter(m => !markersWithPopups.has(m.userData.index));
+
+                                            if (availableMarkers.length > 0) {
+                                                const randomIndex = Math.floor(Math.random() * availableMarkers.length);
+                                                const selectedMarker = availableMarkers[randomIndex];
+                                                const parkInfo = selectedMarker.userData;
+
+                                                showParkLabel(parkInfo.name, selectedMarker, parkInfo.index);
+                                                markersWithPopups.add(parkInfo.index);
+                                            }
+                                        }
+                                    }, popupAttemptInterval);
+
+
+                                    // Add mouse controls for interactive rotation
+                                    let isDragging = false;
+                                    let previousMousePosition = { x: 0, y: 0 };
+
+                                    renderer.domElement.addEventListener('mousedown', (event) => {
+                                        isDragging = true;
+                                    });
+
+                                    renderer.domElement.addEventListener('mousemove', (event) => {
+                                        if (isDragging) {
+                                            const deltaMove = {
+                                                x: event.offsetX - previousMousePosition.x,
+                                                y: event.offsetY - previousMousePosition.y,
+                                            };
+
+                                            // Adjust rotation based on mouse movement
+                                            globe.rotation.y += deltaMove.x * 0.005;
+                                            globe.rotation.x += deltaMove.y * 0.005;
+                                        }
+
+                                        previousMousePosition = {
+                                            x: event.offsetX,
+                                            y: event.offsetY,
+                                        };
+                                    });
+
+                                    renderer.domElement.addEventListener('mouseup', () => {
+                                        isDragging = false;
+                                    });
+
+                                    renderer.domElement.addEventListener('mouseleave', () => {
+                                        isDragging = false;
+                                    });
+                                },
+                                undefined,
+                                (err) => {
+                                    console.error('Error loading texture:', err);
+                                }
+                            );
+                        });
+                    </script>
+            </div>
+        </div>
+    </section>
+
+    <section id="get-involved-section" class="section-hidden">
+        <div class="cta-overlay">
+            <h2 class="font-adobe-caslon solid-text-color">Want to Contribute?</h2>
+            <p class="font-railway">
+                Whether you're a Scout, student, or weekend hiker, your perspective matters.<br>
+                Help build the future of parks by reviewing your favorite places—or simply exploring what others have shared.
+            </p>
+            <div class="cta-buttons">
+                <a href="#scout-info" class="cta-btn">Scout Info</a>
+                <a href="#submit" class="cta-btn">Submit a Park Review</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="latest-posts-section" class="section-hidden">
+        <h2>Latest Posts</h2>
+        <p>Check back soon! Once posts are published, you’ll see them here.</p>
+    </section>
+    <section id="image-gallery-section" class="section-hidden">
+        <div class="gallery-content">
+            <h2 class="font-adobe-caslon">User Submitted Park Images</h2>
+            <p class="font-railway">Explore the beauty captured by our community. These are just a few glimpses of the parks rated by our users!</p>
+            <div class="image-grid">
+                <div class="image-item">
+                    <img src="assets/1.jpg" alt="Park Image 1" class="rounded-lg shadow-md">
+                </div>
+                <div class="image-item">
+                    <img src="assets/2.jpg" alt="Park Image 2" class="rounded-lg shadow-md">
+                </div>
+                <div class="image-item">
+                    <img src="assets/3.jpg" alt="Park Image 3" class="rounded-lg shadow-md">
+                </div>
+                <div class="image-item">
+                    <img src="assets/4.jpg" alt="Park Image 4" class="rounded-lg shadow-md">
+                </div>
+                <div class="image-item">
+                    <img src="assets/5.jpg" alt="Park Image 5" class="rounded-lg shadow-md">
+                </div>
+                <div class="image-item">
+                    <img src="assets/6.jpg" alt="Park Image 6" class="rounded-lg shadow-md">
+                </div>
+                <div class="image-item">
+                    <img src="assets/7.jpg" alt="Park Image 7" class="rounded-lg shadow-md">
+                </div>
+                <div class="image-item">
+                    <img src="assets/8.jpg" alt="Park Image 8" class="rounded-lg shadow-md">
+                </div>
+            </div>
+            <a href="parks-directory.html" class="browse-button mt-10 px-6 py-3">View More Images</a>
+        </div>
+    </section>
+    <footer id="footer">
+      <div class="footer-content">
+        <p class="signature">Created by <strong>Andrew Cameron</strong> as part of Eagle Scout Project, Troop 443</p>
+        <p class="email">📬 Contact: <a href="mailto:ryuseicameron@gmail.com">ryuseicameron@gmail.com</a></p>
+        
+        <nav class="footer-nav">
+          <a href="index.html">Home</a>
+          <a href="parks-directory.html">Explore Parks</a>
+          <a href="submit-a-review.html">Submit Review</a>
+          <a href="about-us.html">Scout Info</a>
+        </nav>
+
+        <p class="existential">Made with heart, sunlight, and a deep sense of existential urgency.</p>
+        
+        <div class="socials">
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" /></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram" /></a>
+        </div>
+      </div>
+    </footer>
+    <script>
+        // Array of video sources for main background
+        const videoSources = [
+            'assets/cliff.mp4',
+            'assets/forest.mp4',
+            'assets/park.mp4',
+            'assets/shore.mp4'
+        ];
+
+        const videoElement = document.getElementById('background-video');
+        let currentVideoIndex = -1;
+        let videoTimeout; // To store the timeout ID for clearing
+
+        // Function to play a random video with fade effect
+        function playRandomVideo() {
+            clearTimeout(videoTimeout); // Clear any existing timeout
+
+            // Start fade out
+            videoElement.style.opacity = 0;
+
+            // Wait for fade out to complete before changing source (matching CSS transition duration)
+            setTimeout(() => {
+                let newIndex;
+                do {
+                    newIndex = Math.floor(Math.random() * videoSources.length);
+                } while (newIndex === currentVideoIndex);
+
+                currentVideoIndex = newIndex;
+                videoElement.src = videoSources[currentVideoIndex];
+                videoElement.load(); // Load the new video source
+            }, 1000); // Wait for 1 second for fade out
+        }
+
+        // Event listener for when the video metadata is loaded (enough to play)
+        videoElement.addEventListener('loadeddata', () => {
+            videoElement.play().then(() => {
+                // Video started playing, now fade in
+                videoElement.style.opacity = 1;
+                // Set a timeout to switch videos after 6 seconds of playing
+                videoTimeout = setTimeout(() => {
+                    playRandomVideo();
+                }, 6000); // 6 seconds
+            }).catch(error => {
+                console.error("Error playing video:", error);
+                // Handle autoplay restrictions: if play() fails, try to switch anyway after a delay
+                videoTimeout = setTimeout(() => {
+                    playRandomVideo();
+                }, 6000); // Still attempt to switch after 6 seconds even if play failed
+            });
+        });
+
+        // Highlight active navigation link and handle mobile menu
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('#main-nav a');
+            const currentPath = window.location.pathname.split('/').pop(); // Get filename from URL
+
+            navLinks.forEach(link => {
+                const linkPath = link.getAttribute('href').split('/').pop();
+                if (linkPath === currentPath) {
+                    link.classList.add('active-nav-link');
+                }
+            });
+
+            // Mobile menu toggle logic
+            const menuButton = document.getElementById('menu-button');
+            const mainNavContainer = document.getElementById('main-nav-container');
+
+            menuButton.addEventListener('click', () => {
+                mainNavContainer.classList.toggle('hidden');
+                // For mobile, ensure it's a column layout when shown
+                if (!mainNavContainer.classList.contains('hidden')) {
+                    mainNavContainer.classList.add('flex', 'flex-col');
+                    // Position the dropdown below the header
+                    mainNavContainer.style.position = 'absolute';
+                    mainNavContainer.style.top = document.querySelector('header').offsetHeight + 'px';
+                    mainNavContainer.style.left = '0';
+                    mainNavContainer.style.width = '100%';
+                } else {
+                    mainNavContainer.classList.remove('flex', 'flex-col');
+                    // Reset position for hidden state
+                    mainNavContainer.style.position = '';
+                    mainNavContainer.style.top = '';
+                    mainNavContainer.style.left = '';
+                    mainNavContainer.style.width = '';
+                }
+            });
+
+            // Intersection Observer for section transitions
+            const parkInsightSection = document.getElementById('park-insight-section');
+            const whyThisMattersSection = document.getElementById('why-this-matters-section');
+            const howItWorksSection = document.getElementById('how-it-works-section');
+            const featuredParksSection = document.getElementById('featured-parks-section');
+            const getInvolvedSection = document.getElementById('get-involved-section'); // New section
+            const latestPostsSection = document.getElementById('latest-posts-section'); // New section
+            const imageGallerySection = document.getElementById('image-gallery-section');
+
+            const observerOptions = {
+                root: null, // viewport
+                rootMargin: '0px',
+                threshold: 0.1 // 10% of the section visible
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('section-visible');
+                        entry.target.classList.remove('section-hidden');
+                        // Special handling for stats animation
+                        if (entry.target.id === 'why-this-matters-section') {
+                            animateStats();
+                        }
+                        // Special handling for how-it-works video and text
+                        if (entry.target.id === 'how-it-works-section') {
+                            const howSteps = document.getElementById('how-steps');
+                            const howVideo = document.getElementById('bg-video');
+                            const howItWorksVideoSrc = "https://res.cloudinary.com/dgbh2aqjj/video/upload/v1751305064/Screen-Recording_online-video-cutter.com_xnwbr6.mp4";
+
+                            // Set source and load only when the section becomes visible
+                            if (howVideo.src !== howItWorksVideoSrc) {
+                                howVideo.src = howItWorksVideoSrc;
+                                howVideo.load();
+                            }
+                            howVideo.play().catch(e => console.error("Error playing how-it-works video:", e));
+                            setTimeout(() => {
+                                howSteps.classList.add('visible');
+                            }, 2000); // Show text after 2 seconds
+                        }
+                        // Special handling for featured parks cards animation
+                        if (entry.target.id === 'featured-parks-section') {
+                            const parkCards = entry.target.querySelectorAll('.park-card');
+                            parkCards.forEach((card, index) => {
+                                setTimeout(() => {
+                                    card.classList.add('fade-in-visible');
+                                }, index * 150); // Stagger animation
+                            });
+                        }
+                        observer.unobserve(entry.target); // Stop observing once visible
+                    }
+                });
+            }, observerOptions);
+
+            if (parkInsightSection) {
+                observer.observe(parkInsightSection);
+            }
+            if (whyThisMattersSection) {
+                observer.observe(whyThisMattersSection);
+            }
+            if (howItWorksSection) {
+                observer.observe(howItWorksSection);
+            }
+            if (featuredParksSection) {
+                observer.observe(featuredParksSection);
+            }
+            if (getInvolvedSection) { // Observe the new section
+                observer.observe(getInvolvedSection);
+            }
+            if (latestPostsSection) { // Observe the new section
+                observer.observe(latestPostsSection);
+            }
+            if (imageGallerySection) { // Observe the new section
+                observer.observe(imageGallerySection);
+            }
+
+            // Function to animate number counters and bar fills
+            function animateStats() {
+                const counters = document.querySelectorAll('#stats-section .number');
+                counters.forEach(counter => {
+                    const updateCount = () => {
+                        const target = +counter.getAttribute('data-target');
+                        const count = +counter.innerText;
+                        const speed = 200; // Adjust for animation speed
+
+                        const increment = Math.ceil(target / speed);
+
+                        if (count < target) {
+                            counter.innerText = count + increment;
+                            setTimeout(updateCount, 20);
+                        } else {
+                            counter.innerText = target;
+                        }
+                    };
+                    counter.innerText = '0'; // Reset for re-animation if needed
+                    updateCount();
+                });
+
+                // Set animated fill widths manually
+                document.querySelector('#stats-section .fill1').style.width = '40%'; // 12/30
+                document.querySelector('#stats-section .fill2').style.width = '80%'; // 40/50
+                document.querySelector('#stats-section .fill3').style.width = '66%'; // 10/15
+            }
+
+            // Initial call to start the video playback for the main background
+            playRandomVideo();
+        });
+
+        // ASCII Animation Script
+        const canvas = document.getElementById('asciiCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas to full screen
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const characters = 'ASTROSCOUTS*+-.=/!@#$%^&~'.split('');
+        const fontSize = 12;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(1); // initial Y positions for each column
+
+        // --- Animation Speed Control ---
+        const animationSpeed = 2; // Lower value = faster, Higher value = slower (e.g., 1 for normal, 2 for half speed, 0.5 for double speed)
+        let frameCount = 0;
+
+        function drawASCII() {
+          requestAnimationFrame(drawASCII); // Keep requesting frames
+
+          frameCount++;
+          if (frameCount < animationSpeed) { // Skip frames based on animationSpeed
+            return;
+          }
+          frameCount = 0; // Reset frame counter
+
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'; // fade old frames
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          ctx.fillStyle = '#00ffcc'; // glowing neon greenish-blue
+          ctx.font = `${fontSize}px monospace`;
+
+          for (let i = 0; i < drops.length; i++) {
+            const char = characters[Math.floor(Math.random() * characters.length)];
+            const x = i * fontSize;
+            const y = drops[i] * fontSize;
+
+            ctx.fillText(char, x, y);
+
+            // reset drop randomly or when it goes off-screen
+            if (y * fontSize > canvas.height && Math.random() > 0.975) { // Corrected condition
+              drops[i] = 0;
+            }
+
+            drops[i]++;
+          }
+        }
+
+        drawASCII();
+
+        // Optional: Handle window resize
+        window.addEventListener('resize', () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
