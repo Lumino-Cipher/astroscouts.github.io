@@ -17,6 +17,63 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const storage = firebase.storage();
 
+// Add this function, for example, right after your Firebase initialization
+// const storage = firebase.storage();
+
+function resizeImage(file, maxWidth, maxHeight, quality) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = event => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                let width = img.width;
+                let height = img.height;
+
+                // Calculate new dimensions to fit within maxWidth/maxHeight while maintaining aspect ratio
+                if (width > height) {
+                    if (width > maxWidth) {
+                        height *= maxWidth / width;
+                        width = maxWidth;
+                    }
+                } else {
+                    if (height > maxHeight) {
+                        width *= maxHeight / height;
+                        height = maxHeight;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+
+                const ctx = canvas.getContext('2d');
+                // Draw image with the new dimensions
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Convert canvas content to a Blob
+                // The third argument (quality) is only for image/jpeg and image/webp types
+                canvas.toBlob(blob => {
+                    if (blob) {
+                        // Create a new File object from the Blob
+                        // This new File object can then be uploaded to Firebase Storage
+                        const resizedFile = new File([blob], file.name, {
+                            type: file.type,
+                            lastModified: Date.now()
+                        });
+                        resolve(resizedFile);
+                    } else {
+                        reject(new Error("Canvas toBlob failed."));
+                    }
+                }, file.type, quality);
+            };
+            img.onerror = error => reject(error);
+        };
+        reader.onerror = error => reject(error);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     // Single leaf image URL
     const leafImage = "https://marketplace.canva.com/ARZ8E/MAFmAUARZ8E/1/tl/canva-natural-leaf-icon.-100%25-naturals-vector-image-MAFmAUARZ8E.png";
@@ -306,17 +363,25 @@ document.addEventListener('DOMContentLoaded', function() {
         handleFiles(files);
     }
 
-    function handleFiles(files) {
-        ([...files]).forEach(file => {
+    async function handleFiles(files) { // Make the function async
+        for (const file of [...files]) { // Use for...of for async operations
             if (uploadedFiles.length < MAX_FILES && (file.type.match('image/jpeg') || file.type.match('image/png') || file.type.match('image/webp'))) {
-                uploadedFiles.push(file);
-                previewFile(file);
+                try {
+                    // Define your desired max width/height and quality
+                    // For example, resize to a maximum of 1280 pixels on the longest side, with 80% quality
+                    const resizedFile = await resizeImage(file, 800, 800, 0.5);
+                    uploadedFiles.push(resizedFile);
+                    previewFile(resizedFile); // Preview the resized file
+                } catch (error) {
+                    console.error("Error resizing image:", error);
+                    alert('Could not process image: ' + file.name + '. Please try another image.');
+                }
             } else if (uploadedFiles.length >= MAX_FILES) {
                 alert(`You can only upload a maximum of ${MAX_FILES} photos.`);
             } else {
                 alert('Only .jpg, .png, and .webp image files are allowed.');
             }
-        });
+        }
     }
 
     function previewFile(file) {

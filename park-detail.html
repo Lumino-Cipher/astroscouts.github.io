@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Park Details - AstroScouts</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://use.typekit.net/gkm8mik.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Add any specific styles for your park detail page here */
+        .container {
+            max-width: 960px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #1a2e44;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px auto; /* Reduce top/bottom margin */
+                padding: 15px; /* Slightly less padding */
+            }
+            .form-section {
+                padding: 1rem; /* Reduce section padding */
+                margin-bottom: 1.5rem; /* Reduce spacing between sections */
+            }
+            .sub-rating-group {
+                padding: 10px; /* Reduce sub-rating group padding */
+                margin-bottom: 0.75rem; /* Reduce spacing between sub-rating groups */
+            }
+            /* Adjust image sizes for tablets */
+            .park-photos-detail img {
+                width: 240px;
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px auto; /* Even less margin */
+                padding: 10px; /* Less padding for tight screens */
+            }
+            .form-section {
+                padding: 0.75rem;
+                margin-bottom: 1rem;
+            }
+            .sub-rating-group {
+                padding: 8px;
+                margin-bottom: 0.5rem;
+            }
+            /* Adjust image sizes for mobile phones */
+            .park-photos-detail img {
+                width: 180px;
+                height: 130px;
+            }
+        }
+        
+        /* Increased font size for park name and address */
+        h1#park-detail-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 3em; /* Larger size */
+            margin-bottom: 10px;
+            text-align: center;
+            color: #e0c29a; /* Ensure consistent color */
+        }
+        .park-info p#park-detail-address { /* More specific selector for address */
+            margin-bottom: 20px; /* Added more space below */
+            font-size: 1.5em; /* Larger size */
+            text-align: center;
+            color: #e0c29a; /* Ensure consistent color */
+        }
+
+        /* Updated styles for image carousel */
+        .park-photos-slider-container {
+            position: relative; /* For positioning absolute buttons */
+            margin-top: 20px;
+            /* Removed fixed horizontal padding here. Content padding handled by .park-photos-detail below. */
+        }
+        .park-photos-detail {
+            display: flex; /* Make images align in a row */
+            overflow-x: scroll; /* Enable horizontal scrolling */
+            scroll-behavior: smooth; /* Smooth scrolling effect */
+            -webkit-overflow-scrolling: touch; /* Enhance scroll performance on touch devices */
+            white-space: nowrap; /* Prevent images from wrapping to the next line */
+            gap: 10px; /* Space between images */
+            padding-bottom: 10px; /* To prevent content being hidden by scrollbar */
+            padding-left: 10px; /* Added horizontal padding for content */
+            padding-right: 10px; /* Added horizontal padding for content */
+            align-items: center; /* Vertically align items */
+
+            /* Hide scrollbar for cleaner look */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
+        }
+
+        .park-photos-detail::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        .park-photos-detail img {
+            flex-shrink: 0; /* Prevent images from shrinking */
+            width: 280px; /* Fixed width for each image in the slider */
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* Slider button styles */
+        .slider-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1.5em;
+            border-radius: 9999px; /* Tailwind's rounded-full */
+            z-index: 10;
+            transition: background-color 0.3s ease;
+            display: flex; /* For centering content (arrow) */
+            align-items: center;
+            justify-content: center;
+            width: 40px; /* Fixed width for button */
+            height: 40px; /* Fixed height for button */
+        }
+
+        .slider-button:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .slider-button.left-0 {
+            left: 8px; /* Small offset from the left edge */
+        }
+
+        .slider-button.right-0 {
+            right: 8px; /* Small offset from the right edge */
+        }
+
+        /* Rating Item Styles (for main categories) */
+        .rating-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #0f1d2d;
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .rating-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #e2ffe0;
+            margin-bottom: 4px;
+        }
+        .rating-item strong {
+            color: #e0c29a; /* Set rating label color */
+        }
+        .star-rating-svg {
+            height: 18px;
+        }
+        /* Specific width for 10-star SVG, each star unit is 24px wide */
+        .star-rating-svg.ten-stars {
+            width: 240px !important; /* 10 stars * 24px/star */
+            flex-shrink: 0; /* Ensure it doesn't shrink */
+        }
+
+        /* New styles for structured detailed ratings */
+        .form-section {
+            margin-bottom: 2rem; /* Spacing between main categories */
+            background-color: #111e2d; /* Slightly different background for sections */
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+        .form-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2em; /* Larger heading for main categories */
+            color: #e0c29a;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            h1#park-detail-name {
+                font-size: 2.5em; /* Slightly smaller */
+            }
+            .park-info p#park-detail-address {
+                font-size: 1.3em;
+            }
+            .form-section h3 {
+                font-size: 1.8em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1#park-detail-name {
+                font-size: 1.8em; /* Significantly smaller for phones */
+            }
+            .park-info p#park-detail-address {
+                font-size: 1.1em;
+            }
+            .form-section h3 {
+                font-size: 1.4em;
+            }
+            .rating-value {
+                font-size: 1.2em; /* Adjust main rating values */
+            }
+            .sub-rating-group label {
+                font-size: 1em; /* Adjust sub-rating labels */
+            }
+            .score-visual .spectrum-value {
+                font-size: 1em; /* Adjust spectrum values */
+            }
+        }
+
+        /* Sub-rating group styles */
+        .sub-rating-group {
+            background-color: #0f1d2d;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 1rem; /* Space between sub-rating groups */
+        }
+        .sub-rating-group:last-child {
+            margin-bottom: 0; /* No margin after the last one in a section */
+        }
+        .sub-rating-group label {
+            color: #e0c29a;
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .sub-rating-group .score-visual {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+        .sub-rating-group .score-visual .spectrum-value {
+            font-weight: bold;
+            color: #b9ffca;
+            font-size: 1.2em;
+            min-width: 60px; /* Ensure consistent width for numerical value */
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        /* Example visuals for ratings */
+        .example-visuals {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        .example-visuals .image-reference-intro {
+            font-size: 0.9em;
+            color: #a0a0a0;
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+        .example-visuals .image-reference-intro strong {
+            color: #e2ffe0;
+        }
+        .image-reference-gallery {
+            display: flex;
+            justify-content: space-around; /* Distribute images evenly */
+            align-items: flex-start; /* Align images to the top */
+            gap: 15px; /* Space between image containers */
+            flex-wrap: wrap; /* Allow images to wrap on smaller screens */
+        }
+        .image-container {
+            flex: 1 1 120px; /* Allow items to grow/shrink, with a base width */
+            max-width: 150px; /* Maximum width for each image container */
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            cursor: pointer; /* Indicate interactivity if user were setting ratings */
+            transition: transform 0.2s ease;
+        }
+        .image-container:hover {
+            transform: translateY(-3px);
+        }
+        .image-container img {
+            width: 100%;
+            height: 100px; /* Fixed height for consistency */
+            object-fit: cover;
+            display: block;
+        }
+        .image-overlay-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 0.8em;
+            padding: 5px 0;
+            text-align: center;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+
+        .image-spinner {
+            /* Styles for the spinner overlay */
+            background-color: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+            display: flex; /* Centering content */
+            align-items: center;
+            justify-content: center;
+            position: absolute; /* Cover the parent .park-photos */
+            inset: 0; /* top, right, bottom, left to 0 */
+            z-index: 10; /* Above images */
+            transition: opacity 0.3s ease-in-out; /* Fade out spinner */
+            border-radius: 8px; /* Match parent border-radius */
+        }
+
+        .image-spinner.hidden {
+            opacity: 0;
+            pointer-events: none; /* Allow clicks through when hidden */
+        }
+
+        .image-spinner > div {
+            /* Styles for the spinning circle */
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #b9ffca; /* Greenish glow */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Custom Scrollbar Styles */
+        body {
+            background-color: #000; /* Ensure black background for video fade transition */
+            scrollbar-color: #1a7f1a #0d250d; /* Firefox scrollbar color */
+            background-color: #000;
+            color: #e0c29a;
+            font-family: 'Raleway', sans-serif;
+        }
+        /* Webkit (Chrome, Safari, Edge) scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d250d; /* Dark green track */
+            border-radius: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1a7f1a; /* Green thumb */
+            border-radius: 6px;
+            border: 2px solid #0d250d; /* Border around thumb */
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2ee62e; /* Lighter green on hover */
+        }
+
+        /* Solid text color - slightly lighter yellow */
+        .solid-text-color {
+            color: #e0c29a; /* Lighter yellow */
+        }
+        /* Custom font for header texts and main heading */
+        .font-adobe-caslon {
+            font-family: 'adobe-caslon-pro', serif;
+        }
+        /* Custom font for Playfair Display */
+        .font-playfair-display {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom font for Railway */
+        .font-railway {
+            font-family: 'Raleway', sans-serif;
+        }
+
+        /* Active navigation link style */
+        .active-nav-link {
+            color: #e0c29a !important; /* Lighter yellow for active link */
+        }
+
+        /* ASCII Canvas Styles */
+        #asciiCanvas {
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: -1; /* behind everything */
+          width: 100vw;
+          height: 100vh;
+          background: black;
+          display: block;
+        }
+
+        /* Footer Styles */
+        #footer {
+          position: relative;
+          color: #e4f5e9;
+          padding: 40px 20px;
+          z-index: 2; /* ABOVE canvas */
+          font-family: 'Segoe UI', sans-serif;
+          opacity: 0.7;
+        }
+
+        .footer-content {
+          max-width: 1000px;
+          margin: auto;
+          text-align: center;
+        }
+
+        .signature, .email, .existential {
+          margin-bottom: 12px;
+          font-size: 0.95em;
+        }
+
+        .email a {
+          color: #e0ffe0;
+          text-decoration: underline dotted;
+        }
+
+        .footer-nav {
+          margin: 20px 0;
+        }
+
+        .footer-nav a {
+          margin: 0 12px;
+          color: #ffffffcc;
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.3s;
+        }
+
+        .footer-nav a:hover {
+          color: #b9ffca;
+        }
+
+        .socials {
+          margin-top: 16px;
+        }
+
+        .socials img {
+          width: 22px;
+          height: 22px;
+          margin: 0 8px;
+          opacity: 0.8;
+          transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .socials img:hover {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-gray-800">
+    <canvas id="asciiCanvas"></canvas>
+    <header class="relative bg-cover bg-center flex items-center justify-between px-4 py-0.5 sm:py-1 rounded-b-lg shadow-lg sticky top-0 z-50" style="background-image: url('assets/header-image.jpg');">
+        <div class="flex items-center space-x-2">
+            <img src="assets/icon.png" alt="AstroScouts Icon" class="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-full flex-shrink-0">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-adobe-caslon solid-text-color whitespace-nowrap flex-shrink-0">AstroScouts</h1>
+                <p class="text-sm sm:text-base font-adobe-caslon solid-text-color leading-tight">Where nature meets accessibility</p>
+            </div>
+        </div>
+
+        <button id="menu-button" class="sm:hidden text-white focus:outline-none p-2 rounded-md hover:bg-gray-700 transition duration-300">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+
+        <nav id="main-nav-container" class="hidden absolute top-full left-0 w-full bg-black bg-opacity-80 sm:relative sm:top-auto sm:left-auto sm:w-auto sm:bg-transparent sm:bg-opacity-100 p-4 sm:p-0 z-20 sm:block">
+            <ul id="main-nav" class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6 items-center sm:items-stretch">
+                <li><a href="index.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Home</a></li>
+                <li><a href="parks-directory.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Parks Directory</a></li>
+                <li><a href="submit-a-review.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Submit a Review</a></li>
+                <li><a href="blog.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Blog</a></li>
+                <li><a href="about-us.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h1 id="park-detail-name">Loading Park...</h1>
+        <div class="park-info">
+            <p id="park-detail-address"></p>
+        </div>
+
+        <!-- Image Carousel Section -->
+        <div class="park-photos-slider-container">
+            <div id="park-detail-photos" class="park-photos-detail">
+                <!-- Images will be injected here by JavaScript -->
+                <div class="image-spinner" id="detail-image-spinner"><div></div></div>
+            </div>
+            <button id="prev-photo" class="slider-button left-0 hidden">&#8249;</button> <!-- Left arrow -->
+            <button id="next-photo" class="slider-button right-0 hidden">&#8250;</button> <!-- Right arrow -->
+        </div>
+        <!-- End Image Carousel Section -->
+
+        <!-- Main Ratings Section -->
+        <div id="park-detail-main-ratings" class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+            <!-- Accessibility, Cleanliness, Sustainability ratings will go here -->
+        </div>
+
+        <!-- Subcategory Ratings Section -->
+        <div id="park-detail-sub-ratings" class="mt-8">
+            <!-- Categories and their sub-ratings will be injected here by JavaScript -->
+        </div>
+
+        <p class="text-center mt-8"><a href="parks-directory.html" class="text-blue-400 hover:text-blue-200">Back to Parks Directory</a></p>
+    </div>
+
+    <script type="module">
+        // Firebase Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Firebase variables
+        let app;
+        let db;
+        let auth;
+        let userId;
+
+        // Initialize Firebase
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyDWRCL_1gTnsZBcpX5l_5BF2-QMMY9nIYM",
+            authDomain: "parkratingform.firebaseapp.com",
+            projectId: "parkratingform",
+            storageBucket: "parkratingform.firebasestorage.app",
+            messagingSenderId: "784897205276",
+            appId: "1:784897205276:web:6f5330566e31fcd605abd9",
+            measurementId: "G-BZ33WZQ78C"
+        };
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // Firebase Initialization and Authentication
+        async function initializeFirebaseAndAuth() {
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                if (typeof __initial_auth_token !== 'undefined') {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                userId = auth.currentUser?.uid || crypto.randomUUID();
+                console.log("Firebase initialized. User ID:", userId);
+            } catch (error) {
+                console.error("Error initializing Firebase or signing in:", error);
+            }
+        }
+
+        // Helper function to generate star SVG HTML for fractional ratings (configurable scale)
+        function getStarRatingHtml(rating, maxStars = 5) {
+            const normalizedRating = Math.max(0, Math.min(maxStars, parseFloat(rating) || 0));
+            const starPath = "M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z";
+            const singleStarUnitWidth = 24;
+            const totalSvgWidth = maxStars * singleStarUnitWidth;
+            const clipWidth = (normalizedRating / maxStars) * totalSvgWidth;
+            const uniqueClipId = `starClip-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
+            // Add a class for 10-star display to adjust width via CSS
+            const svgClass = maxStars === 10 ? 'star-rating-svg ten-stars' : 'star-rating-svg';
+
+            return `
+                <svg class="${svgClass}" viewBox="0 0 ${totalSvgWidth} ${singleStarUnitWidth}" style="height:${singleStarUnitWidth}px;">
+                    <defs>
+                        <clipPath id="${uniqueClipId}">
+                            <rect x="0" y="0" width="${clipWidth}" height="${singleStarUnitWidth}" />
+                        </clipPath>
+                    </defs>
+                    <g fill="#4a5d6e" stroke="#0f1d2d" stroke-width="0.5px">
+                        ${Array.from({ length: maxStars }).map((_, i) =>
+                            `<path transform="translate(${i * singleStarUnitWidth}, 0)" d="${starPath}"/>`
+                        ).join('')}
+                    </g>
+                    <g fill="#b9ffca" stroke="#0f1d2d" stroke-width="0.5px" clip-path="url(#${uniqueClipId})">
+                        ${Array.from({ length: maxStars }).map((_, i) =>
+                            `<path transform="translate(${i * singleStarUnitWidth}, 0)" d="${starPath}"/>`
+                        ).join('')}
+                    </g>
+                </svg>
+            `;
+        }
+
+        // Median calculation function
+        function calculateMedian(arr) {
+            if (!arr || arr.length === 0) return NaN;
+            const numbers = arr.filter(n => typeof n === 'number' && !isNaN(n)).sort((a, b) => a - b);
+            if (numbers.length === 0) return NaN;
+            const mid = Math.floor(numbers.length / 2);
+            return numbers.length % 2 !== 0 ? numbers[mid] : (numbers[mid - 1] + numbers[mid]) / 2;
+        }
+
+        // Function to shuffle an array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
+            return array;
+        }
+
+        // Image loading counter for the detail page
+        let detailImageLoadedCount = 0;
+        let detailTotalImagesExpected = 0;
+        const detailImageSpinner = document.getElementById('detail-image-spinner');
+
+        window.handleDetailImageLoad = function(imgElement) {
+            imgElement.style.opacity = '1';
+            detailImageLoadedCount++;
+            if (detailImageLoadedCount >= detailTotalImagesExpected) {
+                detailImageSpinner.classList.add('hidden');
+            }
+        };
+
+        // --- Image mapping for subcategory ratings ---
+        const subCategoryRatingImages = {
+            trailSmoothness: [
+                { value: 1, url: "https://i.postimg.cc/T2Jr6JY0/OIG1.jpg" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=1PK8HRLv5TTj3pEtsrlMXvy1CRb-beW0t" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1TDmNJIVzk5blXN1CzZxA8iBj5dTDjaYa" }
+            ],
+            wheelchairAccessibility: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1YiRHfOH8zI93Y9smfa8pCaqyBuY1stAl" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=1X1AhKXUR_WiG8GwZMfEYttIg_aTeY__A" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1Qhuu8cZy8gj6BrgCzHSCZlVTvyZQKgK4" }
+            ],
+            signageClarity: [
+                { value: 1, url: "https://i.postimg.cc/cLBRs7m0/unnamed1.png" },
+                { value: 5, url: "https://i.postimg.cc/WFcdsf3B/unnamed-399.png" },
+                { value: 10, url: "https://i.postimg.cc/Z0cWhHhQ/unnamed-37.png" }
+            ],
+            parkingAccessibility: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1C15aMTajP6tChQBdIpUClst5xHwrMhun" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=1gvV0f6q5QmhtEaT52ZMleyczM4e9_mO4" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1glbN2vodgaYESAGwi076yOM-aqaFKN04" }
+            ],
+            restroomAvailability: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1h4Fii0UlhwBud5wsgeaS_WV1y2PStjoc" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=1RwbK6R6aXj-TXyFrTs9S1J5shlADjufm" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1JV3njDxBggQ9GiGTEct9di7If03x3aO4" }
+            ],
+            trailCleanliness: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1ry7d_fLA3f9d8DrPNFXuvuuK1I4Xe0LW" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=1gLcHj44KFYdPHKRl8QxurCQIZAJmjjvy" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1NeopBMV_ObM0Q3dsiT-iEhwpeibDGb49" }
+            ],
+            facilityCleanliness: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1U425DTiiQPBRiMlgM8yn4US1CzlEywSQ" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=13LstedCo5XyNZrYrfjPjJQppjNvOP6Lt" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1MJIsPEhlrSXAI90HW-lzqhrF9fCfImyN" }
+            ],
+            graffitiPresence: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1PFlVBoyXPS962pAqqv2ra-VJZdqxGhui" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=1r7JLmuWyedktd3LeijpZaIhnLVkQuak9" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1L1k_lFIJRgbLiWZTvhyKFtb0LdR9cqTn" }
+            ],
+            litterControl: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=112RoRb-ZW40Sujxx-ExhtwvMna7H378n" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=168EF5gz_QLfeCKIzATFgPsicT8h9nb97" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1PRiw7c327hUiigvVs1iDultPB7TO2K_o" }
+            ],
+            nativePlant: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1RYGjd9_bLxNHb_qzq2xuSamVLUi4JbA-" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=1bo-NuoXGsf6iXlRWilCneGVODbFeKnjn" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1WZ_Qvgy8b5VRQFt-N_eQgXQgm4klKnms" }
+            ],
+            waterCleanliness: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1-AHGW6vC5_JXuqPQDdiu0oToJmSz2mQV" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=1HiLhZN2swbHa-p3AYfqcZBa-p3T61BYw" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1QUYvMzh0GyruV-vYmNeQmr9BgzFcpNls" }
+            ],
+            compostingOptions: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1Gk68PBiSbWA3Hxs1Vn-Iil78XU-JQgJ_" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=1KWfutQTTp9hOCGiM40ds-1qKOSgeb9Ug" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1ZpP43AB84X93JfIMdp3rPo75gzspJr0n" }
+            ],
+            educationSignage: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1zhbzs5PD092s2lD8pcWw-zqppeH4qTO9" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=1OhOhtD9NyY74CPn-GKGTKCsHRM5mtgrT" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1AjmeDIVN-KZqMNb76RPfATGPORjMa03x" }
+            ],
+            trailMarkings: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1uDdRNaqCSn_53Sviw70oMqO-TzuG_gJM" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=1OWqCq0u2BUgvlM2ypdaKkVINYjidAaS7" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1Yn9ub_Qkc1XMM5SjHkYNCeDS-U33dGqz" }
+            ],
+            emergencyInfo: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1QcgfOa48tfi9daZT2qZSq0gJ9g2pManj" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=1PZl1i4HzDz5e_hVT1LpTb5zU7AnggMyn" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1od3BUkWksHpx0SRPXqZlMc0agKKGD-RV" }
+            ],
+            cellSignal: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1s74i2nhn1v6vR8To-ujXFONEedQy5Pt4" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=1evhVCFdsOP01k_DJDJQdGHEBo6oDMSqw" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1Lr3JeFY-HwWt3lNdPryCxuDj6csqtl5S" }
+            ],
+            findingKeyAreas: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1xBrjSxbs5sjS-1ZM6pBjxrJdn4AyZpWN" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=18cLMeSBzfczdN464zFs4qnsueFYmua4r" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1s8K6J0l-WiT2k4HArWzYu75_zTXEcijD" }
+            ],
+            natureAppeal: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1at9CVBcovEakNwESRSZK_N2Wr6kb9mTG" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=138dM28sGMb_Q73w80fZ0DT4gpDyR87oQ" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1hpnG6ap0Di5UKpG4CuiSM-sMb00Hb7XS" }
+            ],
+            seasonalUniqueness: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1CmQkzekaZQB4Zdp1qQ_jHgUvopDWTVqx" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=1FALtOFYc3B0ALeeo4YOkjKuvd_95d34u" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=1wy8aQDhxh7zypBI3d3oWLrKUGZg9273Z" }
+            ],
+            wildlifeSpotted: [
+                { value: 1, url: "https://drive.google.com/thumbnail?id=1-PQ4kY6Ap6Eoy9S4OuwzkBPtCZf3OmaA" },
+                { value: 5, url: "https://drive.google.com/thumbnail?id=1yNm_pvwj6t4cWzzPEN7UNdDCWpPYERun" },
+                { value: 10, url: "https://drive.google.com/thumbnail?id=19t-K1pxM5bTGVw5n_7I4-_JPOozNd9CN" }
+            ],
+            nightSkyClarity: [
+                { value: 1, url: "https://i.postimg.cc/bJwdTxyY/sky1.png" },
+                { value: 5, url: "https://i.postimg.cc/PJLJGdvB/sky2.png" },
+                { value: 10, url: "https://i.postimg.cc/tRf73nLy/sky3.png" }
+            ]
+        };
+
+        const displayCategories = [
+            {
+                title: '🌳 1. Park Accessibility',
+                subRatings: [
+                    { key: 'trailSmoothnessRatings', label: 'Trail Smoothness & Safety' },
+                    { key: 'wheelchairAccessibilityRatings', label: 'Wheelchair/Stroller Accessibility' },
+                    { key: 'signageClarityRatings', label: 'Signage Clarity / Multilingual Signs' },
+                    { key: 'parkingAccessibilityRatings', label: 'Parking Accessibility' },
+                    { key: 'restroomAvailabilityRatings', label: 'Restroom Availability & Condition' }
+                ]
+            },
+            {
+                title: '🧼 2. Cleanliness / Maintenance',
+                subRatings: [
+                    { key: 'trailCleanlinessRatings', label: 'Trail Cleanliness (trash, debris, etc.)' },
+                    { key: 'facilityCleanlinessRatings', label: 'Facility Cleanliness (bathrooms, benches, shelters)' },
+                    { key: 'graffitiPresenceRatings', label: 'Graffiti / Vandalism Presence' },
+                    { key: 'litterControlRatings', label: 'Litter Control / Trash Bin Availability' }
+                ]
+            },
+            {
+                title: '🌱 3. Sustainability & Environmental Health',
+                subRatings: [
+                    { key: 'nativePlantRatings', label: 'Native Plant Preservation' },
+                    { key: 'waterCleanlinessRatings', label: 'Water Source Cleanliness (streams, ponds)' },
+                    { key: 'compostingOptionsRatings', label: 'Composting / Recycling Options' },
+                    { key: 'educationSignageRatings', label: 'Education Signage (ecology info, endangered species)' }
+                ]
+            },
+            {
+                title: '🧭 4. Navigation & Layout',
+                subRatings: [
+                    { key: 'trailMarkingsRatings', label: 'Trail Markings & Maps' },
+                    { key: 'emergencyInfoRatings', label: 'Emergency Contact Info Signage' },
+                    { key: 'cellSignalRatings', label: 'Cell Signal / Safety Info Access' },
+                    { key: 'findingKeyAreasRatings', label: 'Ease of Finding Key Areas (picnic, restrooms, parking, etc.)' }
+                ]
+            },
+            {
+                title: '🏞️ 5. Nature & Wildlife',
+                subRatings: [
+                    { key: 'natureAppealRatings', label: 'Nature Appeal' },
+                    { key: 'seasonalUniquenessRatings', label: 'Seasonal Uniqueness' },
+                    { key: 'wildlifeSpottedRatings', label: 'Wildlife Spotted' }
+                ]
+            },
+            {
+                title: '⭐ 6. Night Sky',
+                subRatings: [
+                    { key: 'nightSkyClarityRatings', label: 'Night Sky Clarity' }
+                ]
+            }
+        ];
+
+
+        async function loadParkDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const parkName = decodeURIComponent(urlParams.get('name') || '');
+            const parkAddress = decodeURIComponent(urlParams.get('address') || '');
+
+            if (!parkName || !parkAddress) {
+                document.getElementById('park-detail-name').textContent = 'Park Not Found';
+                document.getElementById('park-detail-address').textContent = 'Invalid park parameters.';
+                detailImageSpinner.classList.add('hidden'); // Hide spinner if no valid park
+                return;
+            }
+
+            document.getElementById('park-detail-name').textContent = parkName;
+            document.getElementById('park-detail-address').textContent = parkAddress;
+
+            try {
+                if (!db || !auth.currentUser) {
+                    await initializeFirebaseAndAuth();
+                    if (!db || !auth.currentUser) {
+                        console.error("Firebase services are not ready.");
+                        return;
+                    }
+                }
+
+                const parkReviewsCollectionRef = collection(db, `/parkReviews`);
+                // Query for reviews matching both parkName and parkAddress for more specific lookup
+                const q = query(parkReviewsCollectionRef,
+                    where("parkName", "==", parkName),
+                    where("parkAddress", "==", parkAddress)
+                );
+                const querySnapshot = await getDocs(q);
+
+                const parkReviews = [];
+                querySnapshot.forEach((doc) => {
+                    parkReviews.push(doc.data());
+                });
+
+                if (parkReviews.length === 0) {
+                    document.getElementById('park-detail-name').textContent = 'Park Not Found';
+                    document.getElementById('park-detail-address').textContent = 'No reviews found for this park.';
+                    detailImageSpinner.classList.add('hidden');
+                    return;
+                }
+
+                // Aggregate details from all reviews for this specific park
+                const aggregatedDetails = {
+                    allPhotos: [],
+                    accessibilityRatings: [],
+                    cleanlinessRatings: [],
+                    sustainabilityRatings: [],
+                    cellSignalRatings: [],
+                    compostingOptionsRatings: [],
+                    educationSignageRatings: [],
+                    emergencyInfoRatings: [],
+                    facilityCleanlinessRatings: [],
+                    findingKeyAreasRatings: [],
+                    graffitiPresenceRatings: [],
+                    litterControlRatings: [],
+                    nativePlantRatings: [],
+                    natureAppealRatings: [],
+                    nightSkyClarityRatings: [],
+                    parkingAccessibilityRatings: [],
+                    restroomAvailabilityRatings: [],
+                    seasonalUniquenessRatings: [],
+                    signageClarityRatings: [],
+                    trailCleanlinessRatings: [],
+                    trailMarkingsRatings: [],
+                    trailSmoothnessRatings: [],
+                    waterCleanlinessRatings: [],
+                    wheelchairAccessibilityRatings: [],
+                    wildlifeSpottedRatings: []
+                };
+
+                parkReviews.forEach(review => {
+                    if (Array.isArray(review.photos)) {
+                        aggregatedDetails.allPhotos = aggregatedDetails.allPhotos.concat(review.photos.filter(p => typeof p === 'string' && p.trim() !== ''));
+                    }
+                    // Populate all rating arrays
+                    if (typeof review.accessibilityRating === 'number' && !isNaN(review.accessibilityRating)) aggregatedDetails.accessibilityRatings.push(review.accessibilityRating);
+                    if (typeof review.cleanlinessRating === 'number' && !isNaN(review.cleanlinessRating)) aggregatedDetails.cleanlinessRatings.push(review.cleanlinessRating);
+                    if (typeof review.sustainabilityRating === 'number' && !isNaN(review.sustainabilityRating)) aggregatedDetails.sustainabilityRatings.push(review.sustainabilityRating);
+                    if (typeof review.cellSignalRating === 'number' && !isNaN(review.cellSignalRating)) aggregatedDetails.cellSignalRatings.push(review.cellSignalRating);
+                    if (typeof review.compostingOptionsRating === 'number' && !isNaN(review.compostingOptionsRating)) aggregatedDetails.compostingOptionsRatings.push(review.compostingOptionsRating);
+                    if (typeof review.educationSignageRating === 'number' && !isNaN(review.educationSignageRating)) aggregatedDetails.educationSignageRatings.push(review.educationSignageRating);
+                    if (typeof review.emergencyInfoRating === 'number' && !isNaN(review.emergencyInfoRating)) aggregatedDetails.emergencyInfoRatings.push(review.emergencyInfoRating);
+                    if (typeof review.facilityCleanlinessRating === 'number' && !isNaN(review.facilityCleanlinessRating)) aggregatedDetails.facilityCleanlinessRatings.push(review.facilityCleanlinessRating);
+                    if (typeof review.findingKeyAreasRating === 'number' && !isNaN(review.findingKeyAreasRating)) aggregatedDetails.findingKeyAreasRatings.push(review.findingKeyAreasRating);
+                    if (typeof review.graffitiPresenceRating === 'number' && !isNaN(review.graffitiPresenceRating)) aggregatedDetails.graffitiPresenceRatings.push(review.graffitiPresenceRating);
+                    if (typeof review.litterControlRating === 'number' && !isNaN(review.litterControlRating)) aggregatedDetails.litterControlRatings.push(review.litterControlRating);
+                    if (typeof review.nativePlantRating === 'number' && !isNaN(review.nativePlantRating)) aggregatedDetails.nativePlantRatings.push(review.nativePlantRating);
+                    if (typeof review.natureAppealRating === 'number' && !isNaN(review.natureAppealRating)) aggregatedDetails.natureAppealRatings.push(review.natureAppealRating);
+                    if (typeof review.nightSkyClarityRating === 'number' && !isNaN(review.nightSkyClarityRating)) aggregatedDetails.nightSkyClarityRatings.push(review.nightSkyClarityRating);
+                    if (typeof review.parkingAccessibilityRating === 'number' && !isNaN(review.parkingAccessibilityRating)) aggregatedDetails.parkingAccessibilityRatings.push(review.parkingAccessibilityRating);
+                    if (typeof review.restroomAvailabilityRating === 'number' && !isNaN(review.restroomAvailabilityRating)) aggregatedDetails.restroomAvailabilityRatings.push(review.restroomAvailabilityRating);
+                    if (typeof review.seasonalUniquenessRating === 'number' && !isNaN(review.seasonalUniquenessRating)) aggregatedDetails.seasonalUniquenessRatings.push(review.seasonalUniquenessRating);
+                    if (typeof review.signageClarityRating === 'number' && !isNaN(review.signageClarityRating)) aggregatedDetails.signageClarityRatings.push(review.signageClarityRating);
+                    if (typeof review.trailCleanlinessRating === 'number' && !isNaN(review.trailCleanlinessRating)) aggregatedDetails.trailCleanlinessRatings.push(review.trailCleanlinessRating);
+                    if (typeof review.trailMarkingsRating === 'number' && !isNaN(review.trailMarkingsRating)) aggregatedDetails.trailMarkingsRatings.push(review.trailMarkingsRating);
+                    if (typeof review.trailSmoothnessRating === 'number' && !isNaN(review.trailSmoothnessRating)) aggregatedDetails.trailSmoothnessRatings.push(review.trailSmoothnessRating);
+                    if (typeof review.waterCleanlinessRating === 'number' && !isNaN(review.waterCleanlinessRating)) aggregatedDetails.waterCleanlinessRatings.push(review.waterCleanlinessRating);
+                    if (typeof review.wheelchairAccessibilityRating === 'number' && !isNaN(review.wheelchairAccessibilityRating)) aggregatedDetails.wheelchairAccessibilityRatings.push(review.wheelchairAccessibilityRating);
+                    if (typeof review.wildlifeSpottedRating === 'number' && !isNaN(review.wildlifeSpottedRating)) aggregatedDetails.wildlifeSpottedRatings.push(review.wildlifeSpottedRating);
+                });
+
+                // Display Photos
+                const parkPhotosDetail = document.getElementById('park-detail-photos');
+                const prevButton = document.getElementById('prev-photo');
+                const nextButton = document.getElementById('next-photo');
+
+                parkPhotosDetail.innerHTML = ''; // Clear previous content
+                const uniquePhotos = [...new Set(aggregatedDetails.allPhotos)]; // Get unique photo URLs
+                const photosToDisplay = shuffleArray(uniquePhotos); // Display all unique photos, shuffled
+
+                if (photosToDisplay.length > 0) {
+                    detailTotalImagesExpected = photosToDisplay.length;
+                    photosToDisplay.forEach((photoUrl, index) => {
+                        const img = document.createElement('img');
+                        img.src = photoUrl;
+                        img.alt = `Park Photo ${index + 1}`;
+                        img.style.opacity = '0'; // Start invisible
+                        img.onload = () => window.handleDetailImageLoad(img);
+                        img.onerror = () => {
+                            img.src = 'https://placehold.co/280x200/34495E/FFFFFF?text=Error'; // Update placeholder size
+                            window.handleDetailImageLoad(img);
+                        };
+                        parkPhotosDetail.appendChild(img);
+                    });
+                } else {
+                    detailTotalImagesExpected = 1;
+                    const noImage = document.createElement('img');
+                    noImage.src = 'https://placehold.co/280x200/34495E/FFFFFF?text=No+Images+Yet'; // Update placeholder size
+                    noImage.alt = 'No Images Available';
+                    noImage.style.opacity = '0'; // Start invisible
+                    noImage.onload = () => window.handleDetailImageLoad(noImage);
+                    parkPhotosDetail.appendChild(noImage);
+                }
+                // Re-add spinner just in case it was removed early or for a new load
+                parkPhotosDetail.appendChild(detailImageSpinner);
+
+                // Initialize carousel buttons
+                if (photosToDisplay.length <= 1) {
+                    prevButton.classList.add('hidden');
+                    nextButton.classList.add('hidden');
+                } else {
+                    prevButton.classList.remove('hidden');
+                    nextButton.classList.remove('hidden');
+                }
+
+                prevButton.addEventListener('click', () => {
+                    // Scroll by the width of one image plus the gap (280px + 10px)
+                    const scrollAmount = 280 + 10;
+                    parkPhotosDetail.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+                });
+
+                nextButton.addEventListener('click', () => {
+                    const scrollAmount = 280 + 10;
+                    parkPhotosDetail.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+                });
+
+
+                // Define main ratings keys (card format)
+                const mainRatingsKeys = ['accessibilityRatings', 'cleanlinessRatings', 'sustainabilityRatings'];
+
+                const parkMainRatingsDetail = document.getElementById('park-detail-main-ratings');
+                parkMainRatingsDetail.innerHTML = ''; // Clear previous content
+                const parkSubRatingsContainer = document.getElementById('park-detail-sub-ratings');
+                parkSubRatingsContainer.innerHTML = ''; // Clear previous content
+
+                // Render main ratings first
+                mainRatingsKeys.forEach(key => {
+                    // Convert camelCase to readable label and capitalize each word
+                    let label = key.replace('Ratings', '').replace(/([A-Z])/g, ' $1').trim();
+                    label = label.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+
+                    const values = aggregatedDetails[key];
+                    const medianRating = calculateMedian(values);
+                    const ratingValue = typeof medianRating === 'number' ? medianRating.toFixed(1) : 'N/A';
+
+                    const ratingHtml = `
+                        <div class="rating-item">
+                            <span class="rating-value">${ratingValue}</span>
+                            ${typeof medianRating === 'number' ? getStarRatingHtml(medianRating, 5) : getStarRatingHtml(0, 5)}
+                            <strong>${label}</strong>
+                        </div>
+                    `;
+                    parkMainRatingsDetail.innerHTML += ratingHtml;
+                });
+
+                // Render categorized sub-ratings
+                displayCategories.forEach(category => {
+                    const formSectionDiv = document.createElement('div');
+                    formSectionDiv.className = 'form-section';
+
+                    const categoryHeading = document.createElement('h3');
+                    categoryHeading.className = 'text-xl font-playfair-display solid-text-color mb-4 flex items-center gap-2';
+                    categoryHeading.innerHTML = category.title; // Title already includes emoji
+
+                    formSectionDiv.appendChild(categoryHeading);
+
+                    category.subRatings.forEach(subRatingInfo => {
+                        const key = subRatingInfo.key;
+                        const label = subRatingInfo.label; // Use the predefined label
+
+                        const values = aggregatedDetails[key];
+                        const medianRating = calculateMedian(values);
+                        const spectrumValue = typeof medianRating === 'number' ? medianRating.toFixed(1) : 'N/A';
+
+                        let imagesHtml = '';
+                        const imageMapKey = key.replace('Ratings', ''); // e.g., 'trailSmoothness'
+                        const imagesForSubcategory = subCategoryRatingImages[imageMapKey];
+
+                        if (imagesForSubcategory) {
+                            imagesForSubcategory.forEach(imgData => {
+                                imagesHtml += `
+                                    <div class="image-container" data-rating-value="${imgData.value}">
+                                        <img src="${imgData.url}" alt="${imgData.value} Stars ${label}" onerror="this.onerror=null; this.src='https://placehold.co/120x100/34495E/FFFFFF?text=Err';">
+                                        <div class="image-overlay-text">${imgData.value} Stars</div>
+                                    </div>
+                                `;
+                            });
+                        } else {
+                            // Fallback for subcategories without specific images
+                            imagesHtml = `
+                                <div class="image-container">
+                                    <img src="https://placehold.co/120x100/34495E/FFFFFF?text=No+Ref+Img" alt="No reference image available" onerror="this.onerror=null; this.src='https://placehold.co/120x100/34495E/FFFFFF?text=Err';">
+                                    <div class="image-overlay-text">No Ref.</div>
+                                </div>
+                            `;
+                        }
+
+                        const subRatingGroupHtml = `
+                            <div class="sub-rating-group rating-group" data-rating-target="${imageMapKey}">
+                                <label class="text-lg font-medium text-white mb-2 block">${label}:</label>
+                                <div class="score-visual flex items-center gap-3 mb-4">
+                                    ${typeof medianRating === 'number' ? getStarRatingHtml(medianRating, 10) : getStarRatingHtml(0, 10)}
+                                    <span class="spectrum-value">${spectrumValue}/10</span>
+                                </div>
+                                <div class="example-visuals">
+                                    <p class="image-reference-intro">
+                                        <strong>Reference Guide:</strong> These images provide examples for what each star rating might represent.
+                                    </p>
+                                    <div class="image-reference-gallery">
+                                        ${imagesHtml}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        formSectionDiv.innerHTML += subRatingGroupHtml;
+                    });
+                    parkSubRatingsContainer.appendChild(formSectionDiv);
+                });
+
+            } catch (error) {
+                console.error("Error loading park details:", error);
+                document.getElementById('park-detail-name').textContent = 'Error Loading Details';
+                document.getElementById('park-detail-address').textContent = 'Please try again later.';
+                detailImageSpinner.classList.add('hidden');
+            }
+        }
+
+        // Initialize Firebase and load park details when the page loads
+        initializeFirebaseAndAuth().then(() => {
+            loadParkDetails();
+        });
+    </script>
+
+    <footer id="footer">
+      <div class="footer-content">
+        <p class="signature">Created by <strong>Andrew Cameron</strong> as part of Eagle Scout Project, Troop 443</p>
+        <p class="email">📬 Contact: <a href="mailto:ryuseicameron@gmail.com">ryuseicameron@gmail.com</a></p>
+
+        <nav class="footer-nav">
+          <a href="index.html">Home</a>
+          <a href="parks-directory.html">Explore Parks</a>
+          <a href="submit-a-review.html">Submit Review</a>
+          <a href="about-us.html">Scout Info</a>
+        </nav>
+
+        <p class="existential">Made with heart, sunlight, and a deep sense of existential urgency.</p>
+
+        <div class="socials">
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" /></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram" /></a>
+        </div>
+      </div>
+    </footer>
+    <script>
+        // Highlight active navigation link and handle mobile menu
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('#main-nav a');
+            const currentPath = window.location.pathname.split('/').pop(); // Get filename from URL
+
+            navLinks.forEach(link => {
+                const linkPath = link.getAttribute('href').split('/').pop();
+                if (linkPath === currentPath) {
+                    link.classList.add('active-nav-link');
+                }
+            });
+
+            // Mobile menu toggle logic
+            const menuButton = document.getElementById('menu-button');
+            const mainNavContainer = document.getElementById('main-nav-container');
+
+            menuButton.addEventListener('click', () => {
+                mainNavContainer.classList.toggle('hidden');
+                // For mobile, ensure it's a column layout when shown
+                if (!mainNavContainer.classList.contains('hidden')) {
+                    mainNavContainer.classList.add('flex', 'flex-col');
+                    // Position the dropdown below the header
+                    mainNavContainer.style.position = 'absolute';
+                    mainNavContainer.style.top = document.querySelector('header').offsetHeight + 'px';
+                    mainNavContainer.style.left = '0';
+                    mainNavContainer.style.width = '100%';
+                } else {
+                    mainNavContainer.classList.remove('flex', 'flex-col');
+                    // Reset position for hidden state
+                    mainNavContainer.style.position = '';
+                    mainNavContainer.style.top = '';
+                    mainNavContainer.style.left = '';
+                    mainNavContainer.style.width = '';
+                }
+            });
+        });
+
+        // ASCII Animation Script
+        const canvas = document.getElementById('asciiCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas to full screen
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const characters = 'ASTROSCOUTS*+-.=/!@#$%^&~'.split('');
+        const fontSize = 12;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(1); // initial Y positions for each column
+
+        // --- Animation Speed Control ---
+        const animationSpeed = 2; // Lower value = faster, Higher value = slower (e.g., 1 for normal, 2 for half speed, 0.5 for double speed)
+        let frameCount = 0;
+
+        function drawASCII() {
+          requestAnimationFrame(drawASCII); // Keep requesting frames
+
+          frameCount++;
+          if (frameCount < animationSpeed) { // Skip frames based on animationSpeed
+            return;
+          }
+          frameCount = 0; // Reset frame counter
+
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'; // fade old frames
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          ctx.fillStyle = '#00ffcc'; // glowing neon greenish-blue
+          ctx.font = `${fontSize}px monospace`;
+
+          for (let i = 0; i < drops.length; i++) {
+            const char = characters[Math.floor(Math.random() * characters.length)];
+            const x = i * fontSize;
+            const y = drops[i] * fontSize;
+
+            ctx.fillText(char, x, y);
+
+            // reset drop randomly or when it goes off-screen
+            if (y * fontSize > canvas.height && Math.random() > 0.975) { // Corrected condition
+              drops[i] = 0;
+            }
+
+            drops[i]++;
+          }
+        }
+
+        drawASCII();
+
+        // Optional: Handle window resize
+        window.addEventListener('resize', () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstroScouts - About Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://use.typekit.net/gkm8mik.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Scrollbar Styles */
+        body {
+            background-color: #000; /* Ensure black background for video fade transition */
+            scrollbar-color: #1a7f1a #0d250d; /* Firefox scrollbar color */
+        }
+        /* Webkit (Chrome, Safari, Edge) scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d250d; /* Dark green track */
+            border-radius: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1a7f1a; /* Green thumb */
+            border-radius: 6px;
+            border: 2px solid #0d250d; /* Border around thumb */
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2ee62e; /* Lighter green on hover */
+        }
+
+        /* Solid text color - slightly lighter yellow */
+        .solid-text-color {
+            color: #e0c29a; /* Lighter yellow */
+        }
+        /* Custom font for header texts and main heading */
+        .font-adobe-caslon {
+            font-family: 'adobe-caslon-pro', serif;
+        }
+        /* Custom font for Playfair Display */
+        .font-playfair-display {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom font for Railway */
+        .font-railway {
+            font-family: 'Raleway', sans-serif;
+        }
+
+        /* Active navigation link style */
+        .active-nav-link {
+            color: #e0c29a !important; /* Lighter yellow for active link */
+        }
+
+        /* ASCII Canvas Styles */
+        #asciiCanvas {
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: -1; /* behind everything */
+          width: 100vw;
+          height: 100vh;
+          background: black;
+          display: block;
+        }
+
+        /* Hero Section Styles */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            min-height: 60vh; /* Reduced height for a smaller hero section */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #000; /* Fallback background color */
+            background-size: cover;
+            background-position: center;
+            z-index: 1; /* Ensure it's above ASCII canvas */
+        }
+
+        .hero-video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Cover the entire section */
+            z-index: -1; /* Place video behind content */
+            opacity: 0; /* Start with opacity 0 for fade-in effect */
+            transition: opacity 1s ease-in-out; /* Smooth fade transition */
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2; /* Ensure text is above video */
+            text-align: center;
+            color: white; /* White text for contrast */
+            padding: 1rem 2rem; /* Adjusted padding for the transparent rectangle */
+            background-color: rgba(0, 0, 0, 0.6); /* Transparent black background */
+            border-radius: 12px; /* Slightly rounded corners for the background */
+            max-width: 800px; /* Limit text width */
+            margin: 0 auto; /* Center text block */
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem; /* Large heading */
+            margin-bottom: 1rem;
+            color: #e0c29a; /* Consistent accent color */
+        }
+
+        .hero-content p {
+            font-size: 1.25rem; /* Slightly smaller text */
+            line-height: 1.6;
+            color: #f0f0f0; /* Lighter text color */
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem; /* Adjust for smaller screens */
+            }
+            .hero-content p {
+                font-size: 1rem;
+            }
+            .hero-content {
+                padding: 0.75rem 1.5rem; /* Adjust padding for smaller screens */
+            }
+        }
+
+        /* Problem Statement Section Styles */
+        .problem-statement-section {
+            background-color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            overflow: hidden; /* For animation */
+        }
+
+        .problem-statement-section h2 {
+            font-family: 'adobe-caslon-pro', serif;
+            font-size: 3.5rem; /* Larger text for "Parks are fading away" */
+            color: #000;
+            margin-bottom: 3rem;
+        }
+
+        .stats-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            width: 100%; /* Ensure it takes full width */
+            margin: 0 auto;
+        }
+
+        .stat-column {
+            flex: 1 1 calc(50% - 1rem); /* Two columns with gap, covering full width */
+            min-width: 300px; /* Minimum width for each column */
+            min-height: 400px; /* Ensure height for background image */
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 12px;
+            overflow: hidden; /* Ensure content stays within bounds */
+            display: flex; /* Use flex to center content */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center; /* Center text within column */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* Subtle shadow */
+
+            /* Animation initial state */
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        /* Animation visible state */
+        .stat-column.fade-in-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stat-content-overlay {
+            background-color: rgba(0, 0, 0, 0.6); /* Transparent black background */
+            padding: 1.5rem;
+            border-radius: 12px;
+            max-width: 90%; /* Ensure it doesn't touch edges */
+            color: white; /* Text color on overlay */
+        }
+
+        .stat-number {
+            font-family: 'Playfair Display', serif; /* Distinct font for numbers */
+            font-size: 5rem; /* Make numbers stand out a lot */
+            font-weight: 700;
+            color: #e0c29a; /* Greenish-yellow color for numbers on dark background */
+            line-height: 1; /* Adjust line height to prevent too much space */
+            margin-bottom: 1rem;
+        }
+
+        .stat-text {
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.25rem;
+            color: #f0f0f0; /* Lighter text color on dark background */
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .problem-statement-section h2 {
+                font-size: 2.5rem;
+            }
+            .stat-column {
+                flex: 1 1 100%; /* Stack columns on smaller screens */
+                min-width: auto;
+                min-height: 300px; /* Adjust height for mobile */
+            }
+            .stat-number {
+                font-size: 4rem;
+            }
+            .stat-text {
+                font-size: 1.1rem;
+            }
+            .stat-content-overlay {
+                padding: 1rem;
+            }
+        }
+
+        /* Warming Parks Section Styles */
+        .warming-parks-section {
+            position: relative;
+            width: 100%;
+            min-height: 50vh; /* Adjust height as needed */
+            background-image: url('assets/deforestation.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden; /* For animation */
+
+            /* Animation initial state */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        /* Animation visible state */
+        .warming-parks-section.section-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .warming-parks-content {
+            position: relative;
+            z-index: 2;
+            padding: 1.5rem 2.5rem; /* Padding for the transparent background */
+            background-color: rgba(0, 0, 0, 0.6); /* Transparent black background */
+            border-radius: 12px;
+            max-width: 900px; /* Limit width of text container */
+            margin: 0 auto;
+        }
+
+        .warming-parks-content h2 {
+            font-family: 'adobe-caslon-pro', serif;
+            font-size: 2.8rem; /* Adjusted font size for impact */
+            color: #e0c29a; /* Light yellow color for text on dark background */
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .warming-parks-content h2 {
+                font-size: 2rem;
+            }
+            .warming-parks-content {
+                padding: 1rem 2rem;
+            }
+        }
+
+        /* Climate Impact Section Styles */
+        .climate-impact-section {
+            background-color: white; /* White background */
+            padding: 4rem 2rem;
+            text-align: center;
+            overflow: hidden; /* For animation */
+
+            /* Animation initial state */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        /* Animation visible state */
+        .climate-impact-section.section-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .climate-impact-content {
+            max-width: 800px; /* Limit width of text container */
+            margin: 0 auto;
+            padding: 1.5rem 2.5rem; /* Padding for the transparent background */
+            background-color: rgba(0, 0, 0, 0.6); /* Transparent black background */
+            border-radius: 12px;
+        }
+
+        .climate-impact-content h2 {
+            font-family: 'adobe-caslon-pro', serif;
+            font-size: 2.8rem; /* Adjusted font size for impact */
+            color: #e0c29a; /* Light yellow color for text on dark background */
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .climate-impact-content h2 {
+                font-size: 2rem;
+            }
+            .climate-impact-content {
+                padding: 1rem 2rem;
+            }
+        }
+
+        /* Bridging Section Styles */
+        .bridging-section {
+            background-color: white; /* White background */
+            padding: 4rem 2rem;
+            text-align: center;
+            overflow: hidden; /* For animation */
+
+            /* Animation initial state */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        /* Animation visible state */
+        .bridging-section.section-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bridging-section h2 {
+            font-family: 'adobe-caslon-pro', serif;
+            font-size: 3rem; /* Large heading */
+            color: #000; /* Black text */
+            margin-bottom: 1.5rem;
+        }
+
+        .bridging-section p {
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.25rem;
+            color: #333; /* Darker text for readability */
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 768px) {
+            .bridging-section h2 {
+                font-size: 2.2rem;
+            }
+            .bridging-section p {
+                font-size: 1.1rem;
+            }
+        }
+
+
+        /* Values Section Styles */
+        .values-section {
+            background-color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            overflow: hidden; /* For animation */
+
+            /* Animation initial state */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        /* Animation visible state */
+        .values-section.section-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .values-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            max-width: 1200px; /* Wider for three columns */
+            margin: 0 auto;
+        }
+
+        .value-column {
+            flex: 1 1 calc(33.333% - 1.5rem); /* Three columns with gap */
+            min-width: 280px; /* Minimum width for each column */
+            padding: 2rem;
+            background-color: #ffffff; /* White background */
+            border-radius: 12px;
+            text-align: center;
+            /* No transparent rectangle, so no specific background-color or padding for overlay */
+        }
+
+        .value-column h3 {
+            font-family: 'adobe-caslon-pro', serif;
+            font-size: 2.2rem; /* Heading size */
+            color: #000; /* Black text */
+            margin-bottom: 1rem;
+        }
+
+        .value-column p {
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.1rem;
+            color: #333; /* Darker text for readability */
+            line-height: 1.6;
+        }
+
+        @media (max-width: 1024px) {
+            .value-column {
+                flex: 1 1 calc(50% - 1rem); /* Two columns on medium screens */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .value-column {
+                flex: 1 1 100%; /* Stack columns on smaller screens */
+                min-width: auto;
+            }
+            .value-column h3 {
+                font-size: 1.8rem;
+            }
+            .value-column p {
+                font-size: 1rem;
+            }
+        }
+
+        /* Team Section Styles */
+        .team-section {
+            background-color: #f0f0f0; /* Light gray background for contrast */
+            padding: 4rem 2rem;
+            text-align: center;
+            overflow: hidden; /* For animation */
+
+            /* Animation initial state */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        /* Animation visible state */
+        .team-section.section-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .team-section h2 {
+            font-family: 'adobe-caslon-pro', serif;
+            font-size: 3.5rem;
+            color: #000;
+            margin-bottom: 3rem;
+        }
+
+        .team-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .team-member-card {
+            flex: 1 1 calc(33.333% - 1.5rem); /* Three columns with gap */
+            min-width: 280px; /* Minimum width for each card */
+            background-color: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .team-member-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%; /* Circular image */
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+            border: 4px solid #e0c29a; /* Matching color border */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .team-member-name {
+            font-family: 'adobe-caslon-pro', serif;
+            font-size: 1.8rem;
+            color: #000; /* Black text */
+            margin-bottom: 0.5rem;
+        }
+
+        .team-member-role {
+            font-family: 'Raleway', sans-serif;
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 1rem;
+        }
+
+        .team-member-quote {
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.1rem;
+            color: #333;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 1024px) {
+            .team-member-card {
+                flex: 1 1 calc(50% - 1rem); /* Two columns on medium screens */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .team-section h2 {
+                font-size: 2.5rem;
+            }
+            .team-member-card {
+                flex: 1 1 100%; /* Stack columns on smaller screens */
+                min-width: auto;
+            }
+            .team-member-name {
+                font-size: 1.6rem;
+            }
+            .team-member-role {
+                font-size: 0.9rem;
+            }
+            .team-member-quote {
+                font-size: 1rem;
+            }
+        }
+
+        /* Timeline Section Styles */
+        .timeline-section {
+            background-color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        .timeline-section.section-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-section h2 {
+            font-family: 'adobe-caslon-pro', serif;
+            font-size: 3.5rem;
+            color: #000;
+            margin-bottom: 3rem;
+        }
+
+        .timeline-container {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .timeline-container::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-color: #e0c29a; /* Accent color for the line */
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -2px;
+            z-index: 0;
+        }
+
+        .timeline-event {
+            padding: 10px 40px;
+            position: relative;
+            background-color: inherit;
+            width: 50%;
+            text-align: left;
+            margin-bottom: 2rem; /* Spacing between events */
+        }
+
+        .timeline-event::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            right: -17px;
+            background-color: #000; /* Dark circle background */
+            border: 4px solid #e0c29a; /* Accent color border */
+            top: 15px;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .timeline-event.left {
+            left: 0;
+            text-align: right;
+        }
+
+        .timeline-event.right {
+            left: 50%;
+        }
+
+        .timeline-event.right::after {
+            left: -17px;
+        }
+
+        .timeline-event.left::after {
+            right: -17px;
+        }
+
+        .timeline-content {
+            padding: 20px 30px;
+            background-color: #f0f0f0; /* Light gray background for content */
+            position: relative;
+            border-radius: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .timeline-event h3 {
+            font-family: 'adobe-caslon-pro', serif;
+            font-size: 1.8rem;
+            color: #000;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-event p {
+            font-family: 'Raleway', sans-serif;
+            font-size: 1.1rem;
+            color: #333;
+            line-height: 1.5;
+        }
+
+        @media screen and (max-width: 768px) {
+            .timeline-container::after {
+                left: 31px;
+            }
+
+            .timeline-event {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+
+            .timeline-event.right {
+                left: 0%;
+            }
+
+            .timeline-event.left::after,
+            .timeline-event.right::after {
+                left: 15px;
+            }
+        }
+
+        /* Footer Styles */
+        #footer {
+          position: relative;
+          color: #e4f5e9;
+          padding: 40px 20px;
+          z-index: 2; /* ABOVE canvas */
+          font-family: 'Segoe UI', sans-serif;
+          opacity: 0.7;
+        }
+
+        .footer-content {
+          max-width: 1000px;
+          margin: auto;
+          text-align: center;
+        }
+
+        .signature, .email, .existential {
+          margin-bottom: 12px;
+          font-size: 0.95em;
+        }
+
+        .email a {
+          color: #e0ffe0;
+          text-decoration: underline dotted;
+        }
+
+        .footer-nav {
+          margin: 20px 0;
+        }
+
+        .footer-nav a {
+          margin: 0 12px;
+          color: #ffffffcc;
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.3s;
+        }
+
+        .footer-nav a:hover {
+          color: #b9ffca;
+        }
+
+        .socials {
+          margin-top: 16px;
+        }
+
+        .socials img {
+          width: 22px;
+          height: 22px;
+          margin: 0 8px;
+          opacity: 0.8;
+          transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .socials img:hover {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+
+        .value-column {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .value-column:hover {
+          transform: scale(1.03);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+    </style>
+</head>
+<body class="font-sans antialiased text-gray-800">
+    <canvas id="asciiCanvas"></canvas>
+    <header class="relative bg-cover bg-center flex items-center justify-between px-4 py-0.5 sm:py-1 rounded-b-lg shadow-lg sticky top-0 z-50" style="background-image: url('assets/header-image.jpg');">
+        <div class="flex items-center space-x-2">
+            <img src="assets/icon.png" alt="AstroScouts Icon" class="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-full flex-shrink-0">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-adobe-caslon solid-text-color whitespace-nowrap flex-shrink-0">AstroScouts</h1>
+                <p class="text-sm sm:text-base font-adobe-caslon solid-text-color leading-tight">Where nature meets accessibility</p>
+            </div>
+        </div>
+
+        <button id="menu-button" class="sm:hidden text-white focus:outline-none p-2 rounded-md hover:bg-gray-700 transition duration-300">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+
+        <nav id="main-nav-container" class="hidden absolute top-full left-0 w-full bg-black bg-opacity-80 sm:relative sm:top-auto sm:left-auto sm:w-auto sm:bg-transparent sm:bg-opacity-100 p-4 sm:p-0 z-20 sm:block">
+            <ul id="main-nav" class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6 items-center sm:items-stretch">
+                <li><a href="index.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Home</a></li>
+                <li><a href="parks-directory.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Parks Directory</a></li>
+                <li><a href="submit-a-review.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Submit a Review</a></li>
+                <li><a href="blog.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Blog</a></li>
+                <li><a href="about-us.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero-section">
+        <video id="hero-video" class="hero-video-background" muted playsinline>
+            <source src="assets/about-us.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="hero-content">
+            <h1 class="font-adobe-caslon">Our Mission</h1>
+            <p class="font-adobe-caslon">
+                AstroScouts was born from the footsteps of youth—an effort to bring parks to light through accessibility, sustainability, and shared voices.
+            </p>
+        </div>
+    </section>
+
+    <section id="problem-statement-section" class="problem-statement-section">
+        <h2 class="font-adobe-caslon">Parks are fading away.</h2>
+        <div class="stats-grid">
+            <div class="stat-column" style="background-image: url('assets/empty-park.jpg');">
+                <div class="stat-content-overlay">
+                    <div class="stat-number">24%</div>
+                    <div class="stat-text">of teenagers report visiting a park more than once a month</div>
+                </div>
+            </div>
+            <div class="stat-column" style="background-image: url('assets/wheelchair-ramp.jpg');">
+                <div class="stat-content-overlay">
+                    <div class="stat-number">86%</div>
+                    <div class="stat-text">of public parks still lack ADA-compliant pathways</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="warming-parks-section" class="warming-parks-section">
+        <div class="warming-parks-content">
+            <h2 class="font-adobe-caslon">Parks have been warming twice as fast as the U.S. as a whole.</h2>
+        </div>
+    </section>
+
+    <section id="climate-impact-section" class="climate-impact-section">
+        <div class="climate-impact-content">
+            <h2 class="font-adobe-caslon">Many parks are frontline spaces for the climate impact, but lack the data to adapt.</h2>
+        </div>
+    </section>
+
+    <section id="bridging-section" class="bridging-section">
+        <h2 class="font-adobe-caslon">Our Commitment to a Brighter Future for Parks.</h2>
+        <p class="font-adobe-caslon">
+            Faced with the urgent challenges of declining engagement, accessibility gaps, and the profound impacts of climate change, AstroScouts is dedicated to empowering communities and preserving our natural spaces. We believe that by fostering a deeper connection with nature and providing transparent, actionable insights, we can build a more resilient and inclusive future for parks. Our approach is rooted in three core pillars:
+        </p>
+    </section>
+
+    <section id="values-section" class="values-section">
+        <div class="values-grid">
+            <div class="value-column">
+                <h3 class="font-adobe-caslon">Accessibility</h3>
+                <p class="font-adobe-caslon">Everyone deserves to experience nature—regardless of ability.</p>
+            </div>
+            <div class="value-column">
+                <h3 class="font-adobe-caslon">Sustainability</h3>
+                <p class="font-adobe-caslon">We measure impact as much as we admire beauty.</p>
+            </div>
+            <div class="value-column">
+                <h3 class="font-adobe-caslon">Environmental Honesty</h3>
+                <p class="font-adobe-caslon">Our ratings are sourced from those who walk the trails.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="team-section" class="team-section">
+        <h2 class="font-adobe-caslon">Meet the Team</h2>
+        <div class="team-grid">
+            <div class="team-member-card">
+                <img src="assets/person1.png" alt="Team Member 1" class="team-member-photo">
+                <h3 class="team-member-name font-adobe-caslon">Andrew Cameron</h3>
+                <p class="team-member-role">Founder, Developer, Philosopher</p>
+                <p class="team-member-quote">"I believe parks are places where data meets wonder."</p>
+            </div>
+            <div class="team-member-card">
+                <img src="assets/person2.png" alt="Team Member 2" class="team-member-photo">
+                <h3 class="team-member-name font-adobe-caslon">Jane Doe</h3>
+                <p class="team-member-role">Lead Designer, Accessibility Advocate</p>
+                <p class="team-member-quote">"Nature should be a right, not a privilege."</p>
+            </div>
+            <div class="team-member-card">
+                <img src="assets/person3.png" alt="Team Member 3" class="team-member-photo">
+                <h3 class="team-member-name font-adobe-caslon">John Smith</h3>
+                <p class="team-member-role">Environmental Scientist, Data Analyst</p>
+                <p class="team-member-quote">"Understanding the planet begins with understanding our local spaces."</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="timeline-section" class="timeline-section">
+        <h2 class="font-adobe-caslon">Our Journey So Far</h2>
+        <div class="timeline-container">
+            <div class="timeline-event left">
+                <div class="timeline-content">
+                    <h3 class="font-adobe-caslon">September 19th, 2023</h3>
+                    <p class="font-railway">AstroScouts project approved by the Eagle Scout Board of Review, marking the official beginning of our journey.</p>
+                </div>
+            </div>
+            <div class="timeline-event right">
+                <div class="timeline-content">
+                    <h3 class="font-adobe-caslon">June 23rd - July 28th, 2025</h3>
+                    <p class="font-railway">Intensive planning and coding phase, bringing the AstroScouts website to life from concept to digital reality.</p>
+                </div>
+            </div>
+            <div class="timeline-event left">
+                <div class="timeline-content">
+                    <h3 class="font-adobe-caslon">July 11th, 2025</h3>
+                    <p class="font-railway">Website officially launched and discoverable by major search engines, opening our platform to the world.</p>
+                </div>
+            </div>
+            <div class="timeline-event right">
+                <div class="timeline-content">
+                    <h3 class="font-adobe-caslon">July 16th, 2025</h3>
+                    <p class="font-railway">The first park review is submitted, a momentous step in building our community-driven park accessibility database.</p>
+                </div>
+            </div>
+            <div class="timeline-event left">
+                <div class="timeline-content">
+                    <h3 class="font-adobe-caslon">October 5th, 2025</h3>
+                    <p class="font-railway">Partnership established with National Parks Conservancy, expanding our reach and impact.</p>
+                </div>
+            </div>
+            <div class="timeline-event right">
+                <div class="timeline-content">
+                    <h3 class="font-adobe-caslon">January 1st, 2026</h3>
+                    <p class="font-railway">Launch of the AstroScouts mobile application, making park information accessible on the go.</p>
+                </div>
+            </div>
+            <div class="timeline-event left">
+                <div class="timeline-content">
+                    <h3 class="font-adobe-caslon">June 15th, 2026</h3>
+                    <p class="font-railway">AstroScouts hosts its first nationwide "Accessible Trails" event, promoting inclusivity in nature.</p>
+                </div>
+            </div>
+            <div class="timeline-event right">
+                <div class="timeline-content">
+                    <h3 class="font-adobe-caslon">December 31st, 2027</h3>
+                    <p class="font-railway">Achieve 10,000 unique park reviews, establishing AstroScouts as a leading resource for park accessibility data.</p>
+                </div>
+            </div>
+            <div class="timeline-event left">
+                <div class="timeline-content">
+                    <h3 class="font-adobe-caslon">July 20th, 2030</h3>
+                    <p class="font-railway">Integration of real-time climate impact data for all listed parks, empowering visitors and park management.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="footer">
+      <div class="footer-content">
+        <p class="signature">Created by <strong>Andrew Cameron</strong> as part of Eagle Scout Project, Troop 443</p>
+        <p class="email">Contact: <a href="mailto:ryuseicameron@gmail.com">ryuseicameron@gmail.com</a></p>
+
+        <nav class="footer-nav">
+          <a href="index.html">Home</a>
+          <a href="parks-directory.html">Explore Parks</a>
+          <a href="submit-a-review.html">Submit Review</a>
+          <a href="about-us.html">Scout Info</a>
+        </nav>
+
+        <p class="existential">Made with heart, sunlight, and a deep sense of existential urgency.</p>
+
+        <div class="socials">
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" /></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram" /></a>
+        </div>
+      </div>
+    </footer>
+    <script>
+        // Highlight active navigation link and handle mobile menu
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('#main-nav a');
+            const currentPath = window.location.pathname.split('/').pop(); // Get filename from URL
+
+            navLinks.forEach(link => {
+                const linkPath = link.getAttribute('href').split('/').pop();
+                if (linkPath === currentPath) {
+                    link.classList.add('active-nav-link');
+                }
+            });
+
+            // Mobile menu toggle logic
+            const menuButton = document.getElementById('menu-button');
+            const mainNavContainer = document.getElementById('main-nav-container');
+
+            if (menuButton && mainNavContainer) {
+                menuButton.addEventListener('click', () => {
+                    mainNavContainer.classList.toggle('hidden');
+                    // For mobile, ensure it's a column layout when shown
+                    if (!mainNavContainer.classList.contains('hidden')) {
+                        mainNavContainer.classList.add('flex', 'flex-col');
+                        // Position the dropdown below the header
+                        const headerHeight = document.querySelector('header')?.offsetHeight || 0;
+                        mainNavContainer.style.position = 'absolute';
+                        mainNavContainer.style.top = headerHeight + 'px';
+                        mainNavContainer.style.left = '0';
+                        mainNavContainer.style.width = '100%';
+                    } else {
+                        mainNavContainer.classList.remove('flex', 'flex-col');
+                        // Reset position for hidden state
+                        mainNavContainer.style.position = '';
+                        mainNavContainer.style.top = '';
+                        mainNavContainer.style.left = '';
+                        mainNavContainer.style.width = '';
+                    }
+                });
+            }
+        });
+
+        // Hero video fade-in and loop with fade effect
+        const heroVideo = document.getElementById('hero-video');
+        if (heroVideo) {
+            let videoLoadedSuccessfully = false; // Track if video has ever successfully played/loaded
+
+            // Function to handle video fade-in and looping
+            const startVideoLoop = () => {
+                if (!videoLoadedSuccessfully) {
+                    heroVideo.style.opacity = 1; // Initial fade-in
+                    videoLoadedSuccessfully = true;
+                }
+
+                // Remove previous 'ended' listener to prevent duplicates
+                heroVideo.removeEventListener('ended', handleVideoEnded);
+                heroVideo.addEventListener('ended', handleVideoEnded); // Add it back
+            };
+
+            const handleVideoEnded = () => {
+                heroVideo.style.opacity = 0; // Fade out
+                setTimeout(() => {
+                    heroVideo.currentTime = 0; // Reset video to start
+                    heroVideo.play().then(() => {
+                        heroVideo.style.opacity = 1; // Fade in again
+                    }).catch(error => {
+                        // If autoplay is blocked on subsequent loops, still try to show the first frame
+                        heroVideo.style.opacity = 1;
+                    });
+                }, 1000); // Wait for 1 second for fade out transition
+            };
+
+            // Try to play the video as soon as it can be played
+            heroVideo.addEventListener('canplaythrough', async () => {
+                if (!videoLoadedSuccessfully) { // Only attempt initial autoplay once
+                    try {
+                        // Attempt to play. This returns a Promise.
+                        const playPromise = heroVideo.play();
+                        if (playPromise !== undefined) {
+                            await playPromise;
+                            startVideoLoop(); // Start the looping logic
+                        }
+                    } catch (error) {
+                        // If autoplay is prevented, still show the first frame
+                        heroVideo.style.opacity = 1;
+                        videoLoadedSuccessfully = true; // Mark as "loaded" even if autoplay failed
+                        // Add a visual cue or button for the user to play
+                        heroVideo.style.cursor = 'pointer'; // Indicate it's clickable
+                        heroVideo.addEventListener('click', async function playOnClick() {
+                            if (heroVideo.paused) {
+                                try {
+                                    await heroVideo.play();
+                                    heroVideo.style.cursor = 'default';
+                                    startVideoLoop();
+                                } catch (e) {
+                                    // Error playing on click
+                                }
+                            }
+                        }, { once: true }); // Only need to set this once
+                    }
+                }
+            }, { once: true }); // Ensure this listener only fires once for initial setup
+
+            // Fallback for older browsers or if 'canplaythrough' doesn't fire as expected
+            heroVideo.addEventListener('loadeddata', () => {
+                if (!videoLoadedSuccessfully) { // If canplaythrough didn't trigger it
+                    heroVideo.play().then(() => {
+                        startVideoLoop();
+                    }).catch(error => {
+                        heroVideo.style.opacity = 1; // Still show first frame
+                        videoLoadedSuccessfully = true;
+                    });
+                }
+            }, { once: true });
+
+            // Ensure the loop attribute is removed from HTML to manage looping manually
+            heroVideo.removeAttribute('loop');
+        }
+
+        // ASCII Animation Script
+        const canvas = document.getElementById('asciiCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas to full screen
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const characters = 'ASTROSCOUTS*+-.=/!@#$%^&~'.split('');
+        const fontSize = 12;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(1); // initial Y positions for each column
+
+        // --- Animation Speed Control ---
+        const animationSpeed = 2; // Lower value = faster, Higher value = slower (e.g., 1 for normal, 2 for half speed, 0.5 for double speed)
+        let frameCount = 0;
+
+        function drawASCII() {
+          requestAnimationFrame(drawASCII); // Keep requesting frames
+
+          frameCount++;
+          if (frameCount < animationSpeed) { // Skip frames based on animationSpeed
+            return;
+          }
+          frameCount = 0; // Reset frame counter
+
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'; // fade old frames
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          ctx.fillStyle = '#00ffcc'; // glowing neon greenish-blue
+          ctx.font = `${fontSize}px monospace`;
+
+          for (let i = 0; i < drops.length; i++) {
+            const char = characters[Math.floor(Math.random() * characters.length)];
+            const x = i * fontSize;
+            const y = drops[i] * fontSize;
+
+            ctx.fillText(char, x, y);
+
+            // reset drop randomly or when it goes off-screen
+            if (y * fontSize > canvas.height && Math.random() > 0.975) { // Corrected condition
+              drops[i] = 0;
+            }
+
+            drops[i]++;
+          }
+        }
+
+        drawASCII();
+
+        // Optional: Handle window resize
+        window.addEventListener('resize', () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        });
+
+        // Intersection Observer for section transitions
+        const problemStatementSection = document.getElementById('problem-statement-section');
+        const warmingParksSection = document.getElementById('warming-parks-section');
+        const climateImpactSection = document.getElementById('climate-impact-section');
+        const bridgingSection = document.getElementById('bridging-section');
+        const valuesSection = document.getElementById('values-section');
+        const teamSection = document.getElementById('team-section');
+        const timelineSection = document.getElementById('timeline-section');
+
+
+        const observerOptions = {
+            root: null, // viewport
+            rootMargin: '0px',
+            threshold: 0.1 // 10% of the section visible
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    if (entry.target.id === 'problem-statement-section') {
+                        const statColumns = entry.target.querySelectorAll('.stat-column');
+                        statColumns.forEach((column, index) => {
+                            setTimeout(() => {
+                                column.classList.add('fade-in-visible');
+                            }, index * 200); // Stagger animation
+                        });
+                    } else if (entry.target.id === 'warming-parks-section' || entry.target.id === 'climate-impact-section' || entry.target.id === 'bridging-section' || entry.target.id === 'values-section' || entry.target.id === 'timeline-section') {
+                        entry.target.classList.add('section-visible');
+                    } else if (entry.target.id === 'team-section') {
+                        entry.target.classList.add('section-visible');
+                    }
+                    observer.unobserve(entry.target); // Stop observing once visible
+                }
+            });
+        }, observerOptions);
+
+        if (problemStatementSection) {
+            observer.observe(problemStatementSection);
+        }
+        if (warmingParksSection) {
+            observer.observe(warmingParksSection);
+        }
+        if (climateImpactSection) {
+            observer.observe(climateImpactSection);
+        }
+        if (bridgingSection) {
+            observer.observe(bridgingSection);
+        }
+        if (valuesSection) {
+            observer.observe(valuesSection);
+        }
+        if (teamSection) {
+            observer.observe(teamSection);
+        }
+        if (timelineSection) {
+            observer.observe(timelineSection);
+        }
+    </script>
+</body>
+</html>

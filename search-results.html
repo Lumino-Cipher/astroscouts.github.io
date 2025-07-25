@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstroScouts - Header and Footer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://use.typekit.net/gkm8mik.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Scrollbar Styles */
+        body {
+            background-color: #000; /* Ensure black background for video fade transition */
+            scrollbar-color: #1a7f1a #0d250d; /* Firefox scrollbar color */
+        }
+        /* Webkit (Chrome, Safari, Edge) scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d250d; /* Dark green track */
+            border-radius: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1a7f1a; /* Green thumb */
+            border-radius: 6px;
+            border: 2px solid #0d250d; /* Border around thumb */
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2ee62e; /* Lighter green on hover */
+        }
+
+        /* Solid text color - slightly lighter yellow */
+        .solid-text-color {
+            color: #e0c29a; /* Lighter yellow */
+        }
+        /* Custom font for header texts and main heading */
+        .font-adobe-caslon {
+            font-family: 'adobe-caslon-pro', serif;
+        }
+        /* Custom font for Playfair Display */
+        .font-playfair-display {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom font for Railway */
+        .font-railway {
+            font-family: 'Raleway', sans-serif;
+        }
+
+        /* Active navigation link style */
+        .active-nav-link {
+            color: #e0c29a !important; /* Lighter yellow for active link */
+        }
+
+        /* ASCII Canvas Styles */
+        #asciiCanvas {
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: -1; /* behind everything */
+          width: 100vw;
+          height: 100vh;
+          background: black;
+          display: block;
+        }
+
+        /* Footer Styles */
+        #footer {
+          position: relative;
+          color: #e4f5e9;
+          padding: 40px 20px;
+          z-index: 2; /* ABOVE canvas */
+          font-family: 'Segoe UI', sans-serif;
+          opacity: 0.7;
+        }
+
+        .footer-content {
+          max-width: 1000px;
+          margin: auto;
+          text-align: center;
+        }
+
+        .signature, .email, .existential {
+          margin-bottom: 12px;
+          font-size: 0.95em;
+        }
+
+        .email a {
+          color: #e0ffe0;
+          text-decoration: underline dotted;
+        }
+
+        .footer-nav {
+          margin: 20px 0;
+        }
+
+        .footer-nav a {
+          margin: 0 12px;
+          color: #ffffffcc;
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.3s;
+        }
+
+        .footer-nav a:hover {
+          color: #b9ffca;
+        }
+
+        .socials {
+          margin-top: 16px;
+        }
+
+        .socials img {
+          width: 22px;
+          height: 22px;
+          margin: 0 8px;
+          opacity: 0.8;
+          transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .socials img:hover {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+    </style>
+</head>
+<body class="font-sans antialiased text-gray-800">
+    <canvas id="asciiCanvas"></canvas>
+    <header class="relative bg-cover bg-center flex items-center justify-between px-4 py-0.5 sm:py-1 rounded-b-lg shadow-lg sticky top-0 z-50" style="background-image: url('assets/header-image.jpg');">
+        <div class="flex items-center space-x-2">
+            <img src="assets/icon.png" alt="AstroScouts Icon" class="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-full flex-shrink-0">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-adobe-caslon solid-text-color whitespace-nowrap flex-shrink-0">AstroScouts</h1>
+                <p class="text-sm sm:text-base font-adobe-caslon solid-text-color leading-tight">Where nature meets accessibility</p>
+            </div>
+        </div>
+
+        <button id="menu-button" class="sm:hidden text-white focus:outline-none p-2 rounded-md hover:bg-gray-700 transition duration-300">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+
+        <nav id="main-nav-container" class="hidden absolute top-full left-0 w-full bg-black bg-opacity-80 sm:relative sm:top-auto sm:left-auto sm:w-auto sm:bg-transparent sm:bg-opacity-100 p-4 sm:p-0 z-20 sm:block">
+            <ul id="main-nav" class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6 items-center sm:items-stretch">
+                <li><a href="index.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Home</a></li>
+                <li><a href="parks-directory.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Parks Directory</a></li>
+                <li><a href="submit-a-review.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Submit a Review</a></li>
+                <li><a href="blog.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Blog</a></li>
+                <li><a href="about-us.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <footer id="footer">
+      <div class="footer-content">
+        <p class="signature">Created by <strong>Andrew Cameron</strong> as part of Eagle Scout Project, Troop 443</p>
+        <p class="email">📬 Contact: <a href="mailto:ryuseicameron@gmail.com">ryuseicameron@gmail.com</a></p>
+
+        <nav class="footer-nav">
+          <a href="index.html">Home</a>
+          <a href="parks-directory.html">Explore Parks</a>
+          <a href="submit-a-review.html">Submit Review</a>
+          <a href="about-us.html">Scout Info</a>
+        </nav>
+
+        <p class="existential">Made with heart, sunlight, and a deep sense of existential urgency.</p>
+
+        <div class="socials">
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" /></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram" /></a>
+        </div>
+      </div>
+    </footer>
+    <script>
+        // Highlight active navigation link and handle mobile menu
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('#main-nav a');
+            const currentPath = window.location.pathname.split('/').pop(); // Get filename from URL
+
+            navLinks.forEach(link => {
+                const linkPath = link.getAttribute('href').split('/').pop();
+                if (linkPath === currentPath) {
+                    link.classList.add('active-nav-link');
+                }
+            });
+
+            // Mobile menu toggle logic
+            const menuButton = document.getElementById('menu-button');
+            const mainNavContainer = document.getElementById('main-nav-container');
+
+            menuButton.addEventListener('click', () => {
+                mainNavContainer.classList.toggle('hidden');
+                // For mobile, ensure it's a column layout when shown
+                if (!mainNavContainer.classList.contains('hidden')) {
+                    mainNavContainer.classList.add('flex', 'flex-col');
+                    // Position the dropdown below the header
+                    mainNavContainer.style.position = 'absolute';
+                    mainNavContainer.style.top = document.querySelector('header').offsetHeight + 'px';
+                    mainNavContainer.style.left = '0';
+                    mainNavContainer.style.width = '100%';
+                } else {
+                    mainNavContainer.classList.remove('flex', 'flex-col');
+                    // Reset position for hidden state
+                    mainNavContainer.style.position = '';
+                    mainNavContainer.style.top = '';
+                    mainNavContainer.style.left = '';
+                    mainNavContainer.style.width = '';
+                }
+            });
+        });
+
+        // ASCII Animation Script
+        const canvas = document.getElementById('asciiCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas to full screen
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const characters = 'ASTROSCOUTS*+-.=/!@#$%^&~'.split('');
+        const fontSize = 12;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(1); // initial Y positions for each column
+
+        // --- Animation Speed Control ---
+        const animationSpeed = 2; // Lower value = faster, Higher value = slower (e.g., 1 for normal, 2 for half speed, 0.5 for double speed)
+        let frameCount = 0;
+
+        function drawASCII() {
+          requestAnimationFrame(drawASCII); // Keep requesting frames
+
+          frameCount++;
+          if (frameCount < animationSpeed) { // Skip frames based on animationSpeed
+            return;
+          }
+          frameCount = 0; // Reset frame counter
+
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'; // fade old frames
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          ctx.fillStyle = '#00ffcc'; // glowing neon greenish-blue
+          ctx.font = `${fontSize}px monospace`;
+
+          for (let i = 0; i < drops.length; i++) {
+            const char = characters[Math.floor(Math.random() * characters.length)];
+            const x = i * fontSize;
+            const y = drops[i] * fontSize;
+
+            ctx.fillText(char, x, y);
+
+            // reset drop randomly or when it goes off-screen
+            if (y * fontSize > canvas.height && Math.random() > 0.975) { // Corrected condition
+              drops[i] = 0;
+            }
+
+            drops[i]++;
+          }
+        }
+
+        drawASCII();
+
+        // Optional: Handle window resize
+        window.addEventListener('resize', () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

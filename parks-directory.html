@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AstroScouts - Parks Directory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://use.typekit.net/gkm8mik.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom Scrollbar Styles */
+        body {
+            background-color: #000; /* Ensure black background for video fade transition */
+            scrollbar-color: #1a7f1a #0d250d; /* Firefox scrollbar color */
+        }
+        /* Webkit (Chrome, Safari, Edge) scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d250d; /* Dark green track */
+            border-radius: 6px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1a7f1a; /* Green thumb */
+            border-radius: 6px;
+            border: 2px solid #0d250d; /* Border around thumb */
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2ee62e; /* Lighter green on hover */
+        }
+
+        /* Solid text color - slightly lighter yellow */
+        .solid-text-color {
+            color: #e0c29a; /* Lighter yellow */
+        }
+        /* Custom font for header texts and main heading */
+        .font-adobe-caslon {
+            font-family: 'adobe-caslon-pro', serif;
+        }
+        /* Custom font for Playfair Display */
+        .font-playfair-display {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Custom font for Railway */
+        .font-railway {
+            font-family: 'Raleway', sans-serif;
+        }
+
+        /* Active navigation link style */
+        .active-nav-link {
+            color: #e0c29a !important; /* Lighter yellow for active link */
+        }
+
+        /* ASCII Canvas Styles */
+        #asciiCanvas {
+          position: fixed;
+          top: 0;
+          left: 0;
+          z-index: -1; /* behind everything */
+          width: 100vw;
+          height: 100vh;
+          background: black;
+          display: block;
+        }
+
+        /* Footer Styles */
+        #footer {
+          position: relative;
+          color: #e4f5e9;
+          padding: 40px 20px;
+          z-index: 2; /* ABOVE canvas */
+          font-family: 'Segoe UI', sans-serif;
+          opacity: 0.7;
+        }
+
+        .footer-content {
+          max-width: 1000px;
+          margin: auto;
+          text-align: center;
+        }
+
+        .signature, .email, .existential {
+          margin-bottom: 12px;
+          font-size: 0.95em;
+        }
+
+        .email a {
+          color: #e0ffe0;
+          text-decoration: underline dotted;
+        }
+
+        .footer-nav {
+          margin: 20px 0;
+        }
+
+        .footer-nav a {
+          margin: 0 12px;
+          color: #ffffffcc;
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.3s;
+        }
+
+        .footer-nav a:hover {
+          color: #b9ffca;
+        }
+
+        .socials {
+          margin-top: 16px;
+        }
+
+        .socials img {
+          width: 22px;
+          height: 22px;
+          margin: 0 8px;
+          opacity: 0.8;
+          transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .socials img:hover {
+          opacity: 1;
+          transform: scale(1.2);
+        }
+
+        /* Search Section Styles */
+        .search-section {
+            position: relative;
+            width: 100%;
+            height: 100vh; /* Adjust height as needed */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            overflow: hidden;
+            text-align: center;
+            z-index: 1;
+            padding-top: 15vh;
+            gap: 30px;
+        }
+
+        .search-section video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translateX(-50%) translateY(-50%);
+            z-index: -1;
+            object-fit: cover;
+            opacity: 0.9; /* Set opacity for the video background */
+        }
+
+        /* Searchbar adjustments */
+        .divine-search-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px; /* Increased padding */
+            border-radius: 8px; /* Changed from 50px to make it rectangular */
+            position: relative;
+            background-clip: padding-box, border-box;
+            background-origin: padding-box, border-box;
+            background-image:
+                linear-gradient(to bottom right, #133a54, #0f243b),
+                linear-gradient(135deg,
+                    rgba(100,200,255,0.7) 0%, /* Light Blue */
+                    rgba(150,220,255,0.7) 25%, /* Lighter Blue */
+                    rgba(200,240,255,0.7) 75%, /* Even Lighter Blue */
+                    rgba(100,200,255,0.7) 100%); /* Light Blue */
+            border: 2px solid transparent;
+            transition: all 0.4s ease;
+            box-shadow:
+                0 0 8px rgba(0, 150, 255, 0.4), /* Muted blue glow */
+                inset 0 0 3px rgba(255, 255, 255, 0.03); /* More subtle inner white */
+            /* Ensure the wrapper respects the input's width */
+            width: 85vw; /* Match input width */
+            max-width: 800px; /* Match input max-width */
+            z-index: 2;
+        }
+
+        .divine-search-wrapper:hover {
+            transform: scale(1.02); /* Slightly less dramatic scale */
+            filter: brightness(1.03); /* Subtle brightness increase */
+            box-shadow:
+                0 0 15px rgba(0, 180, 255, 0.6), /* Stronger muted blue glow */
+                0 0 25px rgba(255, 255, 255, 0.1), /* Less intense white glow */
+                inset 0 0 6px rgba(0, 180, 255, 0.2); /* More subtle inner glow */
+            animation: shimmer 1.6s ease-in-out infinite;
+        }
+
+        /* Floating glow aura - adjusted for more subtlety */
+        .divine-search-wrapper::after {
+            content: '';
+            position: absolute;
+            top: -4px; /* Reduced spread */
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 12px; /* Changed from 60px to match rectangular shape */
+            background: linear-gradient(135deg, rgba(100,200,255,0.5), rgba(150,220,255,0.5), rgba(200,240,255,0.5)); /* Bluer, less vibrant */
+            filter: blur(8px); /* Less blur */
+            opacity: 0.08; /* Very subtle */
+            z-index: -1;
+            transition: opacity 0.4s ease;
+        }
+        .divine-search-wrapper:hover::after {
+            opacity: 0.2; /* Slightly more visible on hover */
+        }
+
+        /* INPUT FIELD - adjusted for size and less flashiness */
+        /* Target the input within the Place Autocomplete element */
+        .divine-search-wrapper google-maps-place-autocomplete input[type="text"] {
+            width: 100%; /* Fill parent wrapper */
+            padding: 20px 30px; /* Much larger padding for height */
+            font-size: 20px; /* Larger font size */
+            font-family: "adobe-caslon-pro", serif;
+            font-weight: normal;
+            border: none;
+            outline: none;
+            border-radius: 6px; /* Changed from 50px to make it rectangular */
+            background: linear-gradient(to right, #1a2e44, #0e1d2d);
+            color: #c0e0e9; /* Slightly desaturated text color */
+            box-shadow:
+                inset 1px 1px 4px rgba(0, 0, 0, 0.3), /* More subtle inner shadow */
+                inset -1px -1px 4px rgba(255, 255, 255, 0.02); /* More subtle inner highlight */
+            caret-color: skyblue; /* Softer caret color */
+            transition: all 0.3s ease;
+        }
+
+        .divine-search-wrapper google-maps-place-autocomplete input[type="text"]::placeholder {
+            font-family: 'Raleway', sans-serif; /* Changed placeholder font to Raleway */
+            font-weight: normal;
+            background: linear-gradient(to right, #6495ED, #87CEFA); /* SteelBlue to LightSkyBlue */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            text-shadow: 0 0 1px rgba(0, 100, 200, 0.1); /* Muted text shadow */
+        }
+
+        /* On focus */
+        .divine-search-wrapper google-maps-place-autocomplete input[type="text"]:focus {
+            background: linear-gradient(to right, #1f3d59, #12263c);
+            box-shadow:
+                inset 0 0 5px rgba(255, 255, 255, 0.06),
+                0 0 10px rgba(0, 150, 255, 0.5); /* Muted blue focus glow */
+        }
+
+        .pac-container {
+            z-index: 10000 !important;
+        }
+
+        /* Keyframe shimmer effect - removed as per request for less flashiness */
+        @keyframes shimmer {
+            0% {} 50% {} 100% {} /* Keeping the keyframe definition but it won't be applied */
+        }
+
+        /* Matching SEARCH BUTTON - adjusted for less flashiness */
+        .divine-search-button {
+            margin-top: 30px; /* Increased margin */
+            padding: 16px 48px; /* Larger padding */
+            font-size: 22px; /* Larger font size */
+            font-family: "adobe-caslon-pro", serif;
+            color: #c0e0e9; /* Muted button text color */
+            background: linear-gradient(to right, #1a2e44, #0f1d2b);
+            border: 2px solid transparent;
+            border-radius: 8px; /* Changed from 40px to make it rectangular */
+            background-clip: padding-box, border-box;
+            background-origin: padding-box, border-box;
+            background-image:
+                linear-gradient(to right, #1a2e44, #0f1d2b),
+                linear-gradient(135deg,
+                    rgba(0, 100, 200, 0.7), /* Dark Blue */
+                    rgba(0, 150, 250, 0.7), /* Medium Blue */
+                    rgba(0, 200, 255, 0.7), /* Cyan */
+                    rgba(0, 150, 250, 0.7)); /* Medium Blue */
+            box-shadow:
+                0 0 10px rgba(0, 120, 200, 0.3), /* Muted blue shadow */
+                inset 0 0 5px rgba(255, 255, 255, 0.02);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .divine-search-button:hover {
+            transform: scale(1.03) translateY(-1px); /* Less dramatic hover effect */
+            box-shadow:
+                0 0 20px rgba(0, 180, 255, 0.5), /* Stronger muted blue shadow */
+                inset 0 0 10px rgba(0, 150, 255, 0.3);
+            filter: brightness(1.1); /* Less brightness increase */
+            animation: none; /* Remove shimmer for a less flashy look */
+        }
+
+        /* Hover aura - adjusted for more subtlety */
+        .divine-search-button::after {
+            content: '';
+            position: absolute;
+            top: -5px; /* Reduced spread */
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 12px; /* Changed from 50px to match rectangular shape */
+            background: linear-gradient(135deg, rgba(0, 100, 200, 0.3), rgba(0, 150, 250, 0.3), rgba(0, 200, 255, 0.3)); /* Bluer, less vibrant */
+            filter: blur(8px); /* Less blur */
+            opacity: 0.08; /* Very subtle */
+            z-index: -1;
+            transition: opacity 0.3s ease;
+        }
+
+        .divine-search-button:hover::after {
+            opacity: 0.3; /* Slightly more visible on hover */
+        }
+
+        /* Optional animation - removed as per request for less flashiness */
+        @keyframes glowshift {
+            0% {} 50% {} 100% {} /* Keeping the keyframe definition but it won't be applied */
+        }
+
+        @media (max-width: 768px) {
+            .divine-search-wrapper {
+                width: 90vw; /* Adjust wrapper width for mobile */
+                max-width: none; /* Remove max-width on mobile */
+            }
+            .divine-search-wrapper google-maps-place-autocomplete input[type="text"] {
+                width: 100%; /* Full width on smaller screens */
+                padding: 15px 20px; /* Adjust padding for mobile */
+                font-size: 18px; /* Adjust font size for mobile */
+            }
+            .divine-search-button {
+                padding: 12px 36px; /* Adjust padding for mobile */
+                font-size: 18px; /* Adjust font size for mobile */
+            }
+        }
+
+        /* Styling for park results cards */
+        .park-card {
+            background-color: #1a2e44; /* Darker blue background */
+            border-radius: 12px;
+            padding: 20px; /* Increased padding slightly for better spacing */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .park-card h3 {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #e0c29a; /* Lighter yellow for park name */
+            margin-bottom: 10px;
+        }
+
+        .park-card p {
+            font-size: 0.9em;
+            color: #c0e0e9; /* Muted text color */
+            margin-bottom: 5px;
+        }
+
+        .park-card .rating-section {
+            display: flex;
+            flex-wrap: wrap; /* Allow items to wrap to the next line */
+            justify-content: center; /* Center items when they wrap */
+            width: 100%;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            gap: 10px 16px; /* Vertical and horizontal gap between rating items */
+            padding: 0 5px; /* Small padding to prevent items from hugging card edges */
+        }
+
+        .park-card .rating-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #0f1d2d; /* Slightly darker than card background */
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            flex: 1 1 auto; /* Allow items to grow and shrink, minimum size based on content */
+            min-width: 90px; /* Adjusted min-width to give more flexibility if needed, adjust to content */
+            /* Removed max-width to allow content to dictate width */
+        }
+
+        .park-card .rating-value {
+            font-size: 1.4em; /* Larger number */
+            font-weight: bold;
+            color: #e2ffe0; /* Lighter green for rating values */
+            margin-bottom: 4px;
+        }
+
+        /* New CSS for fractional stars setup */
+        .star-container-wrapper {
+            position: relative;
+            width: 90px; /* Explicit width for 5 stars * 18px */
+            height: 18px; /* Height of a single star */
+            display: flex;
+            align-items: center;
+            overflow: hidden; /* Crucial for clipping the filled stars */
+        }
+
+        .star-background, .star-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            display: flex; /* Make sure stars line up */
+            white-space: nowrap; /* Prevent stars from wrapping within the layer */
+        }
+
+        .star-background .star {
+            fill: #4a5d6e; /* Muted grey for background stars */
+            stroke: #0f1d2d;
+            stroke-width: 0.5px;
+        }
+
+        .star-fill {
+            transition: width 0.3s ease-out; /* Smooth transition for star fill */
+        }
+
+        .star-fill .star {
+            fill: #b9ffca; /* Greenish glow for filled stars */
+            stroke: #0f1d2d;
+            stroke-width: 0.5px;
+        }
+
+
+        /* Updated Styles for Park Photos to use CSS Grid */
+        .park-card .park-photos {
+            display: grid; /* Use grid layout for 2x2 structure */
+            grid-template-columns: repeat(2, 1fr); /* Two columns, equal width */
+            grid-template-rows: repeat(2, 1fr);    /* Two rows, equal height */
+            gap: 2px; /* Space between grid items, acts as borders */
+            position: relative; /* For absolute positioning of spinner */
+            width: 240px; /* Increased fixed square size for the composite image */
+            height: 240px;
+            margin-bottom: 15px;
+            overflow: hidden; /* Keep content within bounds */
+            margin-left: auto;
+            margin-right: auto;
+            background-color: #0f1d2d; /* Background for gallery area */
+            border-radius: 8px; /* Slightly rounded corners for the whole gallery block */
+        }
+
+        .park-card .park-photos img {
+            width: 100%; /* Images fill their grid cells */
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0; /* No individual rounded corners */
+            border: 2px solid #0d250d; /* Add border to make pieces distinct */
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+            opacity: 0; /* Start invisible for fade-in effect */
+            transition: opacity 0.5s ease-in-out; /* Smooth fade-in transition */
+            filter: blur(0.2px);
+        }
+
+        /* Style for the single "No Image" placeholder, ensuring it fills the whole area */
+        .park-card .park-photos img.no-image-placeholder {
+            grid-column: 1 / -1; /* Make it span all columns */
+            grid-row: 1 / -1;    /* Make it span all rows */
+            border: none; /* No border for the single placeholder */
+            object-fit: contain; /* Contain the text/image within the full area */
+            background-color: #34495E; /* Ensure placeholder background fills */
+        }
+
+        /* Spinner Styles */
+        .image-spinner {
+            /* Styles for the spinner overlay */
+            background-color: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+            display: flex; /* Centering content */
+            align-items: center;
+            justify-content: center;
+            position: absolute; /* Cover the parent .park-photos */
+            inset: 0; /* top, right, bottom, left to 0 */
+            z-index: 10; /* Above images */
+            transition: opacity 0.3s ease-in-out; /* Fade out spinner */
+            border-radius: 8px; /* Match parent border-radius */
+        }
+
+        .image-spinner.hidden {
+            opacity: 0;
+            pointer-events: none; /* Allow clicks through when hidden */
+        }
+
+        .image-spinner > div {
+            /* Styles for the spinning circle */
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #b9ffca; /* Greenish glow */
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Adjustments for responsiveness for park cards */
+        @media (max-width: 640px) { /* Tailind 'sm' breakpoint */
+            .park-card .rating-section {
+                flex-direction: column; /* Stack vertically on very small screens */
+                gap: 10px;
+            }
+            .park-card .rating-item {
+                width: 100%; /* Full width on small screens when stacked */
+                max-width: none;
+            }
+            .park-card .park-photos {
+                /* On small screens, the square photos should maintain their aspect ratio
+                   but can scale down to fit smaller widths. */
+                width: 180px; /* Slightly smaller fixed size for mobile */
+                height: 180px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <canvas id="asciiCanvas"></canvas>
+    <header class="relative bg-cover bg-center flex items-center justify-between px-4 py-0.5 sm:py-1 rounded-b-lg shadow-lg sticky top-0 z-50" style="background-image: url('assets/header-image.jpg');">
+        <div class="flex items-center space-x-2">
+            <img src="assets/icon.png" alt="AstroScouts Icon" class="h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-full flex-shrink-0">
+            <div>
+                <h1 class="text-xl sm:text-2xl font-adobe-caslon solid-text-color whitespace-nowrap flex-shrink-0">AstroScouts</h1>
+                <p class="text-sm sm:text-base font-adobe-caslon solid-text-color leading-tight">Where nature meets accessibility</p>
+            </div>
+        </div>
+
+        <button id="menu-button" class="sm:hidden text-white focus:outline-none p-2 rounded-md hover:bg-gray-700 transition duration-300">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+
+        <nav id="main-nav-container" class="hidden absolute top-full left-0 w-full bg-black bg-opacity-80 sm:relative sm:top-auto sm:left-auto sm:w-auto sm:bg-transparent sm:bg-opacity-100 p-4 sm:p-0 z-20 sm:block">
+            <ul id="main-nav" class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-6 items-center sm:items-stretch">
+                <li><a href="index.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Home</a></li>
+                <li><a href="parks-directory.html" class="active-nav-link text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Parks Directory</a></li>
+                <li><a href="submit-a-review.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Submit a Review</a></li>
+                <li><a href="blog.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">Blog</a></li>
+                <li><a href="about-us.html" class="text-white hover:text-gray-200 font-medium rounded-md px-3 py-2 transition duration-300 ease-in-out text-sm sm:text-base">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Welcome Section moved to the top -->
+        <section class="p-8 text-center text-white bg-gray-900 bg-opacity-70">
+            <h2 class="text-3xl font-bold mb-4 font-playfair-display solid-text-color">Welcome to the Parks Directory!</h2>
+            <p class="text-lg font-railway text-gray-300">Explore a vast collection of parks, trails, and natural wonders. Find your next adventure with AstroScouts.</p>
+        </section>
+
+        <!-- Search Section -->
+        <section class="search-section">
+            <video autoplay muted loop playsinline class="absolute top-0 left-0 w-full h-full object-cover">
+                <source src="assets/ocean.mp4" type="video/mp4" onerror="this.onerror=null;this.src='https://placehold.co/1920x1080/0000FF/FFFFFF?text=Ocean+Video+Missing';">
+                Your browser does not support the video tag.
+            </video>
+            <div class="relative z-10 flex flex-col items-center">
+                <div class="divine-search-wrapper">
+                    <!-- Container for the Google Places Autocomplete element -->
+                    <div id="autocomplete-container" class="w-full"></div>
+                </div>
+                <button id="search-parks-button" class="divine-search-button">Search</button>
+            </div>
+        </section>
+
+        <!-- Park Results Section -->
+        <section id="park-results-section" class="py-12 px-4 bg-gray-900 text-white hidden">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold mb-8 text-center font-playfair-display solid-text-color">Nearest Parks</h2>
+                <div id="park-results-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Park results will be rendered here -->
+                </div>
+                <p id="no-results-message" class="text-center text-gray-400 mt-8 hidden">No parks found near this location.</p>
+                <div id="loading-indicator" class="text-center mt-8 hidden">
+                    <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-gray-300 mx-auto"></div>
+                    <p class="mt-2 text-gray-400">Searching for parks...</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer id="footer">
+      <div class="footer-content">
+        <p class="signature">Created by <strong>Andrew Cameron</strong> as part of Eagle Scout Project, Troop 443</p>
+        <p class="email">📬 Contact: <a href="mailto:ryuseicameron@gmail.com">ryuseicameron@gmail.com</a></p>
+
+        <nav class="footer-nav">
+          <a href="index.html">Home</a>
+          <a href="parks-directory.html">Explore Parks</a>
+          <a href="submit-a-review.html">Submit Review</a>
+          <a href="about-us.html">Scout Info</a>
+        </nav>
+
+        <p class="existential">Made with heart, sunlight, and a deep sense of existential urgency.</p>
+
+        <div class="socials">
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" /></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733558.png" alt="Instagram" /></a>
+        </div>
+      </div>
+    </footer>
+    <script type="module">
+        // Firebase Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Firebase variables
+        let app;
+        let db;
+        let auth;
+        let userId;
+
+        // Initialize Firebase
+        // MANDATORY: Use __firebase_config from the Canvas environment
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "AIzaSyDWRCL_1gTnsZBcpX5l_5BF2-QMMY9nIYM", // Fallback if __firebase_config is not available (shouldn't happen in Canvas)
+            authDomain: "parkratingform.firebaseapp.com",
+            projectId: "parkratingform",
+            storageBucket: "parkratingform.firebasestorage.app",
+            messagingSenderId: "784897205276",
+            appId: "1:784897205276:web:6f5330566e31fcd605abd9",
+            measurementId: "G-BZ33WZQ78C" // Included as part of the example, though not strictly used by auth/firestore ops
+        };
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+
+        // Firebase Initialization and Authentication
+        async function initializeFirebaseAndAuth() {
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // Authenticate with custom token if available, otherwise anonymously
+                if (typeof __initial_auth_token !== 'undefined') {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                    console.log('Signed in with custom token.');
+                } else {
+                    await signInAnonymously(auth);
+                    console.log('Signed in anonymously.');
+                }
+
+                // Set userId after authentication
+                userId = auth.currentUser?.uid || crypto.randomUUID();
+                console.log("Firebase initialized. User ID:", userId);
+
+            } catch (error) {
+                console.error("Error initializing Firebase or signing in:", error);
+            }
+        }
+
+
+        // Highlight active navigation link and handle mobile menu
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('#main-nav a');
+            const currentPath = window.location.pathname.split('/').pop(); // Get filename from URL
+
+            navLinks.forEach(link => {
+                const linkPath = link.getAttribute('href').split('/').pop();
+                if (linkPath === currentPath) {
+                    link.classList.add('active-nav-link');
+                }
+            });
+
+            // Mobile menu toggle logic
+            const menuButton = document.getElementById('menu-button');
+            const mainNavContainer = document.getElementById('main-nav-container');
+
+            menuButton.addEventListener('click', () => {
+                mainNavContainer.classList.toggle('hidden');
+                // For mobile, ensure it's a column layout when shown
+                if (!mainNavContainer.classList.contains('hidden')) {
+                    mainNavContainer.classList.add('flex', 'flex-col');
+                    // Position the dropdown below the header
+                    mainNavContainer.style.position = 'absolute';
+                    mainNavContainer.style.top = document.querySelector('header').offsetHeight + 'px';
+                    mainNavContainer.style.left = '0';
+                    mainNavContainer.style.width = '100%';
+                } else {
+                    mainNavContainer.classList.remove('flex', 'flex-col');
+                    // Reset position for hidden state
+                    mainNavContainer.style.position = '';
+                    mainNavContainer.style.top = '';
+                    mainNavContainer.style.left = '';
+                    mainNavContainer.style.width = '';
+                }
+            });
+        });
+
+        // ASCII Animation Script
+        const canvas = document.getElementById('asciiCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas to full screen
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const characters = 'ASTROSCOUTS*+-.=/!@#$%^&~'.split('');
+        const fontSize = 12;
+        const columns = Math.floor(canvas.width / fontSize);
+        const drops = Array(columns).fill(1); // initial Y positions for each column
+
+        // --- Animation Speed Control ---
+        const animationSpeed = 2; // Lower value = faster, Higher value = slower (e.g., 1 for normal, 2 for half speed, 0.5 for double speed)
+        let frameCount = 0;
+
+        function drawASCII() {
+          requestAnimationFrame(drawASCII); // Keep requesting frames
+
+          frameCount++;
+          if (frameCount < animationSpeed) { // Skip frames based on animationSpeed
+            return;
+          }
+          frameCount = 0; // Reset frame counter
+
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'; // fade old frames
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          ctx.fillStyle = '#00ffcc'; // glowing neon greenish-blue
+          ctx.font = `${fontSize}px monospace`;
+
+          for (let i = 0; i < drops.length; i++) {
+            const char = characters[Math.floor(Math.random() * characters.length)];
+            const x = i * fontSize;
+            const y = drops[i] * fontSize;
+
+            ctx.fillText(char, x, y);
+
+            // reset drop randomly or when it goes off-screen
+            if (y * fontSize > canvas.height && Math.random() > 0.975) { // Corrected condition
+              drops[i] = 0;
+            }
+
+            drops[i]++;
+          }
+        }
+
+        drawASCII();
+
+        // Optional: Handle window resize
+        window.addEventListener('resize', () => {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        });
+
+        // Google Places Autocomplete API Integration
+        // This script block ensures the Google Maps API is loaded asynchronously.
+        (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once.Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+                    ({key: "AIzaSyDtwsuRgrCYS1hlgQ7Ctu1CKraoZ-tzXsk", v: "weekly"}); // Your provided Google Maps API Key
+
+        let selectedPlaceLocation = null; // Store the last selected place's lat/lng
+        let autocompleteInputText = ''; // Store the raw input text from autocomplete
+
+        // Helper function to generate star SVG HTML for fractional ratings
+        function getStarRatingHtml(rating, maxStars = 5) {
+            // Ensure rating is within bounds and convert to a number
+            const normalizedRating = Math.max(0, Math.min(maxStars, parseFloat(rating) || 0));
+
+            // Define the SVG for a single star path
+            const starPath = "M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z";
+
+            // Assuming each star in the SVG is roughly 24 units wide (based on viewBox and path dimensions)
+            const singleStarUnitWidth = 24;
+            const totalSvgWidth = maxStars * singleStarUnitWidth; // Total width of 5 stars side by side
+
+            // Calculate the actual width to clip the green stars
+            const clipWidth = (normalizedRating / maxStars) * totalSvgWidth;
+
+            // Generate a unique ID for the clipPath to avoid conflicts if multiple ratings are on the page
+            const uniqueClipId = `starClip-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+
+            let svgContent = `
+                <svg class="star-rating-svg" viewBox="0 0 ${totalSvgWidth} ${singleStarUnitWidth}" style="width:${totalSvgWidth}px; height:${singleStarUnitWidth}px;">
+                    <defs>
+                        <clipPath id="${uniqueClipId}">
+                            <rect x="0" y="0" width="${clipWidth}" height="${singleStarUnitWidth}" />
+                        </clipPath>
+                    </defs>
+
+                    <g fill="#4a5d6e" stroke="#0f1d2d" stroke-width="0.5px">
+                        ${Array.from({ length: maxStars }).map((_, i) =>
+                            `<path transform="translate(${i * singleStarUnitWidth}, 0)" d="${starPath}"/>`
+                        ).join('')}
+                    </g>
+
+                    <g fill="#b9ffca" stroke="#0f1d2d" stroke-width="0.5px" clip-path="url(#${uniqueClipId})">
+                        ${Array.from({ length: maxStars }).map((_, i) =>
+                            `<path transform="translate(${i * singleStarUnitWidth}, 0)" d="${starPath}"/>`
+                        ).join('')}
+                    </g>
+                </svg>
+            `;
+
+            return svgContent;
+        }
+
+
+        async function initAutocomplete() {
+            try {
+                await google.maps.importLibrary("places");
+
+                const placeAutocomplete = new google.maps.places.PlaceAutocompleteElement();
+                const autocompleteContainer = document.getElementById('autocomplete-container');
+                const searchButton = document.getElementById('search-parks-button'); // Changed to ID
+                const parkResultsSection = document.getElementById('park-results-section');
+                const loadingIndicator = document.getElementById('loading-indicator');
+                const noResultsMessage = document.getElementById('no-results-message');
+
+                if (autocompleteContainer && searchButton && parkResultsSection && loadingIndicator && noResultsMessage) {
+                    autocompleteContainer.appendChild(placeAutocomplete);
+
+                    let autocompleteInput = null; // Initialize to null
+
+                    // Listen for the 'gmp-ready' event when the component's internal input is ready
+                    placeAutocomplete.addEventListener('gmp-ready', () => {
+                        autocompleteInput = placeAutocomplete.input; // Assign it here when ready
+                        if (autocompleteInput) {
+                            autocompleteInput.placeholder = "Search for parks, features, activities...";
+
+                            // Attach keyup listener ONLY when the input is ready
+                            autocompleteInput.addEventListener('keyup', () => {
+                                // Safely get the value, defaulting to empty string if undefined/null
+                                autocompleteInputText = autocompleteInput.value ? autocompleteInput.value.trim() : '';
+                                if (autocompleteInputText !== '' && !document.querySelector('.pac-container')) {
+                                    searchButton.classList.remove('hidden');
+                                } else {
+                                    searchButton.classList.add('hidden');
+                                }
+                            });
+                            // Initial check for button visibility if input already has text (e.g., from browser autofill)
+                            if (autocompleteInput.value) { // Check if value exists before trimming
+                                if (autocompleteInput.value.trim() !== '') {
+                                    searchButton.classList.remove('hidden');
+                                }
+                            }
+                        } else {
+                            console.error("PlaceAutocompleteElement.input is not available after gmp-ready.");
+                        }
+                    });
+
+                    // MutationObserver to watch for the autocomplete suggestions dropdown
+                    const observer = new MutationObserver(mutations => {
+                        let suggestionsVisible = false;
+                        if (document.querySelector('.pac-container')) {
+                            suggestionsVisible = true;
+                        }
+
+                        if (suggestionsVisible) {
+                            searchButton.classList.add('hidden'); // Hide the button
+                        } else {
+                            // Only show button if a place has been selected OR if input text is present
+                            // Ensure autocompleteInput is available and its value is valid before checking
+                            if (selectedPlaceLocation || (autocompleteInput && autocompleteInput.value && autocompleteInput.value.trim() !== '')) {
+                                searchButton.classList.remove('hidden');
+                            } else {
+                                searchButton.classList.add('hidden');
+                            }
+                        }
+                    });
+                    observer.observe(document.body, { childList: true, subtree: true });
+
+                    // Store selected place location when an autocomplete suggestion is selected
+                    placeAutocomplete.addEventListener('gmp-select', async ({ placePrediction }) => {
+                        const place = await placePrediction.toPlace();
+                        await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location'] });
+                        selectedPlaceLocation = place.location; // Store the selected place's location
+                        autocompleteInputText = place.displayName || place.formattedAddress || ''; // Store selected text
+                        console.log('Selected Place from Autocomplete:', place.toJSON());
+
+                        searchButton.classList.remove('hidden'); // Ensure button is visible after selection
+                    });
+
+                    // Handle search button click
+                    searchButton.addEventListener('click', async () => {
+                        if (selectedPlaceLocation) {
+                            await findNearestParks(selectedPlaceLocation.lat(), selectedPlaceLocation.lng());
+                        } else if (autocompleteInputText) {
+                             // If a user types something but doesn't select from autocomplete,
+                             // we could try geocoding the raw text here.
+                             // For now, we'll prompt the user.
+                            alert('Please select a place from the autocomplete suggestions first, or type a valid location and then click search.');
+                        }
+                        else {
+                            alert('Please enter a location to search for parks.');
+                        }
+                    });
+
+                } else {
+                    console.error("One or more required elements (autocomplete-container, search-parks-button, park-results-section, loading-indicator, no-results-message) not found.");
+                }
+            } catch (error) {
+                console.error("Error initializing Google Places Autocomplete:", error);
+            }
+        }
+
+        // Haversine distance calculation function
+        function haversineDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Radius of Earth in kilometers
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const distance = R * c; // Distance in kilometers
+            return distance;
+        }
+
+        // Median calculation function
+        function calculateMedian(arr) {
+            if (!arr || arr.length === 0) return NaN;
+            const numbers = arr.filter(n => typeof n === 'number' && !isNaN(n)).sort((a, b) => a - b);
+            if (numbers.length === 0) return NaN;
+            const mid = Math.floor(numbers.length / 2);
+            return numbers.length % 2 !== 0 ? numbers[mid] : (numbers[mid - 1] + numbers[mid]) / 2;
+        }
+
+        // Function to shuffle an array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+            }
+            return array;
+        }
+
+        // Maximum distance in kilometers to consider a park "nearby"
+        const MAX_DISTANCE_KM = 50; // You can adjust this value as needed
+
+        // Global map to keep track of loading status for each park-photos container
+        const loadingImageCounters = new Map();
+
+        // Function to handle individual image loads and control spinner visibility
+        // Made global to be accessible by `onload` attribute
+        window.handleImageLoad = function(imgElement) {
+            const parkPhotosContainer = imgElement.closest('.park-photos');
+            if (!parkPhotosContainer) return;
+
+            // Fade in the individual image
+            imgElement.style.opacity = '1';
+
+            // Get a unique ID for this specific park-photos container
+            const parkId = parkPhotosContainer.dataset.parkId;
+
+            // Increment loaded count for this container
+            const currentLoadedCount = loadingImageCounters.get(parkId) || 0;
+            loadingImageCounters.set(parkId, currentLoadedCount + 1);
+
+            // Get total expected images (4 or 1 for placeholder)
+            const totalExpectedImages = parseInt(parkPhotosContainer.dataset.totalImages, 10);
+
+            // Check if all images for this card are loaded
+            if (loadingImageCounters.get(parkId) >= totalExpectedImages) {
+                const spinner = parkPhotosContainer.querySelector('.image-spinner');
+                if (spinner) {
+                    spinner.classList.add('hidden'); // Hide spinner
+                }
+                loadingImageCounters.delete(parkId); // Clean up
+            }
+        };
+
+
+        // Function to find and display nearest parks
+        async function findNearestParks(userLat, userLng) {
+            console.log("Starting findNearestParks with userLat:", userLat, "userLng:", userLng);
+            const parkResultsContainer = document.getElementById('park-results-container');
+            const parkResultsSection = document.getElementById('park-results-section');
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const noResultsMessage = document.getElementById('no-results-message');
+
+            parkResultsContainer.innerHTML = ''; // Clear previous results
+            parkResultsSection.classList.add('hidden'); // Hide results section initially
+            noResultsMessage.classList.add('hidden'); // Hide no results message initially
+            loadingIndicator.classList.remove('hidden'); // Show loading indicator
+
+            try {
+                if (!db || !auth.currentUser) {
+                    console.error("Firestore not initialized or user not authenticated. Attempting to re-initialize.");
+                    await initializeFirebaseAndAuth(); // Attempt to re-initialize if needed
+                    if (!db || !auth.currentUser) { // Check again after attempt
+                        alert("Firebase services are not ready. Please try again.");
+                        loadingIndicator.classList.add('hidden');
+                        return;
+                    }
+                }
+
+                console.log("Fetching park reviews from Firestore...");
+                // Corrected path based on user's clarification: collection is named parkReviews, not artifacts.
+                const parkReviewsCollectionRef = collection(db, `/parkReviews`);
+                const q = query(parkReviewsCollectionRef);
+                const querySnapshot = await getDocs(q);
+
+                const parkReviews = [];
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    parkReviews.push(data);
+                    // Ensure parkName and parkAddress are strings for logging
+                    const logParkName = typeof data.parkName === 'string' ? data.parkName : String(data.parkName);
+                    const logParkAddress = typeof data.parkAddress === 'string' ? data.parkAddress : String(data.parkAddress);
+                    console.log(`Fetched review for "${logParkName}" at "${logParkAddress}" - Location:`, data.parkLocation);
+                });
+                console.log("Total park reviews fetched:", parkReviews.length);
+
+                if (parkReviews.length === 0) {
+                    console.log("No reviews found in Firestore (database is empty).");
+                    loadingIndicator.classList.add('hidden');
+                    parkResultsSection.classList.remove('hidden'); // Show section
+                    noResultsMessage.classList.remove('hidden'); // Show no results message
+                    noResultsMessage.textContent = 'No park reviews found in the database.';
+                    return;
+                }
+
+                // Group reviews by park (using parkName and rounded coordinates for uniqueness)
+                const parksData = {};
+                parkReviews.forEach(review => {
+                    // Ensure parkName and parkAddress are strings before using string methods
+                    const parkName = String(review.parkName || 'Unnamed Park');
+                    const parkAddress = String(review.parkAddress || 'Unknown Address');
+
+                    let lat = null;
+                    let lng = null;
+                    let parkIdentifier;
+
+                    if (review.parkLocation && typeof review.parkLocation.latitude === 'number' && typeof review.parkLocation.longitude === 'number') {
+                        // Round coordinates to a reasonable precision (e.g., 5 decimal places for ~1 meter accuracy)
+                        lat = review.parkLocation.latitude.toFixed(5);
+                        lng = review.parkLocation.longitude.toFixed(5);
+                        parkIdentifier = `${parkName.toLowerCase().trim()} - ${lat},${lng}`; // Normalize name for grouping
+                    } else {
+                        // Fallback for reviews without valid location data. These will not have distance calculated.
+                        console.warn(`Review for '${parkName}' is missing valid parkLocation, or it's malformed. Using address for identifier:`, review);
+                        parkIdentifier = `${parkName.toLowerCase().trim()} - ${parkAddress.toLowerCase().trim()}`;
+                    }
+
+                    if (!parksData[parkIdentifier]) {
+                        parksData[parkIdentifier] = {
+                            name: parkName, // Keep original name for display
+                            address: parkAddress, // Keep original address for display
+                            location: review.parkLocation, // Keep original for distance calc
+                            reviews: [],
+                            distances: [],
+                            allPhotos: []
+                        };
+                    }
+                    parksData[parkIdentifier].reviews.push(review);
+                    if (lat !== null && lng !== null) { // Only calculate distance if location was valid for grouping
+                        const dist = haversineDistance(userLat, userLng, review.parkLocation.latitude, review.parkLocation.longitude);
+                        parksData[parkIdentifier].distances.push(dist);
+                    }
+                    if (Array.isArray(review.photos)) {
+                        // Filter out any non-string or empty string photo URLs before concatenating
+                        parksData[parkIdentifier].allPhotos = parksData[parkIdentifier].allPhotos.concat(review.photos.filter(p => typeof p === 'string' && p.trim() !== ''));
+                    }
+                });
+
+                console.log("Parks data after grouping:", parksData);
+                console.log("Number of unique parks identified before filtering:", Object.keys(parksData).length);
+
+                const aggregatedParks = [];
+                for (const identifier in parksData) {
+                    const park = parksData[identifier];
+                    const aggregatedReview = {
+                        parkName: park.name,
+                        parkAddress: park.address,
+                        averageDistance: park.distances.length > 0 ? calculateMedian(park.distances) : Infinity, // Use median for distance
+                        photos: park.allPhotos.length > 0 ? [...new Set(park.allPhotos)] : [], // Filter unique photos, initialize as empty if none
+                        ratings: {}
+                    };
+
+                    // Define specific rating fields to aggregate and display
+                    const displayRatingFields = [
+                        'accessibilityRating',
+                        'cleanlinessRating',
+                        'sustainabilityRating'
+                    ];
+
+                    // Collect all values for each rating field across all reviews for this park
+                    const tempRatings = {};
+                    displayRatingFields.forEach(field => {
+                        tempRatings[field] = [];
+                    });
+
+                    park.reviews.forEach(review => {
+                        displayRatingFields.forEach(field => {
+                            if (typeof review[field] === 'number' && !isNaN(review[field])) {
+                                tempRatings[field].push(review[field]);
+                            }
+                        });
+                    });
+
+                    // Calculate median for each required rating field
+                    for (const field of displayRatingFields) {
+                        if (tempRatings[field].length > 0) {
+                            aggregatedReview.ratings[field] = calculateMedian(tempRatings[field]);
+                        } else {
+                            aggregatedReview.ratings[field] = 'N/A';
+                        }
+                    }
+
+                    aggregatedParks.push(aggregatedReview);
+                }
+
+                console.log("Aggregated parks before filtering by distance:", aggregatedParks);
+
+                // Filter parks by distance threshold
+                const nearbyParks = aggregatedParks.filter(park => park.averageDistance <= MAX_DISTANCE_KM);
+                console.log("Nearby parks after filtering (within " + MAX_DISTANCE_KM + " km):", nearbyParks);
+
+                // Sort nearby parks by distance
+                nearbyParks.sort((a, b) => a.averageDistance - b.averageDistance);
+
+                console.log("Nearby parks after sorting:", nearbyParks);
+                console.log("Number of nearby parks to display:", nearbyParks.length);
+
+                loadingIndicator.classList.add('hidden'); // Hide loading indicator
+                parkResultsSection.classList.remove('hidden'); // Show the results section container
+
+                if (nearbyParks.length > 0) {
+                    parkResultsContainer.classList.remove('hidden'); // Ensure container is visible
+                    noResultsMessage.classList.add('hidden'); // Hide no results message
+
+                    nearbyParks.forEach(park => {
+                        const cardLink = document.createElement('a'); // Create an anchor tag
+                        // Encode the park name and address to safely pass in URL
+                        const parkNameEncoded = encodeURIComponent(park.parkName);
+                        const parkAddressEncoded = encodeURIComponent(park.parkAddress);
+                        // Set the href to your new detail page, passing identifiers as query parameters
+                        cardLink.href = `park-detail.html?name=${parkNameEncoded}&address=${parkAddressEncoded}`;
+                        cardLink.className = 'park-card'; // Apply existing card styling to the link
+
+                        // Now, create the div element that holds the card content
+                        const cardContent = document.createElement('div');
+                        cardContent.className = 'park-card-content'; // Add a new class for internal styling if needed
+
+                        let ratingsHtml = '';
+                        // Display specific ratings with stars
+                        const ratingsToDisplay = {
+                            'Accessibility': park.ratings.accessibilityRating,
+                            'Cleanliness': park.ratings.cleanlinessRating,
+                            'Sustainability': park.ratings.sustainabilityRating
+                        };
+
+                        for (const label in ratingsToDisplay) {
+                            const ratingValue = ratingsToDisplay[label];
+                            ratingsHtml += `
+                                <div class="rating-item">
+                                    <span class="rating-value">${typeof ratingValue === 'number' ? ratingValue.toFixed(1) : ratingValue}</span>
+                                    ${typeof ratingValue === 'number' ? getStarRatingHtml(ratingValue) : getStarRatingHtml(0)}
+                                    <strong>${label}</strong>
+                                </div>
+                            `;
+                        }
+
+                        let photosHtmlContent = ''; // Content for the actual images/placeholder
+                        const shuffledPhotos = shuffleArray([...park.photos]);
+                        const photosToDisplay = shuffledPhotos.slice(0, 4);
+                        const parkCardId = `park-photos-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`; // Unique ID for this photo container
+
+                        let expectedImageCount = 0;
+
+                        if (photosToDisplay.length > 0) {
+                            expectedImageCount = photosToDisplay.length;
+                            photosToDisplay.forEach((photoUrl, index) => {
+                                // Add onload to trigger fade-in and check if all images are loaded
+                                photosHtmlContent += `<img src="${photoUrl}" alt="Park Photo ${index + 1}" onload="handleImageLoad(this)" onerror="this.onerror=null;this.src='https://placehold.co/240x240/34495E/FFFFFF?text=Error';">`;
+                            });
+                        } else {
+                            expectedImageCount = 1; // Only one placeholder to load
+                            // Single placeholder image spanning all cells, with onload
+                            photosHtmlContent = `<img class="no-image-placeholder" src="https://placehold.co/240x240/34495E/FFFFFF?text=No+Image+Available" alt="No Image Available" onload="handleImageLoad(this)">`;
+                        }
+
+                        // Instead of appending to card, append to cardContent
+                        cardContent.innerHTML = `
+                            <div class="park-photos" data-park-id="${parkCardId}" data-total-images="${expectedImageCount}">
+                                <div class="image-spinner">
+                                    <div></div> </div>
+                                ${photosHtmlContent}
+                            </div>
+                            <h3>${park.parkName}</h3>
+                            <p>${park.parkAddress}</p>
+                            <p>Distance: ${park.averageDistance !== Infinity ? park.averageDistance.toFixed(2) + ' km' : 'N/A'}</p>
+                            <div class="rating-section">
+                                ${ratingsHtml}
+                            </div>
+                            <span style="text-decoration: underline;">Click here to see more</span>
+                        `;
+                        cardLink.appendChild(cardContent); // Append the content div to the clickable link
+                        parkResultsContainer.appendChild(cardLink); // Append the entire clickable link to the container
+                    });
+                } else {
+                    parkResultsContainer.classList.add('hidden'); // Hide container if no nearby parks
+                    noResultsMessage.classList.remove('hidden'); // Show no results message
+                    noResultsMessage.textContent = `No parks found within ${MAX_DISTANCE_KM} km of this location. Try a different search area.`;
+                }
+            } catch (error) {
+                console.error("Error fetching or processing park data:", error);
+                loadingIndicator.classList.add('hidden');
+                parkResultsSection.classList.remove('hidden');
+                parkResultsContainer.innerHTML = '';
+                noResultsMessage.classList.remove('hidden');
+                noResultsMessage.textContent = 'An error occurred while fetching park data. Please try again.';
+            }
+        }
+
+        // Initialize Firebase and Auth first, then the Autocomplete
+        initializeFirebaseAndAuth().then(() => {
+            initAutocomplete();
+        });
+
+    </script>
+</body>
+</html>
