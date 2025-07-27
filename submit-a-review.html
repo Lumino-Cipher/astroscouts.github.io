@@ -1479,7 +1479,7 @@
                     <div class="form-section">
                         <h3>🦌 6. Wildlife Spotted (Types)</h3>
                         <p class="image-reference-intro">
-                            <strong>Reference Guide:</strong> Click on an image to select the type of wildlife spotted.
+                            <strong>Reference Guide:</strong> Click on images to select the type of wildlife spotted. More than one image can be selected.
                         </p>
                         <div class="image-checkbox-gallery">
                             <label class="image-checkbox-item">
@@ -1511,7 +1511,133 @@
                     </div>
                 </div>
                 <div class="form-section">
-                    <h3>🚨 7. Concerns / Issues Noticed</h3>
+                    <h3>🧭 7. Atmosphere</h3>
+                    <p class="image-reference-intro">
+                        <strong>Reference Guide:</strong> Click on images to select the type of atmosphere. More than one image can be selected.
+                    </p>
+                    <div class="image-checkbox-gallery">
+                        <label class="image-checkbox-item">
+                            <input type="checkbox" name="atmosphere" value="quietMeditative" class="hidden-checkbox">
+                            <img src="park-photos/quiet-meditative.png" alt="Quiet & Meditative">
+                            <span class="image-overlay-text">Quiet & meditative</span>
+                        </label>
+                        <label class="image-checkbox-item">
+                            <input type="checkbox" name="atmosphere" value="familyFriendly" class="hidden-checkbox">
+                            <img src="park-photos/family-friendly.png" alt="Family Friendly">
+                            <span class="image-overlay-text">Family friendly</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>🏔️ 8. Terrain</h3>
+                    <p class="image-reference-intro">
+                        <strong>Reference Guide:</strong> Click on images to select the type of terrain. More than one image can be selected.
+                    </p>
+                    <div class="image-checkbox-gallery">
+                        <label class="image-checkbox-item">
+                            <input type="checkbox" name="terrain" value="flat" class="hidden-checkbox">
+                            <img src="park-photos/flat.png" alt="Flat terrain">
+                            <span class="image-overlay-text">Flat</span>
+                        </label>
+                        <label class="image-checkbox-item">
+                            <input type="checkbox" name="terrain" value="hilly" class="hidden-checkbox">
+                            <img src="park-photos/hilly.png" alt="Hilly terrain">
+                            <span class="image-overlay-text">Hilly</span>
+                        </label>
+                        <label class="image-checkbox-item">
+                            <input type="checkbox" name="terrain" value="rocky" class="hidden-checkbox">
+                            <img src="park-photos/rocky.png" alt="Rocky terrain">
+                            <span class="image-overlay-text">Rocky</span>
+                        </label>
+                        <label class="image-checkbox-item">
+                            <input type="checkbox" name="terrain" value="forested" class="hidden-checkbox">
+                            <img src="park-photos/forested.png" alt="Forested terrain">
+                            <span class="image-overlay-text">Forested</span>
+                        </label>
+                        <label class="image-checkbox-item">
+                            <input type="checkbox" name="terrain" value="coastal" class="hidden-checkbox">
+                            <img src="park-photos/coastal.png" alt="Coastal terrain">
+                            <span class="image-overlay-text">Coastal</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>🔥 9. Features</h3>
+                    <p class="image-reference-intro">
+                      <strong>Reference Guide:</strong> Click on images to select the available features. More than one image can be selected.
+                    </p>
+                    <div class="image-checkbox-gallery">
+                      <label class="image-checkbox-item">
+                        <input type="checkbox" name="features" value="bathrooms" class="hidden-checkbox">
+                        <img src="park-photos/bathrooms.png" alt="Bathrooms feature">
+                        <span class="image-overlay-text">Bathrooms</span>
+                      </label>
+                      <label class="image-checkbox-item">
+                        <input type="checkbox" name="features" value="campgrounds" class="hidden-checkbox">
+                        <img src="park-photos/campgrounds.png" alt="Campgrounds feature">
+                        <span class="image-overlay-text">Campgrounds</span>
+                      </label>
+                      <label class="image-checkbox-item">
+                        <input type="checkbox" name="features" value="picnicAreas" class="hidden-checkbox">
+                        <img src="park-photos/picnic-areas.png" alt="Picnic Areas feature">
+                        <span class="image-overlay-text">Picnic areas</span>
+                      </label>
+                      <label class="image-checkbox-item">
+                        <input type="checkbox" name="features" value="waterfalls" class="hidden-checkbox">
+                        <img src="park-photos/waterfalls.png" alt="Waterfalls feature">
+                        <span class="image-overlay-text">Waterfalls</span>
+                      </label>
+                      <label class="image-checkbox-item">
+                        <input type="checkbox" name="features" value="historicalSites" class="hidden-checkbox">
+                        <img src="park-photos/historical-sites.png" alt="Historical Sites feature">
+                        <span class="image-overlay-text">Historical sites</span>
+                      </label>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>🔮 10. Community Ratings</h3>
+                    <p class="image-reference-intro">
+                      <strong>Reference Guide:</strong> Click on the image if relevant.
+                    </p>
+                    <div class="image-checkbox-gallery">
+                      <label class="image-checkbox-item">
+                        <input type="checkbox" name="communityRatings" value="soloVisitors" class="hidden-checkbox">
+                        <img src="park-photos/solo.png" alt="Rated highly for solo visitors">
+                        <span class="image-overlay-text">Rated highly for solo visitors</span>
+                      </label>
+                    </div>
+                    <label for="bestInSeason">Rated best in season:</label>
+                    <select id="bestInSeason" name="bestInSeason">
+                        <option value="">Select season</option>
+                        <option value="spring">Spring</option>
+                        <option value="summer">Summer</option>
+                        <option value="fall">Fall</option>
+                        <option value="winter">Winter</option>
+                    </select>
+                    <div class="sub-rating-group rating-group">
+                      <label>"Would revisit" rating:</label>
+                      <div class="stars stars-10" data-rating="0" data-name="wouldRevisitRating" data-max-stars="10"></div>
+                      <input type="hidden" name="wouldRevisitRating" class="hidden-star-rating" value="0">
+                      <div class="example-visuals">
+                        <div class="image-reference-gallery">
+                          <div class="image-container" data-rating-value="1">
+                            <img src="park-photos/revisit1.png" alt="1 Star Would Revisit">
+                            <div class="image-overlay-text">1 Star</div>
+                          </div>
+                          <div class="image-container" data-rating-value="5">
+                            <img src="park-photos/revisit5.png" alt="5 Stars Would Revisit">
+                            <div class="image-overlay-text">5 Stars</div>
+                          </div>
+                          <div class="image-container" data-rating-value="10">
+                            <img src="park-photos/revisit10.png" alt="10 Stars Would Revisit">
+                            <div class="image-overlay-text">10 Stars</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <div class="form-section">
+                    <h3>🚨 11. Concerns / Issues Noticed</h3>
                     <label>Select any concerns:</label>
                     <div class="tag-select" id="concernsTags">
                         <button type="button" data-tag="trail_blocked">Trail blocked</button>
@@ -1527,13 +1653,13 @@
                 </div>
 
                 <div class="form-section">
-                    <h3>💬 8. Additional Comments</h3>
+                    <h3>💬 12. Additional Comments</h3>
                     <label for="additionalComments">Any thoughts you’d like to share? Describe one thing you loved or one thing that could be improved.</label>
                     <textarea id="additionalComments" name="additionalComments" placeholder="Share your story here..."></textarea>
                 </div>
 
                 <div class="form-section">
-                    <h3>📸 9. Photo Uploads (Optional)</h3>
+                    <h3>📸 13. Photo Uploads (Optional)</h3>
                     <label>Share what you saw – good or bad. (Up to 5 photos)</label>
                     <div class="file-upload-area" id="dropArea">
                         <input type="file" id="photoUpload" name="photos" accept=".jpg, .png, .webp" multiple>
@@ -1546,7 +1672,7 @@
                 </div>
 
                 <div class="form-section">
-                    <h3>👨‍🌾 10. Park Observer Info (Optional)</h3>
+                    <h3>👨‍🌾 14. Park Observer Info (Optional)</h3>
                     <label for="observerRole">Role:</label>
                     <select id="observerRole" name="observerRole">
                         <option value="">Select role</option>

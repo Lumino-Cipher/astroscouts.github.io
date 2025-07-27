@@ -465,7 +465,32 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('input[name="wildlifeType"]:checked').forEach(checkbox => {
                 selectedWildlifeTypes.push(checkbox.value);
             });
-            dataToSave.wildlifeTypes = selectedWildlifeTypes; // Add the array of selected wildlife types
+        dataToSave.wildlifeTypes = selectedWildlifeTypes; // Add the array of selected wildlife types
+
+        dataToSave.wildlifeTypes = selectedWildlifeTypes; // Add the array of selected wildlife types
+        const selectedAtmospheres = [];
+        document.querySelectorAll('input[name="atmosphere"]:checked').forEach(checkbox => {
+            selectedAtmospheres.push(checkbox.value);
+        });
+        dataToSave.atmosphere = selectedAtmospheres;
+
+        const selectedTerrains = [];
+        document.querySelectorAll('input[name="terrain"]:checked').forEach(checkbox => {
+            selectedTerrains.push(checkbox.value);
+        });
+        dataToSave.terrain = selectedTerrains;
+
+        const selectedFeatures = [];
+        document.querySelectorAll('input[name="features"]:checked').forEach(checkbox => {
+            selectedFeatures.push(checkbox.value);
+        });
+        dataToSave.features = selectedFeatures;
+
+        const selectedCommunityRatings = [];
+        document.querySelectorAll('input[name="communityRatings"]:checked').forEach(checkbox => {
+            selectedCommunityRatings.push(checkbox.value);
+        });
+        dataToSave.communityRatings = selectedCommunityRatings;
         
         // --- End: Collect data from form fields ---
 

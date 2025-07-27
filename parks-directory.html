@@ -127,7 +127,7 @@
         .search-section {
             position: relative;
             width: 100%;
-            height: 100vh; /* Adjust height as needed */
+            height: 190vh; /* Adjust height as needed */
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -178,7 +178,7 @@
             /* Ensure the wrapper respects the input's width */
             width: 85vw; /* Match input width */
             max-width: 800px; /* Match input max-width */
-            z-index: 2;
+            z-index: 3;
         }
 
         .divine-search-wrapper:hover {
@@ -518,6 +518,100 @@
             }
         }
 
+        /* New styles for the scroll indicator text */
+        .scroll-indicator {
+            color: #000370; /* Neon Dark Blue */
+            text-shadow:
+                0 0 5px rgba(0, 191, 255, 0.6), /* Blue glow */
+                0 0 10px rgba(0, 191, 255, 0.4),
+                0 0 15px rgba(0, 191, 255, 0.2);
+            font-family: 'Raleway', sans-serif; /* Using Raleway for this text */
+            font-size: 1.2em;
+            margin-top: 20px;
+            opacity: 0; /* Start hidden */
+            transition: opacity 0.5s ease-in-out;
+            pointer-events: none; /* Allows clicks to pass through */
+            z-index: 1; /* Above video */
+        }
+
+        .scroll-indicator.visible {
+            opacity: 1;
+        }
+
+        .scroll-indicator::after {
+            content: ' ↓'; /* Down arrow */
+            margin-left: 5px;
+        }
+
+        /* Inside your <style> block */
+
+        /* Initial height for search-section */
+        .search-section {
+            height: 100vh; /* Changed from 190vh */
+            transition: height 0.7s ease-in-out; /* Smooth transition for height */
+        }
+
+        /* Expanded state for search-section */
+        .search-section.expanded {
+            height: 190vh;
+        }
+
+        /* Styles for the filter toggle area */
+        .filter-toggle-area {
+            width: 100%;
+            max-width: 4xl; /* Matches max-width of parkFilters */
+            padding: 16px 24px; /* Adjust padding as needed */
+            background-color: rgba(15, 29, 45, 0.8); /* Transparent black area */
+            border-radius: 8px; /* Slightly rounded corners */
+            margin-top: 30px; /* Space between search bar and filters */
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e0c29a; /* Lighter yellow text */
+            font-size: 1.8em; /* Prominent font size */
+            font-weight: bold;
+            font-family: 'Playfair Display', serif;
+            transition: background-color 0.3s ease;
+            z-index: 2; /* Ensure it's above the video */
+            position: relative; /* For arrow positioning */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+        }
+
+        .filter-toggle-area:hover {
+            background-color: rgba(26, 46, 68, 0.9); /* Slightly darker on hover */
+        }
+
+        /* Arrow icon for expand/collapse */
+        .filter-toggle-area .arrow-icon {
+            margin-left: 15px;
+            font-size: 1.2em;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .filter-toggle-area.expanded .arrow-icon {
+            transform: rotate(180deg); /* Arrow points up when expanded */
+        }
+
+        /* Hide and show filters with transition */
+        #parkFilters {
+            max-height: 0; /* Initially hidden */
+            opacity: 0; /* Start invisible */
+            overflow: hidden; /* Hide overflow content */
+            transition: max-height 0.7s ease-in-out, opacity 0.7s ease-in-out, padding 0.7s ease-in-out; /* Smooth transition */
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-top: 0; /* Remove initial margin */
+        }
+
+        #parkFilters.show-filters {
+            max-height: 2000px; /* Sufficiently large height to show all content */
+            opacity: 1;
+            padding-top: 24px; /* Restore padding when shown */
+            padding-bottom: 24px;
+            margin-top: 32px; /* Restore margin when shown */
+        }
+
     </style>
 </head>
 <body>
@@ -549,13 +643,11 @@
     </header>
 
     <main>
-        <!-- Welcome Section moved to the top -->
         <section class="p-8 text-center text-white bg-gray-900 bg-opacity-70">
             <h2 class="text-3xl font-bold mb-4 font-playfair-display solid-text-color">Welcome to the Parks Directory!</h2>
             <p class="text-lg font-railway text-gray-300">Explore a vast collection of parks, trails, and natural wonders. Find your next adventure with AstroScouts.</p>
         </section>
 
-        <!-- Search Section -->
         <section class="search-section">
             <video autoplay muted loop playsinline class="absolute top-0 left-0 w-full h-full object-cover">
                 <source src="assets/ocean.mp4" type="video/mp4" onerror="this.onerror=null;this.src='https://placehold.co/1920x1080/0000FF/FFFFFF?text=Ocean+Video+Missing';">
@@ -563,20 +655,139 @@
             </video>
             <div class="relative z-10 flex flex-col items-center">
                 <div class="divine-search-wrapper">
-                    <!-- Container for the Google Places Autocomplete element -->
                     <div id="autocomplete-container" class="w-full"></div>
                 </div>
+
+                <div id="filterToggleArea" class="filter-toggle-area w-full max-w-4xl rounded-lg">
+                    <span>Filter Parks</span>
+                    <span class="arrow-icon">▼</span>
+                </div>
+
+                <div id="parkFilters" class="w-full max-w-4xl px-4 py-6 bg-gray-900 bg-opacity-80 rounded-lg shadow-xl space-y-6 text-left">
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-semibold text-teal-300 font-railway">Ratings (1-10)</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div>
+                                <label for="wheelchairAccessibilityRating" class="block text-gray-300 text-sm font-bold mb-2">Wheelchair/Stroller Accessibility:</label>
+                                <input type="number" id="wheelchairAccessibilityRating" name="wheelchairAccessibilityRating" min="1" max="10" placeholder="Any" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
+                            </div>
+                            <div>
+                                <label for="natureAppealRating" class="block text-gray-300 text-sm font-bold mb-2">Nature Appeal:</label>
+                                <input type="number" id="natureAppealRating" name="natureAppealRating" min="1" max="10" placeholder="Any" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
+                            </div>
+                            <div>
+                                <label for="seasonalUniquenessRating" class="block text-gray-300 text-sm font-bold mb-2">Seasonal Uniqueness:</label>
+                                <input type="number" id="seasonalUniquenessRating" name="seasonalUniquenessRating" min="1" max="10" placeholder="Any" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
+                            </div>
+                            <div>
+                                <label for="wildlifeSpottedRating" class="block text-gray-300 text-sm font-bold mb-2">Wildlife Spotted:</label>
+                                <input type="number" id="wildlifeSpottedRating" name="wildlifeSpottedRating" min="1" max="10" placeholder="Any" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
+                            </div>
+                            <div>
+                                <label for="nightSkyClarityRating" class="block text-gray-300 text-sm font-bold mb-2">Night Sky Clarity:</label>
+                                <input type="number" id="nightSkyClarityRating" name="nightSkyClarityRating" min="1" max="10" placeholder="Any" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-semibold text-teal-300 font-railway">Atmosphere</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <label class="inline-flex items-center text-gray-300">
+                                <input type="checkbox" name="atmosphere" value="quietMeditative" class="form-checkbox h-5 w-5 text-teal-500 bg-gray-700 border-gray-600 rounded">
+                                <span class="ml-2">Quiet & meditative</span>
+                            </label>
+                            <label class="inline-flex items-center text-gray-300">
+                                <input type="checkbox" name="atmosphere" value="familyFriendly" class="form-checkbox h-5 w-5 text-teal-500 bg-gray-700 border-gray-600 rounded">
+                                <span class="ml-2">Family friendly</span>
+                            </label>
+                        </div>
+
+                        <h3 class="text-xl font-semibold text-teal-300 font-railway mt-6">Terrain</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <label class="inline-flex items-center text-gray-300">
+                                <input type="checkbox" name="terrain" value="flat" class="form-checkbox h-5 w-5 text-teal-500 bg-gray-700 border-gray-600 rounded">
+                                <span class="ml-2">Flat</span>
+                            </label>
+                            <label class="inline-flex items-center text-gray-300">
+                                <input type="checkbox" name="terrain" value="hilly" class="form-checkbox h-5 w-5 text-teal-500 bg-gray-700 border-gray-600 rounded">
+                                <span class="ml-2">Hilly</span>
+                            </label>
+                            <label class="inline-flex items-center text-gray-300">
+                                <input type="checkbox" name="terrain" value="rocky" class="form-checkbox h-5 w-5 text-teal-500 bg-gray-700 border-gray-600 rounded">
+                                <span class="ml-2">Rocky</span>
+                            </label>
+                            <label class="inline-flex items-center text-gray-300">
+                                <input type="checkbox" name="terrain" value="forested" class="form-checkbox h-5 w-5 text-teal-500 bg-gray-700 border-gray-600 rounded">
+                                <span class="ml-2">Forested</span>
+                            </label>
+                            <label class="inline-flex items-center text-gray-300">
+                                <input type="checkbox" name="terrain" value="coastal" class="form-checkbox h-5 w-5 text-teal-500 bg-gray-700 border-gray-600 rounded">
+                                <span class="ml-2">Coastal</span>
+                            </label>
+                        </div>
+
+                        <h3 class="text-xl font-semibold text-teal-300 font-railway mt-6">Features</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <label class="inline-flex items-center text-gray-300">
+                                <input type="checkbox" name="features" value="bathrooms" class="form-checkbox h-5 w-5 text-teal-500 bg-gray-700 border-gray-600 rounded">
+                                <span class="ml-2">Bathrooms</span>
+                            </label>
+                            <label class="inline-flex items-center text-gray-300">
+                                <input type="checkbox" name="features" value="campgrounds" class="form-checkbox h-5 w-5 text-teal-500 bg-gray-700 border-gray-600 rounded">
+                                <span class="ml-2">Campgrounds</span>
+                            </label>
+                            <label class="inline-flex items-center text-gray-300">
+                                <input type="checkbox" name="features" value="picnicAreas" class="form-checkbox h-5 w-5 text-teal-500 bg-gray-700 border-gray-600 rounded">
+                                <span class="ml-2">Picnic areas</span>
+                            </label>
+                            <label class="inline-flex items-center text-gray-300">
+                                <input type="checkbox" name="features" value="waterfalls" class="form-checkbox h-5 w-5 text-teal-500 bg-gray-700 border-gray-600 rounded">
+                                <span class="ml-2">Waterfalls</span>
+                            </label>
+                            <label class="inline-flex items-center text-gray-300">
+                                <input type="checkbox" name="features" value="historicalSites" class="form-checkbox h-5 w-5 text-teal-500 bg-gray-700 border-gray-600 rounded">
+                                <span class="ml-2">Historical sites</span>
+                            </label>
+                        </div>
+
+                        <h3 class="text-xl font-semibold text-teal-300 font-railway mt-6">Community Ratings</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <label class="inline-flex items-center text-gray-300">
+                                <input type="checkbox" name="communityRatings" value="rated-highly-solo" class="form-checkbox h-5 w-5 text-teal-500 bg-gray-700 border-gray-600 rounded">
+                                <span class="ml-2">Rated highly for solo visitors</span>
+                            </label>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                            <div>
+                                <label for="wouldRevisitRating" class="block text-gray-300 text-sm font-bold mb-2">Would Revisit (1-10):</label>
+                                <input type="number" id="wouldRevisitRating" name="wouldRevisitRating" min="0" max="10" placeholder="Any" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
+                            </div>
+                            <div>
+                                <label for="bestSeason" class="block text-gray-300 text-sm font-bold mb-2">Rated best in:</label>
+                                <select id="bestSeason" name="bestSeason" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white">
+                                    <option value="">Any Season</option>
+                                    <option value="spring">Spring</option>
+                                    <option value="summer">Summer</option>
+                                    <option value="fall">Fall</option>
+                                    <option value="winter">Winter</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
                 <button id="search-parks-button" class="divine-search-button">Search</button>
+                <p id="scroll-indicator-text" class="scroll-indicator hidden">Scroll below for search results</p>
+                <p id="no-results-indicator-text" class="scroll-indicator hidden">No parks found within 50 km of this location. Try a different search area.</p>
             </div>
         </section>
 
-        <!-- Park Results Section -->
         <section id="park-results-section" class="py-12 px-4 bg-gray-900 text-white hidden">
             <div class="max-w-4xl mx-auto">
-                <h2 class="text-3xl font-bold mb-8 text-center font-playfair-display solid-text-color">Nearest Parks</h2>
+                <h2 id="nearest-parks-heading" class="text-3xl font-bold mb-8 text-center font-playfair-display solid-text-color">Nearest Parks</h2>
                 <div id="park-results-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Park results will be rendered here -->
-                </div>
+                    </div>
                 <p id="no-results-message" class="text-center text-gray-400 mt-8 hidden">No parks found near this location.</p>
                 <div id="loading-indicator" class="text-center mt-8 hidden">
                     <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-gray-300 mx-auto"></div>
@@ -611,18 +822,20 @@
         // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
 
         // Global Firebase variables
         let app;
         let db;
         let auth;
         let userId;
+        let geocoder; // Declare geocoder globally
 
         // Initialize Firebase
         // MANDATORY: Use __firebase_config from the Canvas environment
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            apiKey: "AIzaSyDWRCL_1gTnsZBcpX5l_5BF2-QMMY9nIYM", // Fallback if __firebase_config is not available (shouldn't happen in Canvas)
+            apiKey: "AIzaSyDWRCL_1gTnsZBcpX5l_5BF2-QMMY9nIYM", // Fallback, this should be your Firebase API Key
             authDomain: "parkratingform.firebaseapp.com",
             projectId: "parkratingform",
             storageBucket: "parkratingform.firebasestorage.app",
@@ -631,6 +844,8 @@
             measurementId: "G-BZ33WZQ78C" // Included as part of the example, though not strictly used by auth/firestore ops
         };
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        console.log("Firebase Config API Key:", firebaseConfig.apiKey);
 
 
         // Firebase Initialization and Authentication
@@ -754,8 +969,10 @@
 
         // Google Places Autocomplete API Integration
         // This script block ensures the Google Maps API is loaded asynchronously.
-        (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once.Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
-                    ({key: "AIzaSyDtwsuRgrCYS1hlgQ7Ctu1CKraoZ-tzXsk", v: "weekly"}); // Your provided Google Maps API Key
+        (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=(err)=>{h=n(Error(p+" could not load.")); console.error("Google Maps API script error:", err);};a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once.Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+                    ({key: "AIzaSyDtwsuRgrCYS1hlgQ7Ctu1CKraoZ-tzXsk", v: "weekly"}); // This is your Google Maps API Key
+
+        console.log("Google Maps API Key provided:", "AIzaSyDtwsuRgrCYS1hlgQ7Ctu1CKraoZ-tzXsk");
 
         let selectedPlaceLocation = null; // Store the last selected place's lat/lng
         let autocompleteInputText = ''; // Store the raw input text from autocomplete
@@ -803,10 +1020,57 @@
             return svgContent;
         }
 
+        // New function to perform a search based on a text query using Geocoding
+        async function performSearch(searchTerm, filters = {}) { // Add filters parameter
+            console.log(`Attempting to perform search for: "${searchTerm}" with filters:`, filters); // Log filters
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const parkResultsSection = document.getElementById('park-results-section');
+            const noResultsMessage = document.getElementById('no-results-message');
+            const parkResultsContainer = document.getElementById('park-results-container');
+
+            parkResultsContainer.innerHTML = '';
+            parkResultsSection.classList.add('hidden');
+            noResultsMessage.classList.add('hidden');
+            loadingIndicator.classList.remove('hidden');
+
+            try {
+                console.log("Attempting to import geocoding library...");
+                await google.maps.importLibrary("geocoding");
+                console.log("Geocoding library imported. Initializing Geocoder.");
+                geocoder = new google.maps.Geocoder();
+                console.log("Geocoder initialized:", geocoder);
+
+                const response = await geocoder.geocode({ 'address': searchTerm });
+                console.log("Geocoding response for '" + searchTerm + "':", response);
+
+                if (response.results && response.results.length > 0) {
+                    const location = response.results[0].geometry.location;
+                    console.log("Geocoded location (lat, lng):", location.lat(), location.lng());
+                    // Pass filters to findNearestParks
+                    await findNearestParks(location.lat(), location.lng(), filters);
+                } else {
+                    console.warn("Geocoding failed: No results found for '" + searchTerm + "'.");
+                    loadingIndicator.classList.add('hidden');
+                    parkResultsSection.classList.remove('hidden');
+                    noResultsMessage.classList.remove('hidden');
+                    noResultsMessage.textContent = `Could not find a location for "${searchTerm}". Please try a more specific search.`;
+                }
+            } catch (error) {
+                console.error("Error during geocoding or park search:", error);
+                loadingIndicator.classList.add('hidden');
+                parkResultsSection.classList.remove('hidden');
+                noResultsMessage.classList.remove('hidden');
+                noResultsMessage.textContent = 'An error occurred while searching. Please try again.';
+            }
+        }
+
 
         async function initAutocomplete() {
             try {
+                console.log("initAutocomplete: Attempting to import places library...");
                 await google.maps.importLibrary("places");
+                console.log("initAutocomplete: Places library imported.");
+
 
                 const placeAutocomplete = new google.maps.places.PlaceAutocompleteElement();
                 const autocompleteContainer = document.getElementById('autocomplete-container');
@@ -814,17 +1078,70 @@
                 const parkResultsSection = document.getElementById('park-results-section');
                 const loadingIndicator = document.getElementById('loading-indicator');
                 const noResultsMessage = document.getElementById('no-results-message');
+                const scrollIndicatorText = document.getElementById('scroll-indicator-text'); // Get the new element
+                const noResultsIndicatorText = document.getElementById('no-results-indicator-text');
 
-                if (autocompleteContainer && searchButton && parkResultsSection && loadingIndicator && noResultsMessage) {
+                if (autocompleteContainer && searchButton && parkResultsSection && loadingIndicator && noResultsMessage && scrollIndicatorText) {
                     autocompleteContainer.appendChild(placeAutocomplete);
+                    console.log("PlaceAutocompleteElement appended to container.");
 
                     let autocompleteInput = null; // Initialize to null
+                    let searchTermFromUrl = null; // Declare here to be accessible
 
-                    // Listen for the 'gmp-ready' event when the component's internal input is ready
-                    placeAutocomplete.addEventListener('gmp-ready', () => {
-                        autocompleteInput = placeAutocomplete.input; // Assign it here when ready
+                    // Get search term from URL at the very beginning of initAutocomplete
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const urlLat = urlParams.get('lat');
+                    const urlLng = urlParams.get('lng');
+                    const urlName = urlParams.get('name');
+                    const urlAddress = urlParams.get('address');
+
+                    console.log(`URL Params: lat=${urlLat}, lng=${urlLng}, name=${urlName}, address=${urlAddress}`);
+
+                    // Original gmp-ready event listener (keep as a primary method if it starts working)
+                    placeAutocomplete.addEventListener('gmp-ready', async () => {
+                        console.log("gmp-ready event fired for PlaceAutocompleteElement.");
+                        if (!autocompleteInput) {
+                            autocompleteInput = placeAutocomplete.input;
+                            if (autocompleteInput) {
+                               console.log("gmp-ready: Autocomplete input element ready (from gmp-ready).");
+                               handleAutocompleteInputReady();
+                            } else {
+                               console.error("gmp-ready: PlaceAutocompleteElement.input is not available after gmp-ready.");
+                            }
+                        } else {
+                           console.log("gmp-ready: Autocomplete input already found.");
+                        }
+                    });
+
+                    // Call findNearestParks only if URL parameters are present
+                    if (urlLat && urlLng) {
+                        console.log("URL parameters detected, initiating park search:", urlLat, urlLng);
+                        await findNearestParks(parseFloat(urlLat), parseFloat(urlLng));
+                        // The call to findNearestParks based on URL parameters is now moved inside
+                        // handleAutocompleteInputReady to ensure Google Maps API is ready,
+                        // or you can call it directly here if you are sure Maps API is ready.
+                        // For safety, keeping it within a ready-check context is better.
+                    }
+
+                    async function handleAutocompleteInputReady() {
                         if (autocompleteInput) {
                             autocompleteInput.placeholder = "Search for parks, features, activities...";
+                            console.log("Autocomplete input placeholder set.");
+
+                            // Set input value if searchTermFromUrl exists, but *DO NOT* trigger search
+                            if (searchTermFromUrl) {
+                                autocompleteInput.value = searchTermFromUrl;
+                                // Clear the search parameter from the URL to prevent re-processing on refresh
+                                history.replaceState(null, '', window.location.pathname);
+                                searchTermFromUrl = null; // Clear it so it's not used again
+                                console.log("Autocomplete input pre-filled from URL search term:", autocompleteInput.value);
+                            } else if (urlName) { // If lat/lng are present, also try to pre-fill with name/address
+                                 autocompleteInput.value = urlName + (urlAddress ? `, ${urlAddress}` : '');
+                                 // Clear the URL parameters after using them
+                                 history.replaceState(null, '', window.location.pathname);
+                                 console.log("Autocomplete input pre-filled from URL name/address:", autocompleteInput.value);
+                            }
+
 
                             // Attach keyup listener ONLY when the input is ready
                             autocompleteInput.addEventListener('keyup', () => {
@@ -835,6 +1152,9 @@
                                 } else {
                                     searchButton.classList.add('hidden');
                                 }
+                                // Hide scroll indicator if user types again
+                                scrollIndicatorText.classList.add('hidden');
+                                scrollIndicatorText.classList.remove('visible');
                             });
                             // Initial check for button visibility if input already has text (e.g., from browser autofill)
                             if (autocompleteInput.value) { // Check if value exists before trimming
@@ -843,11 +1163,31 @@
                                 }
                             }
                         } else {
-                            console.error("PlaceAutocompleteElement.input is not available after gmp-ready.");
+                            console.error("handleAutocompleteInputReady: autocompleteInput is null unexpectedly.");
                         }
-                    });
 
-                    // MutationObserver to watch for the autocomplete suggestions dropdown
+                        if (urlLat && urlLng) {
+                            console.log("Detected lat/lng in URL, attempting to trigger search:", urlLat, urlLng);
+
+                            // Ensure google.maps and LatLng are available before proceeding
+                            if (typeof google !== 'undefined' && typeof google.maps !== 'undefined' && typeof google.maps.LatLng === 'function') {
+                                selectedPlaceLocation = new google.maps.LatLng(parseFloat(urlLat), parseFloat(urlLng));
+                                console.log("google.maps.LatLng is available. Calling findNearestParks.");
+                                await findNearestParks(parseFloat(urlLat), parseFloat(urlLng));
+
+                                // Clear the URL parameters after triggering the search
+                                history.replaceState(null, '', window.location.pathname); // Removes all query parameters
+                                console.log("URL parameters cleared after search trigger.");
+                            } else {
+                                console.error("google.maps.LatLng is NOT yet available for URL search. This indicates a Maps API loading issue.");
+                                // If this happens, it means the main Maps API (not just Places) hasn't fully loaded.
+                                // The `importLibrary("places")` implicitly loads some core maps functionalities.
+                                // This might indicate a Google Maps API Key issue or network problem.
+                            }
+                        }
+                    }
+
+                    // MutationObserver to watch for the autocomplete suggestions dropdown (existing logic)
                     const observer = new MutationObserver(mutations => {
                         let suggestionsVisible = false;
                         if (document.querySelector('.pac-container')) {
@@ -870,6 +1210,7 @@
 
                     // Store selected place location when an autocomplete suggestion is selected
                     placeAutocomplete.addEventListener('gmp-select', async ({ placePrediction }) => {
+                        console.log("gmp-select event fired.");
                         const place = await placePrediction.toPlace();
                         await place.fetchFields({ fields: ['displayName', 'formattedAddress', 'location'] });
                         selectedPlaceLocation = place.location; // Store the selected place's location
@@ -877,25 +1218,69 @@
                         console.log('Selected Place from Autocomplete:', place.toJSON());
 
                         searchButton.classList.remove('hidden'); // Ensure button is visible after selection
+                        scrollIndicatorText.classList.add('hidden'); // Hide scroll indicator if a new selection is made
+                        scrollIndicatorText.classList.remove('visible');
                     });
 
                     // Handle search button click
                     searchButton.addEventListener('click', async () => {
+                        console.log("Search button clicked.");
+
+                        // --- NEW: Collect Filter Values ---
+                        const filters = {};
+
+                        // Numerical Ratings
+                        filters.wheelchairAccessibilityRating = document.getElementById('wheelchairAccessibilityRating').value || null;
+                        filters.natureAppealRating = document.getElementById('natureAppealRating').value || null;
+                        filters.seasonalUniquenessRating = document.getElementById('seasonalUniquenessRating').value || null;
+                        filters.wildlifeSpottedRating = document.getElementById('wildlifeSpottedRating').value || null;
+                        filters.nightSkyClarityRating = document.getElementById('nightSkyClarityRating').value || null;
+                        filters.wouldRevisitRating = document.getElementById('wouldRevisitRating').value || null;
+
+                        // Checkboxes
+                        const getCheckedValues = (name) => {
+                            return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(cb => cb.value);
+                        };
+
+                        filters.atmosphere = getCheckedValues('atmosphere');
+                        filters.terrain = getCheckedValues('terrain');
+                        filters.features = getCheckedValues('features');
+                        filters.communityRatings = getCheckedValues('communityRatings');
+
+                        // Dropdown
+                        filters.bestSeason = document.getElementById('bestSeason').value || null;
+                        // --- END NEW: Collect Filter Values ---
+
                         if (selectedPlaceLocation) {
-                            await findNearestParks(selectedPlaceLocation.lat(), selectedPlaceLocation.lng());
+                            console.log("Search triggered by selectedPlaceLocation:", selectedPlaceLocation.lat(), selectedPlaceLocation.lng());
+                            // Pass filters to findNearestParks
+                            await findNearestParks(selectedPlaceLocation.lat(), selectedPlaceLocation.lng(), filters);
                         } else if (autocompleteInputText) {
-                             // If a user types something but doesn't select from autocomplete,
-                             // we could try geocoding the raw text here.
-                             // For now, we'll prompt the user.
-                            alert('Please select a place from the autocomplete suggestions first, or type a valid location and then click search.');
-                        }
-                        else {
-                            alert('Please enter a location to search for parks.');
+                            console.log("Search triggered by raw autocompleteInputText:", autocompleteInputText);
+                            // Pass filters to performSearch (which then calls findNearestParks)
+                            await performSearch(autocompleteInputText, filters);
+                        } else {
+                            // Using a custom modal/message box instead of alert()
+                            // This assumes you have a simple modal setup for messages.
+                            const messageElement = document.getElementById('message-box-content');
+                            const messageBox = document.getElementById('message-box');
+                            if (messageElement && messageBox) {
+                                messageElement.textContent = "Please enter a location to search for parks.";
+                                messageBox.classList.remove('hidden');
+                                // Optionally hide after a few seconds
+                                setTimeout(() => {
+                                    messageBox.classList.add('hidden');
+                                }, 3000);
+                            } else {
+                                console.log("No location or text to search (and no message box found).");
+                                // Fallback if no custom message box exists
+                                alert("Please enter a location to search for parks.");
+                            }
                         }
                     });
 
                 } else {
-                    console.error("One or more required elements (autocomplete-container, search-parks-button, park-results-section, loading-indicator, no-results-message) not found.");
+                    console.error("One or more required elements (autocomplete-container, search-parks-button, park-results-section, loading-indicator, no-results-message, scroll-indicator-text) not found.");
                 }
             } catch (error) {
                 console.error("Error initializing Google Places Autocomplete:", error);
@@ -919,8 +1304,19 @@
         // Median calculation function
         function calculateMedian(arr) {
             if (!arr || arr.length === 0) return NaN;
-            const numbers = arr.filter(n => typeof n === 'number' && !isNaN(n)).sort((a, b) => a - b);
+            const numbers = arr.filter(n => typeof n === 'number' && !isNaN(n) && n > 0).sort((a, b) => a - b);
             if (numbers.length === 0) return NaN;
+            const mid = Math.floor(numbers.length / 2);
+            return numbers.length % 2 !== 0 ? numbers[mid] : (numbers[mid - 1] + numbers[mid]) / 2;
+        }
+
+        // New median calculation function (includes zeroes)
+        function calculateMedianIncludingZeroes(arr) {
+            if (!arr || arr.length === 0) return NaN;
+            // Filter for numbers, including zero, and sort them
+            const numbers = arr.filter(n => typeof n === 'number' && !isNaN(n)).sort((a, b) => a - b);
+            if (numbers.length === 0) return NaN; // Still check if any valid numbers remain after filtering
+
             const mid = Math.floor(numbers.length / 2);
             return numbers.length % 2 !== 0 ? numbers[mid] : (numbers[mid - 1] + numbers[mid]) / 2;
         }
@@ -971,59 +1367,79 @@
 
 
         // Function to find and display nearest parks
-        async function findNearestParks(userLat, userLng) {
+        async function findNearestParks(userLat, userLng, filters = {}) {
             console.log("Starting findNearestParks with userLat:", userLat, "userLng:", userLng);
+            console.log("Filters received:", filters); // Log the received filters
             const parkResultsContainer = document.getElementById('park-results-container');
             const parkResultsSection = document.getElementById('park-results-section');
             const loadingIndicator = document.getElementById('loading-indicator');
             const noResultsMessage = document.getElementById('no-results-message');
+            const scrollIndicatorText = document.getElementById('scroll-indicator-text'); // Get the new element
+            const nearestParksHeading = document.getElementById('nearest-parks-heading'); // Get the heading to scroll to
+            const noResultsIndicatorText = document.getElementById('no-results-indicator-text');
 
             parkResultsContainer.innerHTML = ''; // Clear previous results
             parkResultsSection.classList.add('hidden'); // Hide results section initially
             noResultsMessage.classList.add('hidden'); // Hide no results message initially
             loadingIndicator.classList.remove('hidden'); // Show loading indicator
+            scrollIndicatorText.classList.add('hidden'); // Hide scroll indicator during search
+            scrollIndicatorText.classList.remove('visible');
+            noResultsIndicatorText.classList.add('hidden');
+            noResultsIndicatorText.classList.remove('visible');
 
             try {
                 if (!db || !auth.currentUser) {
                     console.error("Firestore not initialized or user not authenticated. Attempting to re-initialize.");
                     await initializeFirebaseAndAuth(); // Attempt to re-initialize if needed
                     if (!db || !auth.currentUser) { // Check again after attempt
-                        alert("Firebase services are not ready. Please try again.");
+                        // Using a custom modal/message box instead of alert()
+                        const messageElement = document.getElementById('message-box-content');
+                        const messageBox = document.getElementById('message-box');
+                        if (messageElement && messageBox) {
+                            messageElement.textContent = "Firebase services are not ready. Please try again.";
+                            messageBox.classList.remove('hidden');
+                            setTimeout(() => {
+                                messageBox.classList.add('hidden');
+                            }, 3000);
+                        } else {
+                            alert("Firebase services are not ready. Please try again.");
+                        }
                         loadingIndicator.classList.add('hidden');
                         return;
                     }
                 }
 
-                console.log("Fetching park reviews from Firestore...");
-                // Corrected path based on user's clarification: collection is named parkReviews, not artifacts.
+                console.log("Fetching ALL park reviews from Firestore for aggregation...");
                 const parkReviewsCollectionRef = collection(db, `/parkReviews`);
-                const q = query(parkReviewsCollectionRef);
-                const querySnapshot = await getDocs(q);
+                // *** CRITICAL CHANGE START: No filters applied here to the Firestore query ***
+                // We want to fetch all reviews to correctly aggregate ALL photos for each park.
+                // Filtering will now happen client-side on the aggregated park data.
+                const querySnapshot = await getDocs(parkReviewsCollectionRef);
+                // *** CRITICAL CHANGE END ***
 
-                const parkReviews = [];
+                const allParkReviews = []; // Renamed to clearly indicate it's the full set of reviews
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
-                    parkReviews.push(data);
-                    // Ensure parkName and parkAddress are strings for logging
+                    allParkReviews.push(data);
                     const logParkName = typeof data.parkName === 'string' ? data.parkName : String(data.parkName);
                     const logParkAddress = typeof data.parkAddress === 'string' ? data.parkAddress : String(data.parkAddress);
                     console.log(`Fetched review for "${logParkName}" at "${logParkAddress}" - Location:`, data.parkLocation);
                 });
-                console.log("Total park reviews fetched:", parkReviews.length);
+                console.log("Total park reviews fetched from Firestore (before client-side aggregation/filtering):", allParkReviews.length);
 
-                if (parkReviews.length === 0) {
-                    console.log("No reviews found in Firestore (database is empty).");
+                if (allParkReviews.length === 0) {
+                    console.log("No reviews found in Firestore.");
                     loadingIndicator.classList.add('hidden');
-                    parkResultsSection.classList.remove('hidden'); // Show section
-                    noResultsMessage.classList.remove('hidden'); // Show no results message
+                    parkResultsSection.classList.remove('hidden');
+                    noResultsMessage.classList.remove('hidden');
                     noResultsMessage.textContent = 'No park reviews found in the database.';
                     return;
                 }
 
                 // Group reviews by park (using parkName and rounded coordinates for uniqueness)
+                // This section aggregates ALL photos and ALL review data per park.
                 const parksData = {};
-                parkReviews.forEach(review => {
-                    // Ensure parkName and parkAddress are strings before using string methods
+                allParkReviews.forEach(review => {
                     const parkName = String(review.parkName || 'Unnamed Park');
                     const parkAddress = String(review.parkAddress || 'Unknown Address');
 
@@ -1032,104 +1448,191 @@
                     let parkIdentifier;
 
                     if (review.parkLocation && typeof review.parkLocation.latitude === 'number' && typeof review.parkLocation.longitude === 'number') {
-                        // Round coordinates to a reasonable precision (e.g., 5 decimal places for ~1 meter accuracy)
                         lat = review.parkLocation.latitude.toFixed(5);
                         lng = review.parkLocation.longitude.toFixed(5);
-                        parkIdentifier = `${parkName.toLowerCase().trim()} - ${lat},${lng}`; // Normalize name for grouping
+                        parkIdentifier = `${parkName.toLowerCase().trim()} - ${lat},${lng}`;
                     } else {
-                        // Fallback for reviews without valid location data. These will not have distance calculated.
                         console.warn(`Review for '${parkName}' is missing valid parkLocation, or it's malformed. Using address for identifier:`, review);
                         parkIdentifier = `${parkName.toLowerCase().trim()} - ${parkAddress.toLowerCase().trim()}`;
                     }
 
                     if (!parksData[parkIdentifier]) {
                         parksData[parkIdentifier] = {
-                            name: parkName, // Keep original name for display
-                            address: parkAddress, // Keep original address for display
-                            location: review.parkLocation, // Keep original for distance calc
-                            reviews: [],
+                            name: parkName,
+                            address: parkAddress,
+                            location: review.parkLocation,
+                            reviews: [], // Stores all reviews for this park
                             distances: [],
-                            allPhotos: []
+                            allPhotos: [] // Will now collect ALL photos from ALL reviews for this park
                         };
                     }
                     parksData[parkIdentifier].reviews.push(review);
-                    if (lat !== null && lng !== null) { // Only calculate distance if location was valid for grouping
+                    if (lat !== null && lng !== null) {
                         const dist = haversineDistance(userLat, userLng, review.parkLocation.latitude, review.parkLocation.longitude);
                         parksData[parkIdentifier].distances.push(dist);
                     }
                     if (Array.isArray(review.photos)) {
-                        // Filter out any non-string or empty string photo URLs before concatenating
+                        // Collect ALL photos from this review, regardless of its individual filter match
                         parksData[parkIdentifier].allPhotos = parksData[parkIdentifier].allPhotos.concat(review.photos.filter(p => typeof p === 'string' && p.trim() !== ''));
                     }
                 });
 
-                console.log("Parks data after grouping:", parksData);
-                console.log("Number of unique parks identified before filtering:", Object.keys(parksData).length);
+                console.log("Parks data after initial grouping and photo aggregation:", parksData);
+                console.log("Number of unique parks identified:", Object.keys(parksData).length);
 
                 const aggregatedParks = [];
                 for (const identifier in parksData) {
                     const park = parksData[identifier];
-                    const aggregatedReview = {
-                        parkName: park.name,
-                        parkAddress: park.address,
-                        averageDistance: park.distances.length > 0 ? calculateMedian(park.distances) : Infinity, // Use median for distance
-                        photos: park.allPhotos.length > 0 ? [...new Set(park.allPhotos)] : [], // Filter unique photos, initialize as empty if none
-                        ratings: {}
-                    };
 
-                    // Define specific rating fields to aggregate and display
-                    const displayRatingFields = [
+                    // Define all rating fields that could be aggregated or filtered
+                    const allRatingFields = [
+                        'wheelchairAccessibilityRating',
+                        'natureAppealRating',
+                        'seasonalUniquenessRating',
+                        'wildlifeSpottedRating',
+                        'nightSkyClarityRating',
+                        'wouldRevisitRating',
                         'accessibilityRating',
                         'cleanlinessRating',
                         'sustainabilityRating'
                     ];
 
-                    // Collect all values for each rating field across all reviews for this park
+                    const medianRatings = {};
                     const tempRatings = {};
-                    displayRatingFields.forEach(field => {
+                    allRatingFields.forEach(field => {
                         tempRatings[field] = [];
                     });
 
+                    // Aggregate all individual review ratings for this park
                     park.reviews.forEach(review => {
-                        displayRatingFields.forEach(field => {
+                        allRatingFields.forEach(field => {
                             if (typeof review[field] === 'number' && !isNaN(review[field])) {
                                 tempRatings[field].push(review[field]);
                             }
                         });
                     });
 
-                    // Calculate median for each required rating field
-                    for (const field of displayRatingFields) {
+                    // Calculate median for each rating field for the *park*
+                    for (const field of allRatingFields) {
                         if (tempRatings[field].length > 0) {
-                            aggregatedReview.ratings[field] = calculateMedian(tempRatings[field]);
+                            medianRatings[field] = calculateMedian(tempRatings[field]);
                         } else {
-                            aggregatedReview.ratings[field] = 'N/A';
+                            medianRatings[field] = 'N/A';
                         }
                     }
 
-                    aggregatedParks.push(aggregatedReview);
+                    // Aggregate checklist items (atmosphere, terrain, features, communityRatings) from all reviews
+                    const aggregatedAtmosphere = [...new Set(park.reviews.flatMap(r => Array.isArray(r.atmosphere) ? r.atmosphere : []))];
+                    const aggregatedTerrain = [...new Set(park.reviews.flatMap(r => Array.isArray(r.terrain) ? r.terrain : []))];
+                    const aggregatedFeatures = [...new Set(park.reviews.flatMap(r => Array.isArray(r.features) ? r.features : []))];
+                    const aggregatedCommunityRatings = [...new Set(park.reviews.flatMap(r => Array.isArray(r.communityRatings) ? r.communityRatings : []))];
+
+                    // Aggregate all unique 'bestInSeason' values from all reviews for this park
+                    const aggregatedSeasons = [...new Set(park.reviews
+                        .map(r => r.bestInSeason)
+                        .filter(season => season) // Filter out null/undefined/empty strings
+                    )];
+
+                    // Construct the aggregated park object
+                    aggregatedParks.push({
+                        parkName: park.name,
+                        parkAddress: park.address,
+                        location: park.location,
+                        averageDistance: park.distances.length > 0 ? calculateMedianIncludingZeroes(park.distances) : Infinity,
+                        photos: park.allPhotos.length > 0 ? [...new Set(park.allPhotos)] : [], // Contains all unique photos
+                        ratings: medianRatings, // Now includes all median ratings for this park
+                        atmosphere: aggregatedAtmosphere,
+                        terrain: aggregatedTerrain,
+                        features: aggregatedFeatures,
+                        communityRatings: aggregatedCommunityRatings,
+                        bestInSeason: aggregatedSeasons // Most common season for this park
+                    });
                 }
 
-                console.log("Aggregated parks before filtering by distance:", aggregatedParks);
+                console.log("Aggregated parks after all reviews processed (before client-side filtering by user filters):", aggregatedParks);
 
-                // Filter parks by distance threshold
-                const nearbyParks = aggregatedParks.filter(park => park.averageDistance <= MAX_DISTANCE_KM);
-                console.log("Nearby parks after filtering (within " + MAX_DISTANCE_KM + " km):", nearbyParks);
+                // *** CRITICAL CHANGE START: Apply client-side filtering based on the 'filters' object ***
+                const filteredAndNearbyParks = aggregatedParks.filter(park => {
+                    let passesFilters = true;
 
-                // Sort nearby parks by distance
-                nearbyParks.sort((a, b) => a.averageDistance - b.averageDistance);
+                    // Numerical Rating Filters (apply to the *median* rating of the park)
+                    if (filters.wheelchairAccessibilityRating && (park.ratings.wheelchairAccessibilityRating === 'N/A' || park.ratings.wheelchairAccessibilityRating < parseInt(filters.wheelchairAccessibilityRating))) {
+                        passesFilters = false;
+                    }
+                    if (filters.natureAppealRating && (park.ratings.natureAppealRating === 'N/A' || park.ratings.natureAppealRating < parseInt(filters.natureAppealRating))) {
+                        passesFilters = false;
+                    }
+                    if (filters.seasonalUniquenessRating && (park.ratings.seasonalUniquenessRating === 'N/A' || park.ratings.seasonalUniquenessRating < parseInt(filters.seasonalUniquenessRating))) {
+                        passesFilters = false;
+                    }
+                    if (filters.wildlifeSpottedRating && (park.ratings.wildlifeSpottedRating === 'N/A' || park.ratings.wildlifeSpottedRating < parseInt(filters.wildlifeSpottedRating))) {
+                        passesFilters = false;
+                    }
+                    if (filters.nightSkyClarityRating && (park.ratings.nightSkyClarityRating === 'N/A' || park.ratings.nightSkyClarityRating < parseInt(filters.nightSkyClarityRating))) {
+                        passesFilters = false;
+                    }
+                    if (filters.wouldRevisitRating && (park.ratings.wouldRevisitRating === 'N/A' || park.ratings.wouldRevisitRating < parseFloat(filters.wouldRevisitRating))) {
+                        passesFilters = false;
+                    }
 
-                console.log("Nearby parks after sorting:", nearbyParks);
-                console.log("Number of nearby parks to display:", nearbyParks.length);
+
+                    // Checkbox Filters (apply to aggregated arrays for the park - 'array-contains-any' logic)
+                    // Checks if AT LEAST ONE selected filter tag is present in the park's aggregated tags
+                    if (filters.atmosphere && filters.atmosphere.length > 0) {
+                        const hasAnyAtmosphereFilter = filters.atmosphere.some(filterTag => park.atmosphere.includes(filterTag));
+                        if (!hasAnyAtmosphereFilter) {
+                            passesFilters = false;
+                        }
+                    }
+                    if (filters.terrain && filters.terrain.length > 0) {
+                        const hasAnyTerrainFilter = filters.terrain.some(filterTag => park.terrain.includes(filterTag));
+                        if (!hasAnyTerrainFilter) {
+                            passesFilters = false;
+                        }
+                    }
+                    if (filters.features && filters.features.length > 0) {
+                        const hasAnyFeaturesFilter = filters.features.some(filterTag => park.features.includes(filterTag));
+                        if (!hasAnyFeaturesFilter) {
+                            passesFilters = false;
+                        }
+                    }
+                    if (filters.communityRatings && filters.communityRatings.length > 0) {
+                        const hasAnyCommunityRatingFilter = filters.communityRatings.some(filterTag => park.communityRatings.includes(filterTag));
+                        if (!hasAnyCommunityRatingFilter) {
+                            passesFilters = false;
+                        }
+                    }
+
+                    // Dropdown Filter (apply to the array of seasons for the park)
+                    // The park passes if its array of seasons includes the one selected in the filter.
+                    if (filters.bestSeason && !park.bestInSeason.includes(filters.bestSeason)) {
+                        passesFilters = false;
+                    }
+
+                    // Distance filter (always applied, regardless of other filters)
+                    if (park.averageDistance > MAX_DISTANCE_KM) {
+                        passesFilters = false;
+                    }
+
+                    return passesFilters;
+                });
+                // *** CRITICAL CHANGE END ***
+
+                console.log("Final parks after all client-side filtering:", filteredAndNearbyParks);
+                console.log("Number of parks to display:", filteredAndNearbyParks.length);
+
+
+                // Sort filtered parks by distance
+                filteredAndNearbyParks.sort((a, b) => a.averageDistance - b.averageDistance);
 
                 loadingIndicator.classList.add('hidden'); // Hide loading indicator
                 parkResultsSection.classList.remove('hidden'); // Show the results section container
 
-                if (nearbyParks.length > 0) {
+                if (filteredAndNearbyParks.length > 0) {
                     parkResultsContainer.classList.remove('hidden'); // Ensure container is visible
                     noResultsMessage.classList.add('hidden'); // Hide no results message
 
-                    nearbyParks.forEach(park => {
+                    filteredAndNearbyParks.forEach(park => {
                         const cardLink = document.createElement('a'); // Create an anchor tag
                         // Encode the park name and address to safely pass in URL
                         const parkNameEncoded = encodeURIComponent(park.parkName);
@@ -1172,7 +1675,7 @@
                             expectedImageCount = photosToDisplay.length;
                             photosToDisplay.forEach((photoUrl, index) => {
                                 // Add onload to trigger fade-in and check if all images are loaded
-                                photosHtmlContent += `<img src="${photoUrl}" alt="Park Photo ${index + 1}" onload="handleImageLoad(this)" onerror="this.onerror=null;this.src='https://placehold.co/240x240/34495E/FFFFFF?text=Error';">`;
+                                photosHtmlContent += `<img loading="lazy" src="${photoUrl}" alt="Park Photo ${index + 1}" onload="handleImageLoad(this)" onerror="this.onerror=null;this.src='https://placehold.co/240x240/34495E/FFFFFF?text=Error';">`;
                             });
                         } else {
                             expectedImageCount = 1; // Only one placeholder to load
@@ -1184,7 +1687,8 @@
                         cardContent.innerHTML = `
                             <div class="park-photos" data-park-id="${parkCardId}" data-total-images="${expectedImageCount}">
                                 <div class="image-spinner">
-                                    <div></div> </div>
+                                    <div></div>
+                                </div>
                                 ${photosHtmlContent}
                             </div>
                             <h3>${park.parkName}</h3>
@@ -1198,10 +1702,32 @@
                         cardLink.appendChild(cardContent); // Append the content div to the clickable link
                         parkResultsContainer.appendChild(cardLink); // Append the entire clickable link to the container
                     });
+
+                    // Scroll to the results section smoothly
+                    nearestParksHeading.scrollIntoView({ behavior: 'smooth' });
+
+                    // Show the scroll indicator text and then fade it out after a delay
+                    scrollIndicatorText.classList.remove('hidden');
+                    // Use setTimeout to ensure the fade-in animation has time to start
+                    setTimeout(() => {
+                        scrollIndicatorText.classList.add('visible');
+                    }, 10); // Small delay to trigger transition
+                    setTimeout(() => {
+                        scrollIndicatorText.classList.remove('visible');
+                        scrollIndicatorText.classList.add('hidden'); // Fully hide after fade out
+                    }, 20000); // Hide after 20 seconds
+
                 } else {
                     parkResultsContainer.classList.add('hidden'); // Hide container if no nearby parks
                     noResultsMessage.classList.remove('hidden'); // Show no results message
                     noResultsMessage.textContent = `No parks found within ${MAX_DISTANCE_KM} km of this location. Try a different search area.`;
+                    // Scroll to the results section smoothly
+                    noResultsMessage.scrollIntoView({ behavior: 'smooth' });
+                    noResultsIndicatorText.classList.remove('hidden');
+                    setTimeout(() => {
+                        noResultsIndicatorText.classList.add('visible');
+                    }, 10); // Small delay to trigger transition
+
                 }
             } catch (error) {
                 console.error("Error fetching or processing park data:", error);
@@ -1217,7 +1743,18 @@
         initializeFirebaseAndAuth().then(() => {
             initAutocomplete();
         });
+        // Add this new JavaScript code
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterToggleArea = document.getElementById('filterToggleArea');
+            const parkFilters = document.getElementById('parkFilters');
+            const searchSection = document.querySelector('.search-section');
 
+            filterToggleArea.addEventListener('click', () => {
+                const isExpanded = parkFilters.classList.toggle('show-filters');
+                filterToggleArea.classList.toggle('expanded', isExpanded);
+                searchSection.classList.toggle('expanded', isExpanded);
+            });
+        });
     </script>
 </body>
 </html>
