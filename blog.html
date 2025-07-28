@@ -3,7 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AstroScouts - Header and Footer</title>
+    <title>Blog</title>
+    <link rel="apple-touch-icon" href="assets/icon.png">
+    <link rel="shortcut icon" href="assets/favicon.ico">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://use.typekit.net/gkm8mik.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
@@ -12,6 +15,8 @@
         body {
             background-color: #000; /* Ensure black background for video fade transition */
             scrollbar-color: #1a7f1a #0d250d; /* Firefox scrollbar color */
+            opacity: 0; /* Initially hidden for fade-in */
+            animation: fadeIn 5s forwards; /* Apply fade-in animation */
         }
         /* Webkit (Chrome, Safari, Edge) scrollbar styles */
         ::-webkit-scrollbar {
@@ -28,6 +33,12 @@
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #2ee62e; /* Lighter green on hover */
+        }
+
+        /* Keyframe animation for subtle fade-in */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         /* Solid text color - slightly lighter yellow */
@@ -122,6 +133,243 @@
           opacity: 1;
           transform: scale(1.2);
         }
+
+        /* Blog Header Styles */
+        .blog-header {
+            position: relative;
+            width: 100%;
+            height: 250px; /* Adjust height as needed */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem; /* Add some space below the header */
+        }
+
+        .blog-header video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -1;
+            transform: translate(-50%, -50%);
+            background-size: cover;
+        }
+
+        .blog-header-overlay {
+            position: relative;
+            z-index: 1;
+            background: rgba(0, 0, 0, 0.4); /* Dark overlay for text readability */
+            padding: 1rem 2rem;
+            border-radius: 8px;
+        }
+
+        .blog-header h2 {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-header p {
+            font-size: 1.25rem; /* text-xl */
+            font-style: italic;
+        }
+
+        /* Blog Section Title */
+        .blog-section-title {
+            text-align: center;
+            font-size: 3rem; /* Larger text */
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+            color: #d4af37; /* Gold-like color */
+            opacity: 0.7; /* Faded effect */
+        }
+
+        /* Blog Card Styles (General - specific colors set by JS) */
+        .blog-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .blog-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .blog-card img {
+            width: 100%;
+            height: 200px; /* Fixed height for consistency */
+            object-fit: cover;
+        }
+
+        .blog-card-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1; /* Allow content to grow */
+        }
+
+        /* Submit Blog Form Styles - LIGHT THEME */
+        .submit-blog-section {
+            background-color: #f0f0f0; /* Light gray background */
+            padding: 2rem;
+            margin: 0;
+            width: 100%;
+            border-radius: 0;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* Lighter shadow */
+            color: #333; /* Dark text color for contrast */
+            z-index: 10;
+            position: relative;
+        }
+
+        .submit-blog-section h2 {
+            font-size: 2.5rem;
+            color: #1a7f1a; /* Dark green title */
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-family: 'adobe-caslon-pro', serif;
+        }
+
+        .submit-form-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.7s ease-in-out;
+            padding: 0 2rem;
+        }
+
+        .submit-form-container.expanded {
+            max-height: 2000px; /* Large enough to contain all content */
+        }
+
+        .submit-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333; /* Darker color for labels */
+        }
+
+        .submit-form input[type="text"],
+        .submit-form input[type="email"],
+        .submit-form textarea {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1.5rem;
+            background-color: #ffffff; /* White input background */
+            border: 1px solid #ccc; /* Light gray border */
+            border-radius: 8px;
+            color: #333; /* Dark text in inputs */
+            font-family: 'Raleway', sans-serif;
+            resize: vertical;
+        }
+        /* Style for select dropdown specifically */
+        .submit-form select {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1.5rem;
+            background-color: #ffffff; /* White background */
+            border: 1px solid #ccc; /* Light gray border */
+            border-radius: 8px;
+            color: #333; /* Dark text */
+            font-family: 'Raleway', sans-serif;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            /* Updated SVG fill color for arrow */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.25rem;
+        }
+        .submit-form select option {
+            background-color: #ffffff; /* Background for options */
+            color: #333; /* Text color for options */
+        }
+
+        .submit-form input[type="file"] {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1.5rem;
+            background-color: #ffffff;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            color: #333;
+            font-family: 'Raleway', sans-serif;
+        }
+
+        .submit-form input[type="text"]::placeholder,
+        .submit-form input[type="email"]::placeholder,
+        .submit-form textarea::placeholder {
+            color: #888; /* Darker placeholder text color */
+        }
+
+        .submit-form button {
+            background-color: #1a7f1a; /* Green button */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            font-weight: bold;
+            margin-top: 1rem;
+        }
+
+        .submit-form button:hover {
+            background-color: #2ee62e; /* Lighter green on hover */
+        }
+
+        .submit-form-button-toggle {
+            display: block;
+            width: fit-content;
+            margin: 0 auto 1.5rem auto;
+            background-color: #666; /* Dark gray toggle button */
+            color: white; /* White text on toggle button */
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+            font-weight: bold;
+        }
+
+        .submit-form-button-toggle:hover {
+            background-color: #888; /* Lighter gray on hover */
+        }
+
+        .file-upload-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+            margin-bottom: 1.5rem;
+        }
+        .file-upload-preview img {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #ccc; /* Light border for images */
+        }
+
+        .char-counter {
+            text-align: right;
+            font-size: 0.85rem;
+            color: #888; /* Visible on light background */
+            margin-top: -1rem; /* Adjust to be closer to textarea */
+            margin-bottom: 1.5rem;
+        }
+
+        .char-counter.warning {
+            color: #ff6347; /* Tomato color for warning */
+            font-weight: bold;
+        }
     </style>
 </head>
 <body class="font-sans antialiased text-gray-800">
@@ -152,6 +400,77 @@
         </nav>
     </header>
 
+    <main>
+        <section class="blog-header">
+            <video autoplay muted loop playsinline>
+                <source src="assets/sunset.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="blog-header-overlay font-adobe-caslon">
+                <h2 id="blog-title" class="text-white font-bold"></h2>
+                <p id="blog-quote" class="text-white"></p>
+            </div>
+        </section>
+
+        <section class="w-full px-4 py-8 relative" style="background-color: #000000; z-index: 5;"> <h2 class="font-adobe-caslon blog-section-title">Blog</h2>
+            <div id="blog-posts-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                </div>
+        </section>
+
+        <section class="submit-blog-section">
+            <h2 class="font-adobe-caslon">Submit Your Blog Post</h2>
+            <button id="toggle-submit-form" class="submit-form-button-toggle">Expand Form</button>
+            <div id="submit-form-container" class="submit-form-container">
+                <form id="submit-blog-form" class="submit-form">
+                    <label for="post-title">Blog Title:</label>
+                    <input type="text" id="post-title" placeholder="e.g., The Journey to the Whispering Falls">
+
+                    <label for="post-author">Your Name or Scout ID:</label>
+                    <input type="text" id="post-author" placeholder="e.g., AstroScout 042">
+
+                    <label for="post-excerpt">Short Excerpt/Quote (max 150 characters):</label>
+                    <textarea id="post-excerpt" rows="3" placeholder="e.g., First time my brother made it to the waterfall on his wheelchair. That’s all."></textarea>
+                    <div id="excerpt-char-counter" class="char-counter">0/150 characters</div>
+
+                    <label for="post-tags">Tags (comma-separated):</label>
+                    <input type="text" id="post-tags" placeholder="e.g., #Accessibility, #Hiking, #Family, #Adventure">
+
+                    <div class="image-upload-section mb-4">
+                        <label for="post-images">Upload Photos (max 5):</label>
+                        <input type="file" id="post-images" multiple accept="image/*">
+                        <p class="text-sm text-gray-400 mt-1">Select up to 5 image files to upload for your blog post.</p>
+                        <div id="image-preview" class="file-upload-preview">
+                            </div>
+                    </div>
+
+                    <label for="post-content">Full Blog Content:</label>
+                    <textarea id="post-content" rows="10" placeholder="Write your full blog post here."></textarea>
+
+                    <label for="contact-email">Your Contact Email:</label>
+                    <input type="email" id="contact-email" placeholder="e.g., your.email@example.com (not published)">
+
+                    <div class="color-scheme-options">
+                        <label for="theme-select">Choose a Theme Preset:</label>
+                        <select id="theme-select" class="mb-4">
+                            <option value="">-- Select a Theme --</option>
+                            <option value="default">Default Dark Green</option>
+                            <option value="stargazer">Stargazer Blue-Purple</option>
+                            <option value="desert-sun">Desert Sun Gold</option>
+                            <option value="mountain-grey">Mountain Grey-Blue</option>
+                            <option value="ocean-teal">Ocean Teal</option>
+                            <option value="winter-white">Winter White-Gray</option>
+                            <option value="forest-berry">Forest-Berry</option>
+                            <option value="sunset-glow">Sunset Glow</option>
+                        </select>
+                        </div>
+
+                    <button type="submit" id="submit-blog-button">Submit Blog Post</button>
+                    <div id="loading-indicator" class="hidden text-center text-green-600 mt-2">Uploading images...</div>
+                </form>
+            </div>
+        </section>
+    </main>
+
     <footer id="footer">
       <div class="footer-content">
         <p class="signature">Created by <strong>Andrew Cameron</strong> as part of Eagle Scout Project, Troop 443</p>
@@ -172,7 +491,26 @@
         </div>
       </div>
     </footer>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script> <!-- Added Firebase Storage -->
     <script>
+        // Firebase Configuration (place before your main script)
+        const firebaseConfig = {
+            apiKey: "AIzaSyDWRCL_1gTnsZBcpX5l_5BF2-QMMY9nIYM",
+            authDomain: "parkratingform.firebaseapp.com",
+            projectId: "parkratingform",
+            storageBucket: "parkratingform.firebasestorage.app",
+            messagingSenderId: "784897205276",
+            appId: "1:784897205276:web:6f5330566e31fcd605abd9",
+            measurementId: "G-BZ33WZQ78C"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage(); // Initialize Firebase Storage
+
         // Highlight active navigation link and handle mobile menu
         document.addEventListener('DOMContentLoaded', () => {
             const navLinks = document.querySelectorAll('#main-nav a');
@@ -208,7 +546,341 @@
                     mainNavContainer.style.width = '';
                 }
             });
+
+            // Blog header dynamic text
+            const blogHeaderPosts = [
+                {
+                    title: "A Solo Night at Mono Lake",
+                    quote: "I couldn’t hear a thing. That’s how I knew I was exactly where I needed to be."
+                },
+                {
+                    title: "The Silent Symphony of the Redwoods",
+                    quote: "Among giants, I found my voice, or rather, the silence that allowed me to hear it."
+                },
+                {
+                    title: "Desert Stars and Deep Thoughts",
+                    quote: "Every grain of sand felt like a star, and every star, a profound thought."
+                },
+                {
+                    title: "Morning Mist on the Appalachian Trail",
+                    quote: "The world woke up with me, in a symphony of mist and birdsong."
+                }
+            ];
+
+            const randomHeaderIndex = Math.floor(Math.random() * blogHeaderPosts.length);
+            const selectedHeaderPost = blogHeaderPosts[randomHeaderIndex];
+
+            document.getElementById('blog-title').innerText = selectedHeaderPost.title;
+            document.getElementById('blog-quote').innerText = `— ${selectedHeaderPost.quote}`;
+
+            // Blog Post Cards Dynamic Content (This data will ideally come from Firestore)
+            const blogPostsContainer = document.getElementById('blog-posts-container');
+
+            // Define static placeholder blog posts
+            const staticBlogPostsData = [
+                {
+                    image: "assets/forest.jpg",
+                    title: "Whispers of the Ancient Forest",
+                    author: "AstroScout 037",
+                    excerpt: "A deep dive into the serene beauty and hidden sounds of old-growth forests, exploring their vital role in our ecosystem and spiritual well-being.",
+                    tags: ["#Nature", "#Forest", "#Ecology", "#Serenity"],
+                    bgColor: "#1a2a1a", titleColor: "#c2f08a", textColor: "#a3e635", authorColor: "#8bbd4c", tagColor: "#6c8c3e"
+                },
+                {
+                    image: "assets/stars.jpg",
+                    title: "Stargazing Secrets: A Guide to Celestial Wonders",
+                    author: "Dr. Nova",
+                    excerpt: "Unlocking the mysteries of the night sky, from identifying constellations to understanding cosmic phenomena. Perfect for amateur astronomers.",
+                    tags: ["#Astronomy", "#NightSky", "#Stars", "#Stargazing"],
+                    bgColor: "#1e1e3f", titleColor: "#cce0ff", textColor: "#99ccff", authorColor: "#66aaff", tagColor: "#3366cc"
+                },
+                {
+                    image: "assets/desert.jpg",
+                    title: "Desert Blooms: Life Flourishes in Arid Lands",
+                    author: "Wanderer Kate",
+                    excerpt: "Discovering the surprising resilience and vibrant flora and fauna that thrive in seemingly barren desert landscapes. A testament to nature's adaptability.",
+                    tags: ["#Desert", "#Wildlife", "#Botany", "#Adaptation"],
+                    bgColor: "#3a2a1a", titleColor: "#ffe066", textColor: "#ffd700", authorColor: "#e6b800", tagColor: "#cc9900"
+                },
+                {
+                    image: "assets/mountains.jpg",
+                    title: "Conquering Peaks: More Than Just a Climb",
+                    author: "Peak Seeker",
+                    excerpt: "The spiritual and physical journey of mountaineering, detailing the challenges, triumphs, and the unique perspectives gained from high altitudes.",
+                    tags: ["#Mountains", "#Hiking", "#Adventure", "#Mindfulness"],
+                    bgColor: "#2a3a4a", titleColor: "#f0f0f0", textColor: "#e0e0e0", authorColor: "#b0b0b0", tagColor: "#808080"
+                },
+                {
+                    image: "assets/waves.jpg",
+                    title: "Ocean's Embrace: Reflections on the Coastline",
+                    author: "Seashell Scribe",
+                    excerpt: "Meditations on the power and tranquility of the ocean, exploring its rhythm, marine life, and its profound impact on human spirit.",
+                    tags: ["#Ocean", "#Coastal", "#Reflection", "#MarineLife"],
+                    bgColor: "#1a3a3a", titleColor: "#c0ffff", textColor: "#80ffff", authorColor: "#40e0d0", tagColor: "#008080"
+                },
+                {
+                    image: "assets/snow.jpg",
+                    title: "Winter's Silence: Finding Peace in the Cold",
+                    author: "Frosty Explorer",
+                    excerpt: "Embracing the quiet beauty of winter landscapes, from snow-covered trails to the crisp, silent air. A guide to enjoying the colder months.",
+                    tags: ["#Winter", "#Silence", "#Peace", "#ScoutVoices"],
+                    bgColor: "#2a2a3a", titleColor: "#ffffff", textColor: "#f0f8ff", authorColor: "#d3d3d3", tagColor: "#a9a9a9"
+                }
+            ];
+
+            const fetchBlogPosts = async () => {
+                try {
+                    const blogPostsData = [];
+                    const snapshot = await db.collection("blog").orderBy("createdAt", "desc").get(); // Order by creation time
+                    
+                    if (snapshot.empty) {
+                        // If no documents are found, render the static placeholder data
+                        console.log("No blog posts found in Firestore, displaying placeholders.");
+                        renderBlogPosts(staticBlogPostsData);
+                    } else {
+                        snapshot.forEach(doc => {
+                            blogPostsData.push({ id: doc.id, ...doc.data() });
+                        });
+                        renderBlogPosts(blogPostsData);
+                    }
+                } catch (error) {
+                    console.error("Error fetching blog posts: ", error);
+                    // Fallback to static data if Firestore fails
+                    renderBlogPosts(staticBlogPostsData);
+                }
+            };
+
+            const renderBlogPosts = (posts) => {
+                blogPostsContainer.innerHTML = ''; // Clear existing posts before adding new ones
+                posts.forEach(post => {
+                    const card = document.createElement('div');
+                    card.classList.add('blog-card');
+                    // Apply background color dynamically, fallback to default if not set
+                    card.style.backgroundColor = post.bgColor || "#1a2a1a";
+
+                    const contentDiv = document.createElement('div');
+                    contentDiv.classList.add('blog-card-content');
+
+                    const titleElem = document.createElement('h3');
+                    titleElem.classList.add('font-adobe-caslon');
+                    titleElem.innerText = post.title;
+                    titleElem.style.color = post.titleColor || "#c2f08a";
+
+                    const authorElem = document.createElement('p');
+                    authorElem.classList.add('author');
+                    authorElem.innerText = `By ${post.author}`;
+                    authorElem.style.color = post.authorColor || "#8bbd4c";
+
+                    const excerptElem = document.createElement('p');
+                    excerptElem.innerText = post.excerpt;
+                    excerptElem.style.color = post.textColor || "#a3e635";
+
+                    const tagsElem = document.createElement('p');
+                    tagsElem.classList.add('tags');
+                    tagsElem.innerText = (post.tags || []).join(' '); // Ensure tags is an array
+                    tagsElem.style.color = post.tagColor || "#6c8c3e";
+
+                    contentDiv.appendChild(titleElem);
+                    contentDiv.appendChild(authorElem);
+                    contentDiv.appendChild(excerptElem);
+                    contentDiv.appendChild(tagsElem);
+
+                    // Use post.image if available, otherwise a placeholder
+                    // Check if post.imageUrls exists and use the first one, else fallback to single image or placeholder
+                    const imageUrl = (post.imageUrls && post.imageUrls.length > 0) ? post.imageUrls[0] : (post.image || 'https://placehold.co/600x400/000/fff?text=No+Image');
+
+                    card.innerHTML = `
+                        <img src="${imageUrl}" alt="${post.title}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/000/fff?text=Image+Error';" class="rounded-t-lg">
+                    `;
+                    card.appendChild(contentDiv); // Append contentDiv after img
+
+                    blogPostsContainer.appendChild(card);
+                });
+            };
+
+            // Call fetchBlogPosts on load
+            fetchBlogPosts();
+
+            // Toggle Submit Form functionality
+            const toggleButton = document.getElementById('toggle-submit-form');
+            const submitFormContainer = document.getElementById('submit-form-container');
+
+            toggleButton.addEventListener('click', () => {
+                submitFormContainer.classList.toggle('expanded');
+                if (submitFormContainer.classList.contains('expanded')) {
+                    toggleButton.innerText = 'Collapse Form';
+                } else {
+                    toggleButton.innerText = 'Expand Form';
+                }
+            });
+
+            // Make the submit button functional with Firestore
+            const submitBlogForm = document.getElementById('submit-blog-form');
+            const loadingIndicator = document.getElementById('loading-indicator');
+
+            submitBlogForm.addEventListener('submit', async (event) => {
+                event.preventDefault(); // Prevent default form submission
+
+                const postTitle = document.getElementById('post-title').value;
+                const postAuthor = document.getElementById('post-author').value;
+                const postExcerpt = document.getElementById('post-excerpt').value;
+                const postTags = document.getElementById('post-tags').value.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
+                const postContent = document.getElementById('post-content').value;
+                const contactEmail = document.getElementById('contact-email').value;
+                const selectedTheme = document.getElementById('theme-select').value;
+                const postImages = document.getElementById('post-images').files;
+
+                // Basic validation
+                if (!postTitle || !postAuthor || !postExcerpt || !postContent) {
+                    alert('Please fill in all required fields (Title, Author, Excerpt, Content).');
+                    return;
+                }
+
+                if (postExcerpt.length > MAX_EXCERPT_CHARS) {
+                    alert(`Excerpt exceeds the maximum of ${MAX_EXCERPT_CHARS} characters.`);
+                    return;
+                }
+
+                loadingIndicator.classList.remove('hidden'); // Show loading indicator
+                document.getElementById('submit-blog-button').disabled = true; // Disable button
+
+                try {
+                    const imageUrls = [];
+                    // Upload images to Firebase Storage
+                    if (postImages.length > 0) {
+                        for (let i = 0; i < postImages.length; i++) {
+                            const file = postImages[i];
+                            // Create a unique file name using a timestamp and original file name
+                            const fileName = `${Date.now()}-${file.name}`;
+                            const storageRef = storage.ref('blog_images/' + fileName);
+                            const uploadTask = storageRef.put(file);
+
+                            // Wait for the upload to complete and get the download URL
+                            await uploadTask;
+                            const downloadURL = await storageRef.getDownloadURL();
+                            imageUrls.push(downloadURL);
+                        }
+                    }
+
+                    // Get selected theme colors
+                    const themeColors = themePresets[selectedTheme];
+
+                    const newBlogPost = {
+                        title: postTitle,
+                        author: postAuthor,
+                        excerpt: postExcerpt,
+                        tags: postTags,
+                        content: postContent,
+                        contactEmail: contactEmail, // Not published, but stored
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(), // Timestamp for ordering
+                        imageUrls: imageUrls, // Store the array of image URLs
+                        ...themeColors // Spread the selected theme colors
+                    };
+
+                    // Add the new blog post to the 'blog' collection
+                    await db.collection("blog").add(newBlogPost);
+                    alert('Blog post submitted successfully!');
+                    submitBlogForm.reset(); // Clear the form
+                    document.getElementById('image-preview').innerHTML = ''; // Clear image previews
+                    document.getElementById('excerpt-char-counter').innerText = '0/150 characters';
+                    submitFormContainer.classList.remove('expanded'); // Collapse the form
+                    toggleButton.innerText = 'Expand Form';
+                    fetchBlogPosts(); // Refresh the displayed blog posts
+                } catch (error) {
+                    console.error("Error submitting blog post or uploading image: ", error);
+                    alert('Error submitting blog post. Please try again. ' + error.message);
+                } finally {
+                    loadingIndicator.classList.add('hidden'); // Hide loading indicator
+                    document.getElementById('submit-blog-button').disabled = false; // Re-enable button
+                }
+            });
+
+            // --- Theme Presets for Blog Cards ---
+            const themePresets = {
+                "default": {
+                    bgColor: "#1a2a1a", titleColor: "#c2f08a", textColor: "#a3e635", authorColor: "#8bbd4c", tagColor: "#6c8c3e"
+                },
+                "stargazer": {
+                    bgColor: "#1e1e3f", titleColor: "#cce0ff", textColor: "#99ccff", authorColor: "#66aaff", tagColor: "#3366cc"
+                },
+                "desert-sun": {
+                    bgColor: "#3a2a1a", titleColor: "#ffe066", textColor: "#ffd700", authorColor: "#e6b800", tagColor: "#cc9900"
+                },
+                "mountain-grey": {
+                    bgColor: "#2a3a4a", titleColor: "#f0f0f0", textColor: "#e0e0e0", authorColor: "#b0b0b0", tagColor: "#808080"
+                },
+                "ocean-teal": {
+                    bgColor: "#1a3a3a", titleColor: "#c0ffff", textColor: "#80ffff", authorColor: "#40e0d0", tagColor: "#008080"
+                },
+                "winter-white": {
+                    bgColor: "#2a2a3a", titleColor: "#ffffff", textColor: "#f0f8ff", authorColor: "#d3d3d3", tagColor: "#a9a9a9"
+                },
+                "forest-berry": {
+                    bgColor: "#3b1e2c", titleColor: "#f4a261", textColor: "#e76f51", authorColor: "#d64536", tagColor: "#a8332b"
+                },
+                "sunset-glow": {
+                    bgColor: "#4a2a1a", titleColor: "#fdd835", textColor: "#ffb300", authorColor: "#ff8f00", tagColor: "#e65100"
+                }
+            };
+
+            const themeSelect = document.getElementById('theme-select');
+            themeSelect.addEventListener('change', (event) => {
+                const selectedTheme = event.target.value;
+                if (selectedTheme && themePresets[selectedTheme]) {
+                    console.log("Selected Theme Colors:", themePresets[selectedTheme]);
+                    // In a real application, you would store these values
+                    // in hidden inputs or state for later use when submitting the form.
+                    // For now, they are just selected and not visually updated in text fields.
+                }
+            });
+
+            // --- Image Upload Handling (Client-side preview only) ---
+            const postImagesInput = document.getElementById('post-images');
+            const imagePreviewContainer = document.getElementById('image-preview');
+            const MAX_IMAGES = 5;
+
+            postImagesInput.addEventListener('change', (event) => {
+                imagePreviewContainer.innerHTML = ''; // Clear previous previews
+                const files = event.target.files;
+
+                if (files.length > MAX_IMAGES) {
+                    alert(`You can only upload a maximum of ${MAX_IMAGES} images.`);
+                    postImagesInput.value = ''; // Clear selected files
+                    return;
+                }
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.alt = `Preview ${file.name}`;
+                            imagePreviewContainer.appendChild(img);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+            });
+
+            // --- Excerpt Character Counter ---
+            const postExcerptInput = document.getElementById('post-excerpt');
+            const excerptCharCounter = document.getElementById('excerpt-char-counter');
+            const MAX_EXCERPT_CHARS = 150;
+
+            postExcerptInput.addEventListener('input', () => {
+                const currentLength = postExcerptInput.value.length;
+                excerptCharCounter.innerText = `${currentLength}/${MAX_EXCERPT_CHARS} characters`;
+
+                if (currentLength > MAX_EXCERPT_CHARS) {
+                    excerptCharCounter.classList.add('warning');
+                } else {
+                    excerptCharCounter.classList.remove('warning');
+                }
+            });
         });
+
 
         // ASCII Animation Script
         const canvas = document.getElementById('asciiCanvas');

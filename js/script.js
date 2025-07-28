@@ -78,6 +78,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // Single leaf image URL
     const leafImage = "https://marketplace.canva.com/ARZ8E/MAFmAUARZ8E/1/tl/canva-natural-leaf-icon.-100%25-naturals-vector-image-MAFmAUARZ8E.png";
 
+    const reviewForm = document.getElementById('parkRatingForm');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+
+    // Function to show the loading overlay
+    function showLoading() {
+        loadingOverlay.style.display = 'flex';
+    }
+
+    // Function to hide the loading overlay
+    function hideLoading() {
+        loadingOverlay.style.display = 'none';
+    }
+
     // Function to initialize star ratings
     function initializeStarRating(starsContainer) {
         const maxStars = parseInt(starsContainer.dataset.maxStars) || 5;
@@ -508,6 +521,9 @@ document.addEventListener('DOMContentLoaded', function() {
         dataToSave.timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
         if (window.selectedPlaceData) {
+        
+          showLoading();
+          
           dataToSave.parkName = window.selectedPlaceData.name || '';
           dataToSave.parkAddress = window.selectedPlaceData.address || '';
           dataToSave.parkLocation = {
@@ -582,6 +598,7 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error("Error submitting data:", error);
             alert("There was an error submitting your review. Please try again.");
         } finally {
+            hideLoading();
             submitButton.disabled = false; // Re-enable the button
             submitButton.textContent = 'Submit Park Review';
         }

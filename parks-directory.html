@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AstroScouts - Parks Directory</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="apple-touch-icon" href="assets/icon.png">
+    <link rel="shortcut icon" href="assets/favicon.ico">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://use.typekit.net/gkm8mik.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -553,7 +556,7 @@
 
         /* Expanded state for search-section */
         .search-section.expanded {
-            height: 210vh;
+            height: 250vh;
         }
 
         /* Styles for the filter toggle area */
@@ -664,28 +667,32 @@
                 </div>
 
                 <div id="parkFilters" class="w-full max-w-4xl px-4 py-6 bg-gray-900 bg-opacity-80 rounded-lg shadow-xl space-y-6 text-left">
+                    <div>
+                      <label for="distanceLimitMiles" class="block text-gray-300 text-sm font-bold mb-2">Distance Limit (miles):</label>
+                      <input type="number" id="distanceLimitMiles" name="distanceLimitMiles" min="1" max="500" value="30" placeholder="30" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
+                    </div>
                     <div class="space-y-4">
                         <h3 class="text-xl font-semibold text-teal-300 font-railway">Ratings (1-10)</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div>
                                 <label for="wheelchairAccessibilityRating" class="block text-gray-300 text-sm font-bold mb-2">Wheelchair/Stroller Accessibility:</label>
-                                <input type="number" id="wheelchairAccessibilityRating" name="wheelchairAccessibilityRating" min="1" max="10" placeholder="Any" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
+                                <input type="number" id="wheelchairAccessibilityRating" name="wheelchairAccessibilityRating" min="1" max="10" placeholder="a number 1-10" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
                             </div>
                             <div>
                                 <label for="natureAppealRating" class="block text-gray-300 text-sm font-bold mb-2">Nature Appeal:</label>
-                                <input type="number" id="natureAppealRating" name="natureAppealRating" min="1" max="10" placeholder="Any" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
+                                <input type="number" id="natureAppealRating" name="natureAppealRating" min="1" max="10" placeholder="a number 1-10" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
                             </div>
                             <div>
                                 <label for="seasonalUniquenessRating" class="block text-gray-300 text-sm font-bold mb-2">Seasonal Uniqueness:</label>
-                                <input type="number" id="seasonalUniquenessRating" name="seasonalUniquenessRating" min="1" max="10" placeholder="Any" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
+                                <input type="number" id="seasonalUniquenessRating" name="seasonalUniquenessRating" min="1" max="10" placeholder="a number 1-10" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
                             </div>
                             <div>
                                 <label for="wildlifeSpottedRating" class="block text-gray-300 text-sm font-bold mb-2">Wildlife Spotted:</label>
-                                <input type="number" id="wildlifeSpottedRating" name="wildlifeSpottedRating" min="1" max="10" placeholder="Any" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
+                                <input type="number" id="wildlifeSpottedRating" name="wildlifeSpottedRating" min="1" max="10" placeholder="a number 1-10" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
                             </div>
                             <div>
                                 <label for="nightSkyClarityRating" class="block text-gray-300 text-sm font-bold mb-2">Night Sky Clarity:</label>
-                                <input type="number" id="nightSkyClarityRating" name="nightSkyClarityRating" min="1" max="10" placeholder="Any" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
+                                <input type="number" id="nightSkyClarityRating" name="nightSkyClarityRating" min="1" max="10" placeholder="a number 1-10" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
                             </div>
                         </div>
                     </div>
@@ -761,7 +768,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                             <div>
                                 <label for="wouldRevisitRating" class="block text-gray-300 text-sm font-bold mb-2">Would Revisit (1-10):</label>
-                                <input type="number" id="wouldRevisitRating" name="wouldRevisitRating" min="0" max="10" placeholder="Any" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
+                                <input type="number" id="wouldRevisitRating" name="wouldRevisitRating" min="0" max="10" placeholder="a number 1-10" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white placeholder-gray-400">
                             </div>
                             <div>
                                 <label for="bestSeason" class="block text-gray-300 text-sm font-bold mb-2">Rated best in:</label>
@@ -779,7 +786,7 @@
             </div>
                 <button id="search-parks-button" class="divine-search-button">Search</button>
                 <p id="scroll-indicator-text" class="scroll-indicator hidden">Scroll below for search results</p>
-                <p id="no-results-indicator-text" class="scroll-indicator hidden">No parks found within 50 km of this location. Try a different search area.</p>
+                <p id="no-results-indicator-text" class="scroll-indicator hidden">No parks found within 30 miles of this location. Try a different search area.</p>
             </div>
         </section>
 
@@ -1237,6 +1244,8 @@
                         filters.nightSkyClarityRating = document.getElementById('nightSkyClarityRating').value || null;
                         filters.wouldRevisitRating = document.getElementById('wouldRevisitRating').value || null;
 
+                        filters.distanceLimitMiles = document.getElementById('distanceLimitMiles')?.value || 30;
+
                         // Checkboxes
                         const getCheckedValues = (name) => {
                             return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(cb => cb.value);
@@ -1330,8 +1339,10 @@
             return array;
         }
 
-        // Maximum distance in kilometers to consider a park "nearby"
-        const MAX_DISTANCE_KM = 50; // You can adjust this value as needed
+       let filters = {};
+
+        
+
 
         // Global map to keep track of loading status for each park-photos container
         const loadingImageCounters = new Map();
@@ -1386,6 +1397,11 @@
             scrollIndicatorText.classList.remove('visible');
             noResultsIndicatorText.classList.add('hidden');
             noResultsIndicatorText.classList.remove('visible');
+
+            // Maximum distance in kilometers to consider a park "nearby"
+            const defaultDistanceMiles = 30;
+            const maxDistanceMiles = filters.distanceLimitMiles ? parseFloat(filters.distanceLimitMiles) : defaultDistanceMiles;
+            const maxDistanceKm = maxDistanceMiles * 1.60934; // Convert miles to km for haversine
 
             try {
                 if (!db || !auth.currentUser) {
@@ -1610,7 +1626,7 @@
                     }
 
                     // Distance filter (always applied, regardless of other filters)
-                    if (park.averageDistance > MAX_DISTANCE_KM) {
+                    if (park.averageDistance > maxDistanceKm) {
                         passesFilters = false;
                     }
 
@@ -1683,6 +1699,8 @@
                             photosHtmlContent = `<img class="no-image-placeholder" src="https://placehold.co/240x240/34495E/FFFFFF?text=No+Image+Available" alt="No Image Available" onload="handleImageLoad(this)">`;
                         }
 
+                        park.averageDistance = park.averageDistance * 0.621371;
+
                         // Instead of appending to card, append to cardContent
                         cardContent.innerHTML = `
                             <div class="park-photos" data-park-id="${parkCardId}" data-total-images="${expectedImageCount}">
@@ -1693,7 +1711,7 @@
                             </div>
                             <h3>${park.parkName}</h3>
                             <p>${park.parkAddress}</p>
-                            <p>Distance: ${park.averageDistance !== Infinity ? park.averageDistance.toFixed(2) + ' km' : 'N/A'}</p>
+                            <p>Distance: ${park.averageDistance !== Infinity ? park.averageDistance.toFixed(2) + ' mi' : 'N/A'}</p>
                             <div class="rating-section">
                                 ${ratingsHtml}
                             </div>
@@ -1718,9 +1736,10 @@
                     }, 20000); // Hide after 20 seconds
 
                 } else {
+                    maxDistanceMiles = maxDistanceMiles * 0.621371;
                     parkResultsContainer.classList.add('hidden'); // Hide container if no nearby parks
                     noResultsMessage.classList.remove('hidden'); // Show no results message
-                    noResultsMessage.textContent = `No parks found within ${MAX_DISTANCE_KM} km of this location. Try a different search area.`;
+                    noResultsMessage.textContent = `No parks found within ${maxDistanceMiles} mi of this location. Try a different search area.`;
                     // Scroll to the results section smoothly
                     noResultsMessage.scrollIntoView({ behavior: 'smooth' });
                     noResultsIndicatorText.classList.remove('hidden');

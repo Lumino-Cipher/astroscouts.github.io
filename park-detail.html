@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Park Details - AstroScouts</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="apple-touch-icon" href="assets/icon.png">
+    <link rel="shortcut icon" href="assets/favicon.ico">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://use.typekit.net/gkm8mik.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
     <style>
@@ -512,6 +515,15 @@
         </div>
         <!-- End Image Carousel Section -->
 
+        <div id="park-detail-tags" class="mt-4 text-white text-lg space-y-2">
+            <p><strong>🧭 Atmosphere:</strong> <span id="atmosphere-tags">Loading...</span></p>
+            <p><strong>🏔️ Terrain:</strong> <span id="terrain-tags">Loading...</span></p>
+            <p><strong>🔥 Features:</strong> <span id="features-tags">Loading...</span></p>
+            <p id="solo-visitors-tag" class="hidden">🔮 Rated highly for solo visitors</p>
+            <p><strong>Rated best in season:</strong> <span id="best-season-tag">Loading...</span></p>
+            <p class="flex items-center"><strong>"Would revisit" rating:</strong> <span id="revisit-rating-value" class="ml-2">Loading...</span><span id="revisit-rating-stars" class="ml-2"></span></p>
+        </div>
+
         <!-- Main Ratings Section -->
         <div id="park-detail-main-ratings" class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
             <!-- Accessibility, Cleanliness, Sustainability ratings will go here -->
@@ -866,7 +878,13 @@
                     trailSmoothnessRatings: [],
                     waterCleanlinessRatings: [],
                     wheelchairAccessibilityRatings: [],
-                    wildlifeSpottedRatings: []
+                    wildlifeSpottedRatings: [],
+                    atmosphere: [],
+                    terrain: [],
+                    features: [],
+                    soloVisitors: false,
+                    bestInSeason: {},
+                    wouldRevisitRating: []
                 };
 
                 parkReviews.forEach(review => {
@@ -898,6 +916,25 @@
                     if (typeof review.waterCleanlinessRating === 'number' && !isNaN(review.waterCleanlinessRating)) aggregatedDetails.waterCleanlinessRatings.push(review.waterCleanlinessRating);
                     if (typeof review.wheelchairAccessibilityRating === 'number' && !isNaN(review.wheelchairAccessibilityRating)) aggregatedDetails.wheelchairAccessibilityRatings.push(review.wheelchairAccessibilityRating);
                     if (typeof review.wildlifeSpottedRating === 'number' && !isNaN(review.wildlifeSpottedRating)) aggregatedDetails.wildlifeSpottedRatings.push(review.wildlifeSpottedRating);
+                    if (Array.isArray(review.atmosphere)) {
+                        aggregatedDetails.atmosphere = aggregatedDetails.atmosphere.concat(review.atmosphere);
+                    }
+                    if (Array.isArray(review.terrain)) {
+                        aggregatedDetails.terrain = aggregatedDetails.terrain.concat(review.terrain);
+                    }
+                    if (Array.isArray(review.features)) {
+                        aggregatedDetails.features = aggregatedDetails.features.concat(review.features);
+                    }
+                    if (Array.isArray(review.communityRatings) && review.communityRatings.includes('soloVisitors')) {
+                        aggregatedDetails.soloVisitors = true; // Mark if any review rates highly for solo visitors
+                    }
+                    if (review.bestInSeason) {
+                        aggregatedDetails.bestInSeason = aggregatedDetails.bestInSeason || {};
+                        aggregatedDetails.bestInSeason[review.bestInSeason] = (aggregatedDetails.bestInSeason[review.bestInSeason] || 0) + 1;
+                    }
+                    if (typeof review.wouldRevisitRatingRating === 'number' && !isNaN(review.wouldRevisitRatingRating)) {
+                        aggregatedDetails.wouldRevisitRating.push(review.wouldRevisitRatingRating);
+                    }
                 });
 
                 // Display Photos
@@ -955,6 +992,68 @@
                     parkPhotosDetail.scrollBy({ left: scrollAmount, behavior: 'smooth' });
                 });
 
+                // Display Park Tags
+                const atmosphereTags = document.getElementById('atmosphere-tags');
+                const terrainTags = document.getElementById('terrain-tags');
+                const featuresTags = document.getElementById('features-tags');
+                const soloVisitorsTag = document.getElementById('solo-visitors-tag');
+                const bestSeasonTag = document.getElementById('best-season-tag');
+                const revisitRatingValue = document.getElementById('revisit-rating-value');
+                const revisitRatingStars = document.getElementById('revisit-rating-stars');
+
+                function getMostFrequent(arr) {
+                    if (!arr || arr.length === 0) return 'N/A';
+                    const counts = {};
+                    arr.forEach(item => {
+                        counts[item] = (counts[item] || 0) + 1;
+                    });
+                    let maxCount = 0;
+                    let mostFrequent = [];
+                    for (const item in counts) {
+                        if (counts[item] > maxCount) {
+                            maxCount = counts[item];
+                            mostFrequent = [item];
+                        } else if (counts[item] === maxCount) {
+                            mostFrequent.push(item);
+                        }
+                    }
+                    return mostFrequent.map(tag => tag.charAt(0).toUpperCase() + tag.slice(1).replace(/([A-Z])/g, ' $1')).join(', ');
+                }
+
+                atmosphereTags.textContent = getMostFrequent(aggregatedDetails.atmosphere);
+                terrainTags.textContent = getMostFrequent(aggregatedDetails.terrain);
+                featuresTags.textContent = getMostFrequent(aggregatedDetails.features);
+
+                if (aggregatedDetails.soloVisitors) {
+                    soloVisitorsTag.classList.remove('hidden');
+                } else {
+                    soloVisitorsTag.classList.add('hidden');
+                }
+
+                if (Object.keys(aggregatedDetails.bestInSeason).length > 0) {
+                    let maxCount = 0;
+                    let mostFrequentSeasons = [];
+                    for (const season in aggregatedDetails.bestInSeason) {
+                        if (aggregatedDetails.bestInSeason[season] > maxCount) {
+                            maxCount = aggregatedDetails.bestInSeason[season];
+                            mostFrequentSeasons = [season];
+                        } else if (aggregatedDetails.bestInSeason[season] === maxCount) {
+                            mostFrequentSeasons.push(season);
+                        }
+                    }
+                    bestSeasonTag.textContent = mostFrequentSeasons.map(season => season.charAt(0).toUpperCase() + season.slice(1)).join(', ');
+                } else {
+                    bestSeasonTag.textContent = 'N/A';
+                }
+
+                const medianRevisitRating = calculateMedian(aggregatedDetails.wouldRevisitRating);
+                if (typeof medianRevisitRating === 'number') {
+                    revisitRatingValue.textContent = `${medianRevisitRating.toFixed(1)}/10`;
+                    revisitRatingStars.innerHTML = getStarRatingHtml(medianRevisitRating, 10);
+                } else {
+                    revisitRatingValue.textContent = 'N/A';
+                    revisitRatingStars.innerHTML = getStarRatingHtml(0, 10); // Display empty stars
+                }
 
                 // Define main ratings keys (card format)
                 const mainRatingsKeys = ['accessibilityRatings', 'cleanlinessRatings', 'sustainabilityRatings'];

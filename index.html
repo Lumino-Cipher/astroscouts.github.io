@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AstroScouts</title>
+    <link rel="apple-touch-icon" href="assets/icon.png">
+    <link rel="shortcut icon" href="assets/favicon.ico">
+    <link rel="icon" href="assets/favicon.ico" type="image/x-icon">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://use.typekit.net/gkm8mik.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Raleway:wght@400;700&display=swap" rel="stylesheet">
@@ -1151,6 +1154,13 @@
         .park-label.show {
             opacity: 1;
         }
+
+        @media (max-width: 767px) {
+            .globe-column {
+                min-height: 300px; /* Or any height you prefer for mobile */
+                height: 300px; /* Explicitly set height */
+            }
+        }
     </style>
 </head>
 <body class="font-sans antialiased text-gray-800">
@@ -1334,544 +1344,6 @@
             </div>
             <div class="globe-column w-full md:w-1/2">
                 <div id="globe-container"></div>
-
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-
-                    <script>
-                        document.addEventListener('DOMContentLoaded', () => {
-                            const container = document.getElementById('globe-container');
-                            const width = container.offsetWidth;
-                            const height = container.offsetHeight;
-
-                            // Set up the scene, camera, and renderer
-                            const scene = new THREE.Scene();
-                            const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-                            const renderer = new THREE.WebGLRenderer({ antialias: true });
-                            renderer.setSize(width, height);
-                            container.appendChild(renderer.domElement);
-
-                            // Create the globe
-                            const geometry = new THREE.SphereGeometry(5, 64, 64); // Increased segments for smoother globe
-                            const textureLoader = new THREE.TextureLoader();
-                            const textureURL = 'https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg';
-
-                            textureLoader.load(
-                                textureURL,
-                                (texture) => {
-                                    const material = new THREE.MeshBasicMaterial({ map: texture });
-                                    const globe = new THREE.Mesh(geometry, material);
-                                    scene.add(globe);
-
-                                    // Atmosphere
-                                    const atmosphereMaterial = new THREE.ShaderMaterial({
-                                        uniforms: {
-                                            c: { value: 0.1 },
-                                            p: { value: 4.0 }
-                                        },
-                                        vertexShader: document.getElementById('vertexShader').textContent,
-                                        fragmentShader: document.getElementById('fragmentShader').textContent,
-                                        blending: THREE.AdditiveBlending,
-                                        side: THREE.BackSide,
-                                    });
-                                    const atmosphere = new THREE.Mesh(geometry, atmosphereMaterial);
-                                    atmosphere.scale.set(1.05, 1.05, 1.05);
-                                    scene.add(atmosphere);
-
-                                    // Position the camera
-                                    camera.position.z = 10;
-
-                                    // Add lights
-                                    const ambientLight = new THREE.AmbientLight(0x404040); // Softer ambient light
-                                    scene.add(ambientLight);
-
-                                    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7); // Directional light for better shading
-                                    directionalLight.position.set(5, 5, 5).normalize();
-                                    scene.add(directionalLight);
-
-                                    // Example park markers
-                                    const parks = [
-                                        { lat: 40.78, lon: -73.97, name: "Central Park, NY" },
-                                        { lat: 51.50, lon: 0.12, name: "Hyde Park, London" },
-                                        { lat: 37.77, lon: -122.47, name: "Golden Gate Park, San Francisco" },
-                                        { lat: 35.70, lon: 139.77, name: "Ueno Park, Tokyo" },
-                                        { lat: 52.50, lon: 13.37, name: "Tiergarten, Berlin" },
-                                        { lat: 40.41, lon: -3.69, name: "Retiro Park, Madrid" },
-                                        { lat: 49.28, lon: -123.11, name: "Stanley Park, Vancouver" },
-                                        { lat: 52.28, lon: 4.52, name: "Keukenhof Gardens, Netherlands" },
-                                        { lat: 48.42, lon: -123.41, name: "Butchart Gardens, Canada" },
-                                        { lat: 37.8, lon: -119.6, name: "Yosemite National Park, California" },
-                                        { lat: 44.6, lon: -110.5, name: "Yellowstone National Park, Wyoming" },
-                                        { lat: 36.1, lon: -112.1, name: "Grand Canyon National Park, Arizona" },
-                                        { lat: 51.17, lon: -115.76, name: "Banff National Park, Canada" },
-                                        { lat: -24.35, lon: 31.47, name: "Kruger National Park, South Africa" },
-                                        { lat: -51.0, lon: -72.5, name: "Torres del Paine National Park, Chile" },
-                                        { lat: -25.12, lon: -54.58, name: "Iguaçu National Park, Brazil/Argentina" },
-                                        { lat: -25.34, lon: 130.98, name: "Uluru-Kata Tjuta National Park, Australia" },
-                                        { lat: -44.4, lon: 168.6, name: "Fiordland National Park, New Zealand" },
-                                        { lat: -12.83, lon: 132.72, name: "Kakadu National Park, Australia" },
-                                        { lat: 51.82, lon: -9.50, name: "Killarney National Park, Ireland" },
-                                        { lat: 44.86, lon: 15.60, name: "Plitvice Lakes National Park, Croatia" },
-                                        { lat: 50.92, lon: 14.12, name: "Saxon Switzerland National Park, Germany" },
-                                        { lat: 18.57, lon: 98.56, name: "Doi Inthanon National Park, Thailand" },
-                                        { lat: 35.36, lon: 138.73, name: "Mount Fuji, Japan" },
-                                        { lat: 15.58, lon: -89.13, name: "Semuc Champey, Guatemala" },
-                                        { lat: 4.32, lon: 103.38, name: "Taman Negara National Park, Malaysia" },
-                                        { lat: 59.5, lon: -151.0, name: "Kenai Fjords National Park, Alaska" },
-                                        { lat: 48.8, lon: -114.1, name: "Glacier National Park, Montana" },
-                                        { lat: 35.6, lon: -83.0, name: "Great Smoky Mountains National Park, NC & TN" },
-                                        { lat: 37.2, lon: -113.0, name: "Zion National Park, Utah" },
-                                        { lat: 37.6, lon: -112.1, name: "Bryce Canyon National Park, Utah" },
-                                        { lat: 25.1, lon: -80.8, name: "Everglades National Park, Florida" },
-                                        { lat: 47.0, lon: -123.4, name: "Olympic National Park, Washington" },
-                                        { lat: 40.4, lon: -105.7, name: "Rocky Mountain National Park, Colorado" },
-                                        { lat: 35.68, lon: 139.71, name: "Shinjuku Gyoen National Garden, Tokyo" },
-                                        { lat: 30.8, lon: 118.1, name: "Hengshan Park, China" },
-                                        { lat: 48.85, lon: 2.33, name: "Jardin du Luxembourg, Paris" },
-                                        { lat: 51.50, lon: 0.12, name: "St. James's Park, London" },
-                                        { lat: 43.77, lon: 11.26, name: "Boboli Gardens, Italy" },
-                                        { lat: 48.18, lon: 16.37, name: "Schönbrunn Palace Park, Austria" },
-                                        { lat: 55.67, lon: 12.56, name: "Tivoli Gardens, Denmark" },
-                                        { lat: 48.84, lon: 2.22, name: "Bois de Boulogne, Paris" },
-                                        { lat: 53.33, lon: -6.2, name: "Phoenix Park, Ireland" },
-                                        { lat: 51.53, lon: -0.13, name: "Regent's Park, London" },
-                                        { lat: 29.38, lon: 47.98, name: "Al Shaheed Park, Kuwait City" },
-                                        { lat: 34.02, lon: -118.49, name: "Griffith Park, Los Angeles" },
-                                        { lat: -33.86, lon: 151.20, name: "Royal Botanic Garden, Sydney" },
-                                        { lat: 34.05, lon: -118.24, name: "Exposition Park, Los Angeles" },
-                                        { lat: 41.90, lon: 12.45, name: "Villa Borghese, Rome" },
-                                        { lat: -22.90, lon: -43.19, name: "Parque Lage, Rio de Janeiro" },
-                                        { lat: -26.20, lon: 28.04, name: "Johannesburg Botanical Garden, South Africa" },
-                                        { lat: 39.90, lon: 116.39, name: "Temple of Heaven Park, Beijing" },
-                                        { lat: 55.75, lon: 37.61, name: "Gorky Park, Moscow" },
-                                        { lat: 28.61, lon: 77.20, name: "Lodhi Garden, Delhi" },
-                                        { lat: 30.27, lon: 120.16, name: "West Lake Scenic Area, Hangzhou" },
-                                        { lat: 34.69, lon: 135.50, name: "Osaka Castle Park, Osaka" },
-                                        { lat: 25.07, lon: 121.56, name: "Daan Forest Park, Taipei" },
-                                        { lat: 37.56, lon: 126.97, name: "Namsan Park, Seoul" },
-                                        { lat: 31.22, lon: 121.47, name: "Yu Garden, Shanghai" },
-                                        { lat: 33.58, lon: -7.61, name: "Arab League Park, Casablanca" },
-                                        { lat: 31.78, lon: 35.22, name: "Jerusalem Botanical Gardens, Israel" },
-                                        { lat: 33.30, lon: 44.36, name: "Zawraa Park, Baghdad" },
-                                        { lat: 23.68, lon: 90.35, name: "Ramna Park, Dhaka" },
-                                        { lat: 13.75, lon: 100.50, name: "Lumpini Park, Bangkok" },
-                                        { lat: 14.59, lon: 120.97, name: "Rizal Park, Manila" },
-                                        { lat: 1.35, lon: 103.81, name: "Gardens by the Bay, Singapore" },
-                                        { lat: 3.13, lon: 101.68, name: "KLCC Park, Kuala Lumpur" },
-                                        { lat: 6.92, lon: 79.86, name: "Viharamahadevi Park, Colombo" },
-                                        { lat: 34.68, lon: 33.04, name: "Limassol Municipal Park, Cyprus" },
-                                        { lat: 38.72, lon: -9.13, name: "Parque Eduardo VII, Lisbon" },
-                                        { lat: 41.38, lon: 2.17, name: "Parc de la Ciutadella, Barcelona" },
-                                        { lat: 45.46, lon: 9.18, name: "Parco Sempione, Milan" },
-                                        { lat: 50.08, lon: 14.43, name: "Letná Park, Prague" },
-                                        { lat: 47.49, lon: 19.04, name: "Margaret Island, Budapest" },
-                                        { lat: 50.45, lon: 30.52, name: "Mariinsky Park, Kyiv" },
-                                        { lat: 52.22, lon: 21.01, name: "Łazienki Park, Warsaw" },
-                                        { lat: 59.32, lon: 18.06, name: "Djurgården, Stockholm" },
-                                        { lat: 60.16, lon: 24.93, name: "Esplanadi, Helsinki" },
-                                        { lat: 64.13, lon: -21.92, name: "Hallgrímskirkja Garden, Reykjavik" },
-                                        { lat: 33.51, lon: -7.58, name: "Parc de la Ligue Arabe, Casablanca" },
-                                        { lat: 30.04, lon: 31.23, name: "Al-Azhar Park, Cairo" },
-                                        { lat: -33.92, lon: 18.42, name: "Kirstenbosch National Botanical Garden, Cape Town" },
-                                        { lat: -26.19, lon: 28.03, name: "Walter Sisulu National Botanical Garden, Johannesburg" },
-                                        { lat: -1.28, lon: 36.81, name: "Nairobi National Park, Kenya" },
-                                        { lat: -3.07, lon: 29.36, name: "Rusizi National Park, Burundi" },
-                                        { lat: -16.29, lon: 28.72, name: "Lower Zambezi National Park, Zambia" },
-                                        { lat: -18.87, lon: 47.50, name: "Isalo National Park, Madagascar" },
-                                        { lat: -18.17, lon: 178.44, name: "Colo-I-Suva Forest Park, Fiji" },
-                                        { lat: -27.47, lon: 153.02, name: "South Bank Parklands, Brisbane" },
-                                        { lat: -37.81, lon: 144.96, name: "Royal Botanic Gardens Victoria, Melbourne" },
-                                        { lat: -41.28, lon: 174.77, name: "Zealandia, Wellington" },
-                                        { lat: -43.53, lon: 172.63, name: "Christchurch Botanic Gardens, New Zealand" },
-                                        { lat: -34.92, lon: 138.59, name: "Adelaide Botanic Garden, Australia" },
-                                        { lat: -31.95, lon: 115.86, name: "Kings Park and Botanic Garden, Perth" },
-                                        { lat: -17.73, lon: 177.05, name: "Garden of the Sleeping Giant, Fiji" },
-                                        { lat: 10.48, lon: -66.86, name: "Parque del Este, Caracas" },
-                                        { lat: -34.60, lon: -58.38, name: "Parque Tres de Febrero, Buenos Aires" },
-                                        { lat: -33.44, lon: -70.66, name: "Parque Metropolitano de Santiago, Chile" },
-                                        { lat: 19.43, lon: -99.13, name: "Chapultepec Park, Mexico City" },
-                                        { lat: 9.92, lon: -84.09, name: "La Sabana Metropolitan Park, San Jose" },
-                                        { lat: 8.98, lon: -79.51, name: "Parque Natural Metropolitano, Panama City" },
-                                        { lat: 14.07, lon: -87.19, name: "La Tigra National Park, Honduras" },
-                                        { lat: 13.69, lon: -89.19, name: "Boquerón National Park, El Salvador" },
-                                        { lat: 12.13, lon: -86.25, name: "Masaya Volcano National Park, Nicaragua" },
-                                        { lat: 10.64, lon: -61.52, name: "Royal Botanic Gardens, Trinidad and Tobago" },
-                                        { lat: 18.47, lon: -69.93, name: "Mirador Sur Park, Santo Domingo" },
-                                        { lat: 18.00, lon: -76.78, name: "Blue and John Crow Mountains National Park, Jamaica" },
-                                        { lat: 18.34, lon: -64.93, name: "Virgin Islands National Park, USVI" }
-                                    ];
-
-                                    const markers = [];
-                                    const markerData = {}; // To store marker mesh and its associated data
-
-                                    parks.forEach((park, index) => {
-                                        const marker = createGlowingMarker();
-                                        const { x, y, z } = latLonToVector3(park.lat, park.lon, 5.01); // Slightly above globe
-                                        marker.position.set(x, y, z);
-                                        globe.add(marker);
-                                        marker.userData = { name: park.name, index: index, connections: 0 };
-                                        markers.push(marker);
-                                        markerData[index] = { mesh: marker, info: park };
-                                    });
-
-                                    // Add stars background
-                                    function createStars() {
-                                        const starGeometry = new THREE.BufferGeometry();
-                                        const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5, sizeAttenuation: true });
-
-                                        const starVertices = [];
-                                        for (let i = 0; i < 5000; i++) {
-                                            const x = (Math.random() - 0.5) * 2000;
-                                            const y = (Math.random() - 0.5) * 2000;
-                                            const z = -Math.random() * 2000; // Stars appear behind
-                                            starVertices.push(x, y, z);
-                                        }
-
-                                        starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-                                        const stars = new THREE.Points(starGeometry, starMaterial);
-                                        scene.add(stars);
-                                    }
-
-                                    createStars();
-
-                                    // Animation loop
-                                    function animate() {
-                                        requestAnimationFrame(animate);
-                                        globe.rotation.y += 0.003; // Increased rotation speed
-                                        renderer.render(scene, camera);
-                                    }
-
-                                    animate();
-
-                                    // Handle window resize
-                                    window.addEventListener('resize', () => {
-                                        const width = container.offsetWidth;
-                                        const height = container.offsetHeight;
-                                        renderer.setSize(width, height);
-                                        camera.aspect = width / height;
-                                        camera.updateProjectionMatrix();
-                                    });
-
-                                    // Function to create glowing markers
-                                    function createGlowingMarker() {
-                                        const markerGroup = new THREE.Group();
-
-                                        // Core sphere (brighter)
-                                        const coreGeometry = new THREE.SphereGeometry(0.08, 16, 16);
-                                        const coreMaterial = new THREE.MeshBasicMaterial({ color: 0x00e6ff }); // Bright blue
-                                        const coreSphere = new THREE.Mesh(coreGeometry, coreMaterial);
-                                        markerGroup.add(coreSphere);
-
-                                        // Outer glow (subtle, transparent)
-                                        const glowGeometry = new THREE.SphereGeometry(0.15, 16, 16);
-                                        const glowMaterial = new THREE.MeshBasicMaterial({
-                                            color: 0x00e6ff,
-                                            transparent: true,
-                                            opacity: 0.3,
-                                            blending: THREE.AdditiveBlending // Additive blending for glow effect
-                                        });
-                                        const glowSphere = new THREE.Mesh(glowGeometry, glowMaterial);
-                                        markerGroup.add(glowSphere);
-
-                                        return markerGroup;
-                                    }
-
-                                    // Function to convert lat/lon to 3D coordinates
-                                    function latLonToVector3(lat, lon, radius) {
-                                        const phi = (90 - lat) * (Math.PI / 180);
-                                        const theta = (lon + 180) * (Math.PI / 180);
-
-                                        const x = -((radius) * Math.sin(phi) * Math.cos(theta));
-                                        const z = ((radius) * Math.sin(phi) * Math.sin(theta));
-                                        const y = ((radius) * Math.cos(phi));
-
-                                        return new THREE.Vector3(x, y, z);
-                                    }
-
-                                    // --- Connection Line Animation ---
-                                    const activeConnections = [];
-                                    const maxConnectionsPerPoint = 2;
-                                    const minSimultaneousConnections = 140; // At least 50 connections at any given time
-                                    const minPopUpConnections = 0; // At least 2 connections with pop-ups
-
-                                    function createConnectionLine(startPoint, endPoint) {
-                                        const curve = new THREE.CatmullRomCurve3([
-                                            startPoint,
-                                            startPoint.clone().lerp(endPoint, 0.5).setLength(5.5), // Arc point slightly above globe
-                                            endPoint
-                                        ]);
-
-                                        const points = curve.getPoints(100); // More points for smoother animation
-                                        const geometry = new THREE.BufferGeometry();
-                                        geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(points.length * 3), 3));
-                                        geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(points.length * 3), 3)); // For gradient
-
-                                        const colors = [];
-                                        const startColor = new THREE.Color(getRandomHexColor());
-                                        const endColor = new THREE.Color(getRandomHexColor());
-
-                                        for (let i = 0; i < points.length; i++) {
-                                            const color = startColor.clone().lerp(endColor, i / (points.length - 1));
-                                            colors.push(color.r, color.g, color.b);
-                                        }
-                                        geometry.attributes.color.array.set(colors);
-
-                                        // Single gradient line with blending for glow
-                                        const lineMaterial = new THREE.LineBasicMaterial({
-                                            vertexColors: true, // Enable vertex colors for gradient
-                                            linewidth: 16, // Thicker line
-                                            transparent: true,
-                                            opacity: 0,
-                                            blending: THREE.AdditiveBlending // Additive blending for glow effect
-                                        });
-                                        const line = new THREE.Line(geometry, lineMaterial);
-                                        globe.add(line);
-
-                                        // Animate the drawing of the line
-                                        const tempPoints = [];
-                                        const tempColors = [];
-                                        let currentPointIndex = 0;
-                                        const drawDuration = 4; // Seconds to draw the line
-                                        const holdDuration = 19.0; // Seconds to hold after drawing
-                                        const fadeDuration = 1.0; // Seconds to fade out
-
-                                        const drawTween = gsap.to({ progress: 0 }, {
-                                            progress: 1,
-                                            duration: drawDuration,
-                                            ease: "power1.inOut",
-                                            onUpdate: function() {
-                                                const p = this.progress();
-                                                const numPointsToDraw = Math.floor(points.length * p);
-
-                                                if (numPointsToDraw > currentPointIndex) {
-                                                    for (let i = currentPointIndex; i < numPointsToDraw; i++) {
-                                                        tempPoints.push(points[i].x, points[i].y, points[i].z);
-                                                        tempColors.push(colors[i * 3], colors[i * 3 + 1], colors[i * 3 + 2]);
-                                                    }
-                                                    line.geometry.attributes.position.set(tempPoints);
-                                                    line.geometry.attributes.color.set(tempColors);
-                                                    line.geometry.setDrawRange(0, tempPoints.length / 3);
-                                                    line.geometry.attributes.position.needsUpdate = true;
-                                                    line.geometry.attributes.color.needsUpdate = true;
-                                                    currentPointIndex = numPointsToDraw;
-                                                }
-
-                                                // Fade in as it draws
-                                                lineMaterial.opacity = p;
-                                            },
-                                            onComplete: () => {
-                                                // Once drawn, hold then fade out
-                                                gsap.to(lineMaterial, {
-                                                    opacity: 0,
-                                                    duration: fadeDuration,
-                                                    delay: holdDuration,
-                                                    onComplete: () => {
-                                                        globe.remove(line);
-                                                        // Remove from active connections
-                                                        const index = activeConnections.findIndex(conn => conn.line === line);
-                                                        if (index !== -1) {
-                                                            const removedConnection = activeConnections.splice(index, 1)[0];
-                                                            markers[removedConnection.park1Index].userData.connections--;
-                                                            markers[removedConnection.park2Index].userData.connections--;
-                                                        }
-                                                    }
-                                                });
-                                            }
-                                        });
-
-                                        return { line, drawTween };
-                                    }
-
-                                    function getRandomHexColor() {
-                                        const letters = '0123456789ABCDEF';
-                                        let color = '0x';
-                                        for (let i = 0; i < 6; i++) {
-                                            color += letters[Math.floor(Math.random() * 16)];
-                                        }
-                                        return parseInt(color, 16);
-                                    }
-
-                                    function initiateRandomConnection() {
-                                        // Keep adding connections until we reach the minimum desired amount
-                                        if (markers.length < 2 || activeConnections.length >= minSimultaneousConnections) {
-                                            return;
-                                        }
-
-                                        // Filter parks that haven't reached max connections
-                                        const availableParks = markers.filter(m => m.userData.connections < maxConnectionsPerPoint);
-
-                                        if (availableParks.length < 2) return;
-
-                                        let park1, park2;
-                                        let attempts = 0;
-                                        const maxAttempts = 50; // Prevent infinite loops if all parks are connected
-                                        do {
-                                            park1 = availableParks[Math.floor(Math.random() * availableParks.length)];
-                                            park2 = availableParks[Math.floor(Math.random() * availableParks.length)];
-                                            attempts++;
-                                        } while ((park1 === park2 || isConnectionActive(park1, park2)) && attempts < maxAttempts);
-
-                                        if (attempts >= maxAttempts) {
-                                            return; // Couldn't find a suitable pair
-                                        }
-
-                                        // Increment connection count for these parks immediately
-                                        park1.userData.connections++;
-                                        park2.userData.connections++;
-
-                                        const connection = createConnectionLine(
-                                            park1.position,
-                                            park2.position
-                                        );
-                                        activeConnections.push({
-                                            line: connection.line,
-                                            drawTween: connection.drawTween,
-                                            park1Index: park1.userData.index,
-                                            park2Index: park2.userData.index
-                                        });
-                                    }
-
-                                    function isConnectionActive(p1, p2) {
-                                        return activeConnections.some(conn =>
-                                            (conn.park1Index === p1.userData.index && conn.park2Index === p2.userData.index) ||
-                                            (conn.park1Index === p2.userData.index && conn.park1Index === p1.userData.index)
-                                        );
-                                    }
-
-                                    // Periodically initiate new connections.
-                                    setInterval(initiateRandomConnection, 500); // Try to add a new connection every 0.5 seconds
-
-                                    // --- Park Name Pop-up ---
-                                    const currentlyVisibleLabels = new Map(); // Use a Map to track multiple visible labels
-
-                                    function showParkLabel(parkName, markerMesh, markerIndex) {
-                                        // If a label for this marker is already visible, don't create a new one
-                                        if (currentlyVisibleLabels.has(markerIndex)) {
-                                            return;
-                                        }
-
-                                        const labelDiv = document.createElement('div');
-                                        labelDiv.className = 'park-label';
-                                        labelDiv.textContent = parkName;
-                                        document.body.appendChild(labelDiv);
-
-                                        currentlyVisibleLabels.set(markerIndex, labelDiv); // Add to map
-
-                                        // Update label position in the animation loop
-                                        const updateLabelPosition = () => {
-                                            // Convert 3D marker position to 2D screen position
-                                            const markerPositionInWorld = new THREE.Vector3().copy(markerMesh.position).applyMatrix4(globe.matrixWorld);
-                                            const vector = markerPositionInWorld.clone();
-                                            vector.project(camera);
-
-                                            // Check if the marker is on the visible side of the globe
-                                            const cameraDirection = new THREE.Vector3().subVectors(markerPositionInWorld, camera.position).normalize();
-                                            const globeNormal = new THREE.Vector3().copy(markerMesh.position).normalize();
-
-                                            if (cameraDirection.dot(globeNormal) < -0.2) { // Only show if visible
-                                                labelDiv.style.display = 'block';
-                                                const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
-                                                const y = (-vector.y * 0.5 + 0.5) * window.innerHeight;
-
-                                                labelDiv.style.left = `${x}px`;
-                                                labelDiv.style.top = `${y}px`;
-                                            } else {
-                                                labelDiv.style.display = 'none'; // Hide if not visible
-                                            }
-
-                                            // If label is still in DOM and active, request next frame
-                                            if (currentlyVisibleLabels.has(markerIndex) && labelDiv.parentNode) {
-                                                requestAnimationFrame(updateLabelPosition);
-                                            }
-                                        };
-
-                                        updateLabelPosition(); // Start updating position
-
-                                        // Animate in
-                                        gsap.to(labelDiv, { opacity: 1, duration: 0.3, onComplete: () => {
-                                            labelDiv.classList.add('show');
-                                        }});
-
-                                        // Hide after a few seconds
-                                        gsap.to(labelDiv, { opacity: 0, delay: 5, duration: 0.5, onComplete: () => { // Increased delay
-                                            labelDiv.classList.remove('show');
-                                            if (labelDiv.parentNode) {
-                                                labelDiv.parentNode.removeChild(labelDiv);
-                                            }
-                                            currentlyVisibleLabels.delete(markerIndex); // Remove from map
-                                        }});
-                                    }
-
-                                    // Keep track of which markers currently have active pop-ups
-                                    const markersWithPopups = new Set();
-                                    const popupAttemptInterval = 1000; // Check every 1 second
-
-                                    setInterval(() => {
-                                        // Remove markers whose pop-ups have faded out
-                                        markersWithPopups.forEach(index => {
-                                            if (!currentlyVisibleLabels.has(index)) {
-                                                markersWithPopups.delete(index);
-                                            }
-                                        });
-
-                                        // If we have fewer than minPopUpConnections, try to add more
-                                        if (markersWithPopups.size < minPopUpConnections) {
-                                            const availableMarkers = markers.filter(m => !markersWithPopups.has(m.userData.index));
-
-                                            if (availableMarkers.length > 0) {
-                                                const randomIndex = Math.floor(Math.random() * availableMarkers.length);
-                                                const selectedMarker = availableMarkers[randomIndex];
-                                                const parkInfo = selectedMarker.userData;
-
-                                                showParkLabel(parkInfo.name, selectedMarker, parkInfo.index);
-                                                markersWithPopups.add(parkInfo.index);
-                                            }
-                                        }
-                                    }, popupAttemptInterval);
-
-
-                                    // Add mouse controls for interactive rotation
-                                    let isDragging = false;
-                                    let previousMousePosition = { x: 0, y: 0 };
-
-                                    renderer.domElement.addEventListener('mousedown', (event) => {
-                                        isDragging = true;
-                                    });
-
-                                    renderer.domElement.addEventListener('mousemove', (event) => {
-                                        if (isDragging) {
-                                            const deltaMove = {
-                                                x: event.offsetX - previousMousePosition.x,
-                                                y: event.offsetY - previousMousePosition.y,
-                                            };
-
-                                            // Adjust rotation based on mouse movement
-                                            globe.rotation.y += deltaMove.x * 0.005;
-                                            globe.rotation.x += deltaMove.y * 0.005;
-                                        }
-
-                                        previousMousePosition = {
-                                            x: event.offsetX,
-                                            y: event.offsetY,
-                                        };
-                                    });
-
-                                    renderer.domElement.addEventListener('mouseup', () => {
-                                        isDragging = false;
-                                    });
-
-                                    renderer.domElement.addEventListener('mouseleave', () => {
-                                        isDragging = false;
-                                    });
-                                },
-                                undefined,
-                                (err) => {
-                                    console.error('Error loading texture:', err);
-                                }
-                            );
-                        });
-                    </script>
             </div>
         </div>
     </section>
@@ -2237,6 +1709,554 @@
           // The click listener for the search icon is removed as the output display is ignored.
       }
       initMap();
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('globe-container');
+            const width = container.offsetWidth;
+            const height = container.offsetHeight;
+
+            // Set up the scene, camera, and renderer
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(width, height);
+            container.appendChild(renderer.domElement);
+
+            // Function to adjust camera based on screen width
+            function updateCameraPosition() {
+                const width = container.offsetWidth;
+                if (width < 768) { // Mobile devices
+                    camera.position.z = 20; // Zoom out
+                } else { // Desktops
+                    camera.position.z = 10; // Default position
+                }
+                camera.updateProjectionMatrix();
+            }
+
+            // Create the globe
+            const geometry = new THREE.SphereGeometry(5, 64, 64); // Increased segments for smoother globe
+            const textureLoader = new THREE.TextureLoader();
+            const textureURL = 'https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg';
+
+            textureLoader.load(
+                textureURL,
+                (texture) => {
+                    const material = new THREE.MeshBasicMaterial({ map: texture });
+                    const globe = new THREE.Mesh(geometry, material);
+                    scene.add(globe);
+
+                    // Atmosphere
+                    const atmosphereMaterial = new THREE.ShaderMaterial({
+                        uniforms: {
+                            c: { value: 0.1 },
+                            p: { value: 4.0 }
+                        },
+                        vertexShader: document.getElementById('vertexShader').textContent,
+                        fragmentShader: document.getElementById('fragmentShader').textContent,
+                        blending: THREE.AdditiveBlending,
+                        side: THREE.BackSide,
+                    });
+                    const atmosphere = new THREE.Mesh(geometry, atmosphereMaterial);
+                    atmosphere.scale.set(1.05, 1.05, 1.05);
+                    scene.add(atmosphere);
+
+                    // Position the camera
+                    updateCameraPosition();
+
+                    // Add lights
+                    const ambientLight = new THREE.AmbientLight(0x404040); // Softer ambient light
+                    scene.add(ambientLight);
+
+                    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.7); // Directional light for better shading
+                    directionalLight.position.set(5, 5, 5).normalize();
+                    scene.add(directionalLight);
+
+                    // Example park markers
+                    const parks = [
+                        { lat: 40.78, lon: -73.97, name: "Central Park, NY" },
+                        { lat: 51.50, lon: 0.12, name: "Hyde Park, London" },
+                        { lat: 37.77, lon: -122.47, name: "Golden Gate Park, San Francisco" },
+                        { lat: 35.70, lon: 139.77, name: "Ueno Park, Tokyo" },
+                        { lat: 52.50, lon: 13.37, name: "Tiergarten, Berlin" },
+                        { lat: 40.41, lon: -3.69, name: "Retiro Park, Madrid" },
+                        { lat: 49.28, lon: -123.11, name: "Stanley Park, Vancouver" },
+                        { lat: 52.28, lon: 4.52, name: "Keukenhof Gardens, Netherlands" },
+                        { lat: 48.42, lon: -123.41, name: "Butchart Gardens, Canada" },
+                        { lat: 37.8, lon: -119.6, name: "Yosemite National Park, California" },
+                        { lat: 44.6, lon: -110.5, name: "Yellowstone National Park, Wyoming" },
+                        { lat: 36.1, lon: -112.1, name: "Grand Canyon National Park, Arizona" },
+                        { lat: 51.17, lon: -115.76, name: "Banff National Park, Canada" },
+                        { lat: -24.35, lon: 31.47, name: "Kruger National Park, South Africa" },
+                        { lat: -51.0, lon: -72.5, name: "Torres del Paine National Park, Chile" },
+                        { lat: -25.12, lon: -54.58, name: "Iguaçu National Park, Brazil/Argentina" },
+                        { lat: -25.34, lon: 130.98, name: "Uluru-Kata Tjuta National Park, Australia" },
+                        { lat: -44.4, lon: 168.6, name: "Fiordland National Park, New Zealand" },
+                        { lat: -12.83, lon: 132.72, name: "Kakadu National Park, Australia" },
+                        { lat: 51.82, lon: -9.50, name: "Killarney National Park, Ireland" },
+                        { lat: 44.86, lon: 15.60, name: "Plitvice Lakes National Park, Croatia" },
+                        { lat: 50.92, lon: 14.12, name: "Saxon Switzerland National Park, Germany" },
+                        { lat: 18.57, lon: 98.56, name: "Doi Inthanon National Park, Thailand" },
+                        { lat: 35.36, lon: 138.73, name: "Mount Fuji, Japan" },
+                        { lat: 15.58, lon: -89.13, name: "Semuc Champey, Guatemala" },
+                        { lat: 4.32, lon: 103.38, name: "Taman Negara National Park, Malaysia" },
+                        { lat: 59.5, lon: -151.0, name: "Kenai Fjords National Park, Alaska" },
+                        { lat: 48.8, lon: -114.1, name: "Glacier National Park, Montana" },
+                        { lat: 35.6, lon: -83.0, name: "Great Smoky Mountains National Park, NC & TN" },
+                        { lat: 37.2, lon: -113.0, name: "Zion National Park, Utah" },
+                        { lat: 37.6, lon: -112.1, name: "Bryce Canyon National Park, Utah" },
+                        { lat: 25.1, lon: -80.8, name: "Everglades National Park, Florida" },
+                        { lat: 47.0, lon: -123.4, name: "Olympic National Park, Washington" },
+                        { lat: 40.4, lon: -105.7, name: "Rocky Mountain National Park, Colorado" },
+                        { lat: 35.68, lon: 139.71, name: "Shinjuku Gyoen National Garden, Tokyo" },
+                        { lat: 30.8, lon: 118.1, name: "Hengshan Park, China" },
+                        { lat: 48.85, lon: 2.33, name: "Jardin du Luxembourg, Paris" },
+                        { lat: 51.50, lon: 0.12, name: "St. James's Park, London" },
+                        { lat: 43.77, lon: 11.26, name: "Boboli Gardens, Italy" },
+                        { lat: 48.18, lon: 16.37, name: "Schönbrunn Palace Park, Austria" },
+                        { lat: 55.67, lon: 12.56, name: "Tivoli Gardens, Denmark" },
+                        { lat: 48.84, lon: 2.22, name: "Bois de Boulogne, Paris" },
+                        { lat: 53.33, lon: -6.2, name: "Phoenix Park, Ireland" },
+                        { lat: 51.53, lon: -0.13, name: "Regent's Park, London" },
+                        { lat: 29.38, lon: 47.98, name: "Al Shaheed Park, Kuwait City" },
+                        { lat: 34.02, lon: -118.49, name: "Griffith Park, Los Angeles" },
+                        { lat: -33.86, lon: 151.20, name: "Royal Botanic Garden, Sydney" },
+                        { lat: 34.05, lon: -118.24, name: "Exposition Park, Los Angeles" },
+                        { lat: 41.90, lon: 12.45, name: "Villa Borghese, Rome" },
+                        { lat: -22.90, lon: -43.19, name: "Parque Lage, Rio de Janeiro" },
+                        { lat: -26.20, lon: 28.04, name: "Johannesburg Botanical Garden, South Africa" },
+                        { lat: 39.90, lon: 116.39, name: "Temple of Heaven Park, Beijing" },
+                        { lat: 55.75, lon: 37.61, name: "Gorky Park, Moscow" },
+                        { lat: 28.61, lon: 77.20, name: "Lodhi Garden, Delhi" },
+                        { lat: 30.27, lon: 120.16, name: "West Lake Scenic Area, Hangzhou" },
+                        { lat: 34.69, lon: 135.50, name: "Osaka Castle Park, Osaka" },
+                        { lat: 25.07, lon: 121.56, name: "Daan Forest Park, Taipei" },
+                        { lat: 37.56, lon: 126.97, name: "Namsan Park, Seoul" },
+                        { lat: 31.22, lon: 121.47, name: "Yu Garden, Shanghai" },
+                        { lat: 33.58, lon: -7.61, name: "Arab League Park, Casablanca" },
+                        { lat: 31.78, lon: 35.22, name: "Jerusalem Botanical Gardens, Israel" },
+                        { lat: 33.30, lon: 44.36, name: "Zawraa Park, Baghdad" },
+                        { lat: 23.68, lon: 90.35, name: "Ramna Park, Dhaka" },
+                        { lat: 13.75, lon: 100.50, name: "Lumpini Park, Bangkok" },
+                        { lat: 14.59, lon: 120.97, name: "Rizal Park, Manila" },
+                        { lat: 1.35, lon: 103.81, name: "Gardens by the Bay, Singapore" },
+                        { lat: 3.13, lon: 101.68, name: "KLCC Park, Kuala Lumpur" },
+                        { lat: 6.92, lon: 79.86, name: "Viharamahadevi Park, Colombo" },
+                        { lat: 34.68, lon: 33.04, name: "Limassol Municipal Park, Cyprus" },
+                        { lat: 38.72, lon: -9.13, name: "Parque Eduardo VII, Lisbon" },
+                        { lat: 41.38, lon: 2.17, name: "Parc de la Ciutadella, Barcelona" },
+                        { lat: 45.46, lon: 9.18, name: "Parco Sempione, Milan" },
+                        { lat: 50.08, lon: 14.43, name: "Letná Park, Prague" },
+                        { lat: 47.49, lon: 19.04, name: "Margaret Island, Budapest" },
+                        { lat: 50.45, lon: 30.52, name: "Mariinsky Park, Kyiv" },
+                        { lat: 52.22, lon: 21.01, name: "Łazienki Park, Warsaw" },
+                        { lat: 59.32, lon: 18.06, name: "Djurgården, Stockholm" },
+                        { lat: 60.16, lon: 24.93, name: "Esplanadi, Helsinki" },
+                        { lat: 64.13, lon: -21.92, name: "Hallgrímskirkja Garden, Reykjavik" },
+                        { lat: 33.51, lon: -7.58, name: "Parc de la Ligue Arabe, Casablanca" },
+                        { lat: 30.04, lon: 31.23, name: "Al-Azhar Park, Cairo" },
+                        { lat: -33.92, lon: 18.42, name: "Kirstenbosch National Botanical Garden, Cape Town" },
+                        { lat: -26.19, lon: 28.03, name: "Walter Sisulu National Botanical Garden, Johannesburg" },
+                        { lat: -1.28, lon: 36.81, name: "Nairobi National Park, Kenya" },
+                        { lat: -3.07, lon: 29.36, name: "Rusizi National Park, Burundi" },
+                        { lat: -16.29, lon: 28.72, name: "Lower Zambezi National Park, Zambia" },
+                        { lat: -18.87, lon: 47.50, name: "Isalo National Park, Madagascar" },
+                        { lat: -18.17, lon: 178.44, name: "Colo-I-Suva Forest Park, Fiji" },
+                        { lat: -27.47, lon: 153.02, name: "South Bank Parklands, Brisbane" },
+                        { lat: -37.81, lon: 144.96, name: "Royal Botanic Gardens Victoria, Melbourne" },
+                        { lat: -41.28, lon: 174.77, name: "Zealandia, Wellington" },
+                        { lat: -43.53, lon: 172.63, name: "Christchurch Botanic Gardens, New Zealand" },
+                        { lat: -34.92, lon: 138.59, name: "Adelaide Botanic Garden, Australia" },
+                        { lat: -31.95, lon: 115.86, name: "Kings Park and Botanic Garden, Perth" },
+                        { lat: -17.73, lon: 177.05, name: "Garden of the Sleeping Giant, Fiji" },
+                        { lat: 10.48, lon: -66.86, name: "Parque del Este, Caracas" },
+                        { lat: -34.60, lon: -58.38, name: "Parque Tres de Febrero, Buenos Aires" },
+                        { lat: -33.44, lon: -70.66, name: "Parque Metropolitano de Santiago, Chile" },
+                        { lat: 19.43, lon: -99.13, name: "Chapultepec Park, Mexico City" },
+                        { lat: 9.92, lon: -84.09, name: "La Sabana Metropolitan Park, San Jose" },
+                        { lat: 8.98, lon: -79.51, name: "Parque Natural Metropolitano, Panama City" },
+                        { lat: 14.07, lon: -87.19, name: "La Tigra National Park, Honduras" },
+                        { lat: 13.69, lon: -89.19, name: "Boquerón National Park, El Salvador" },
+                        { lat: 12.13, lon: -86.25, name: "Masaya Volcano National Park, Nicaragua" },
+                        { lat: 10.64, lon: -61.52, name: "Royal Botanic Gardens, Trinidad and Tobago" },
+                        { lat: 18.47, lon: -69.93, name: "Mirador Sur Park, Santo Domingo" },
+                        { lat: 18.00, lon: -76.78, name: "Blue and John Crow Mountains National Park, Jamaica" },
+                        { lat: 18.34, lon: -64.93, name: "Virgin Islands National Park, USVI" }
+                    ];
+
+                    const markers = [];
+                    const markerData = {}; // To store marker mesh and its associated data
+
+                    parks.forEach((park, index) => {
+                        const marker = createGlowingMarker();
+                        const { x, y, z } = latLonToVector3(park.lat, park.lon, 5.01); // Slightly above globe
+                        marker.position.set(x, y, z);
+                        globe.add(marker);
+                        marker.userData = { name: park.name, index: index, connections: 0 };
+                        markers.push(marker);
+                        markerData[index] = { mesh: marker, info: park };
+                    });
+
+                    // Add stars background
+                    function createStars() {
+                        const starGeometry = new THREE.BufferGeometry();
+                        const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5, sizeAttenuation: true });
+
+                        const starVertices = [];
+                        for (let i = 0; i < 5000; i++) {
+                            const x = (Math.random() - 0.5) * 2000;
+                            const y = (Math.random() - 0.5) * 2000;
+                            const z = -Math.random() * 2000; // Stars appear behind
+                            starVertices.push(x, y, z);
+                        }
+
+                        starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+                        const stars = new THREE.Points(starGeometry, starMaterial);
+                        scene.add(stars);
+                    }
+
+                    createStars();
+
+                    // Animation loop
+                    function animate() {
+                        requestAnimationFrame(animate);
+                        globe.rotation.y += 0.003; // Increased rotation speed
+                        renderer.render(scene, camera);
+                    }
+
+                    animate();
+
+                    // Handle window resize
+                    window.addEventListener('resize', () => {
+                        const width = container.offsetWidth;
+                        const height = container.offsetHeight;
+                        renderer.setSize(width, height);
+                        camera.aspect = width / height;
+                        updateCameraPosition(); // Add this line
+                    });
+
+                    // Function to create glowing markers
+                    function createGlowingMarker() {
+                        const markerGroup = new THREE.Group();
+
+                        // Core sphere (brighter)
+                        const coreGeometry = new THREE.SphereGeometry(0.08, 16, 16);
+                        const coreMaterial = new THREE.MeshBasicMaterial({ color: 0x00e6ff }); // Bright blue
+                        const coreSphere = new THREE.Mesh(coreGeometry, coreMaterial);
+                        markerGroup.add(coreSphere);
+
+                        // Outer glow (subtle, transparent)
+                        const glowGeometry = new THREE.SphereGeometry(0.15, 16, 16);
+                        const glowMaterial = new THREE.MeshBasicMaterial({
+                            color: 0x00e6ff,
+                            transparent: true,
+                            opacity: 0.3,
+                            blending: THREE.AdditiveBlending // Additive blending for glow effect
+                        });
+                        const glowSphere = new THREE.Mesh(glowGeometry, glowMaterial);
+                        markerGroup.add(glowSphere);
+
+                        return markerGroup;
+                    }
+
+                    // Function to convert lat/lon to 3D coordinates
+                    function latLonToVector3(lat, lon, radius) {
+                        const phi = (90 - lat) * (Math.PI / 180);
+                        const theta = (lon + 180) * (Math.PI / 180);
+
+                        const x = -((radius) * Math.sin(phi) * Math.cos(theta));
+                        const z = ((radius) * Math.sin(phi) * Math.sin(theta));
+                        const y = ((radius) * Math.cos(phi));
+
+                        return new THREE.Vector3(x, y, z);
+                    }
+
+                    // --- Connection Line Animation ---
+                    const activeConnections = [];
+                    const maxConnectionsPerPoint = 2;
+                    const minSimultaneousConnections = 140; // At least 50 connections at any given time
+                    const minPopUpConnections = 0; // At least 2 connections with pop-ups
+
+                    function createConnectionLine(startPoint, endPoint) {
+                        const curve = new THREE.CatmullRomCurve3([
+                            startPoint,
+                            startPoint.clone().lerp(endPoint, 0.5).setLength(5.5), // Arc point slightly above globe
+                            endPoint
+                        ]);
+
+                        const points = curve.getPoints(100); // More points for smoother animation
+                        const geometry = new THREE.BufferGeometry();
+                        geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(points.length * 3), 3));
+                        geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(points.length * 3), 3)); // For gradient
+
+                        const colors = [];
+                        const startColor = new THREE.Color(getRandomHexColor());
+                        const endColor = new THREE.Color(getRandomHexColor());
+
+                        for (let i = 0; i < points.length; i++) {
+                            const color = startColor.clone().lerp(endColor, i / (points.length - 1));
+                            colors.push(color.r, color.g, color.b);
+                        }
+                        geometry.attributes.color.array.set(colors);
+
+                        // Single gradient line with blending for glow
+                        const lineMaterial = new THREE.LineBasicMaterial({
+                            vertexColors: true, // Enable vertex colors for gradient
+                            linewidth: 16, // Thicker line
+                            transparent: true,
+                            opacity: 0,
+                            blending: THREE.AdditiveBlending // Additive blending for glow effect
+                        });
+                        const line = new THREE.Line(geometry, lineMaterial);
+                        globe.add(line);
+
+                        // Animate the drawing of the line
+                        const tempPoints = [];
+                        const tempColors = [];
+                        let currentPointIndex = 0;
+                        const drawDuration = 4; // Seconds to draw the line
+                        const holdDuration = 19.0; // Seconds to hold after drawing
+                        const fadeDuration = 1.0; // Seconds to fade out
+
+                        const drawTween = gsap.to({ progress: 0 }, {
+                            progress: 1,
+                            duration: drawDuration,
+                            ease: "power1.inOut",
+                            onUpdate: function() {
+                                const p = this.progress();
+                                const numPointsToDraw = Math.floor(points.length * p);
+
+                                if (numPointsToDraw > currentPointIndex) {
+                                    for (let i = currentPointIndex; i < numPointsToDraw; i++) {
+                                        tempPoints.push(points[i].x, points[i].y, points[i].z);
+                                        tempColors.push(colors[i * 3], colors[i * 3 + 1], colors[i * 3 + 2]);
+                                    }
+                                    line.geometry.attributes.position.set(tempPoints);
+                                    line.geometry.attributes.color.set(tempColors);
+                                    line.geometry.setDrawRange(0, tempPoints.length / 3);
+                                    line.geometry.attributes.position.needsUpdate = true;
+                                    line.geometry.attributes.color.needsUpdate = true;
+                                    currentPointIndex = numPointsToDraw;
+                                }
+
+                                // Fade in as it draws
+                                lineMaterial.opacity = p;
+                            },
+                            onComplete: () => {
+                                // Once drawn, hold then fade out
+                                gsap.to(lineMaterial, {
+                                    opacity: 0,
+                                    duration: fadeDuration,
+                                    delay: holdDuration,
+                                    onComplete: () => {
+                                        globe.remove(line);
+                                        // Remove from active connections
+                                        const index = activeConnections.findIndex(conn => conn.line === line);
+                                        if (index !== -1) {
+                                            const removedConnection = activeConnections.splice(index, 1)[0];
+                                            markers[removedConnection.park1Index].userData.connections--;
+                                            markers[removedConnection.park2Index].userData.connections--;
+                                        }
+                                    }
+                                });
+                            }
+                        });
+
+                        return { line, drawTween };
+                    }
+
+                    function getRandomHexColor() {
+                        const letters = '0123456789ABCDEF';
+                        let color = '0x';
+                        for (let i = 0; i < 6; i++) {
+                            color += letters[Math.floor(Math.random() * 16)];
+                        }
+                        return parseInt(color, 16);
+                    }
+
+                    function initiateRandomConnection() {
+                        // Keep adding connections until we reach the minimum desired amount
+                        if (markers.length < 2 || activeConnections.length >= minSimultaneousConnections) {
+                            return;
+                        }
+
+                        // Filter parks that haven't reached max connections
+                        const availableParks = markers.filter(m => m.userData.connections < maxConnectionsPerPoint);
+
+                        if (availableParks.length < 2) return;
+
+                        let park1, park2;
+                        let attempts = 0;
+                        const maxAttempts = 50; // Prevent infinite loops if all parks are connected
+                        do {
+                            park1 = availableParks[Math.floor(Math.random() * availableParks.length)];
+                            park2 = availableParks[Math.floor(Math.random() * availableParks.length)];
+                            attempts++;
+                        } while ((park1 === park2 || isConnectionActive(park1, park2)) && attempts < maxAttempts);
+
+                        if (attempts >= maxAttempts) {
+                            return; // Couldn't find a suitable pair
+                        }
+
+                        // Increment connection count for these parks immediately
+                        park1.userData.connections++;
+                        park2.userData.connections++;
+
+                        const connection = createConnectionLine(
+                            park1.position,
+                            park2.position
+                        );
+                        activeConnections.push({
+                            line: connection.line,
+                            drawTween: connection.drawTween,
+                            park1Index: park1.userData.index,
+                            park2Index: park2.userData.index
+                        });
+                    }
+
+                    function isConnectionActive(p1, p2) {
+                        return activeConnections.some(conn =>
+                            (conn.park1Index === p1.userData.index && conn.park2Index === p2.userData.index) ||
+                            (conn.park1Index === p2.userData.index && conn.park1Index === p1.userData.index)
+                        );
+                    }
+
+                    // Periodically initiate new connections.
+                    setInterval(initiateRandomConnection, 500); // Try to add a new connection every 0.5 seconds
+
+                    // --- Park Name Pop-up ---
+                    const currentlyVisibleLabels = new Map(); // Use a Map to track multiple visible labels
+
+                    function showParkLabel(parkName, markerMesh, markerIndex) {
+                        // If a label for this marker is already visible, don't create a new one
+                        if (currentlyVisibleLabels.has(markerIndex)) {
+                            return;
+                        }
+
+                        const labelDiv = document.createElement('div');
+                        labelDiv.className = 'park-label';
+                        labelDiv.textContent = parkName;
+                        document.body.appendChild(labelDiv);
+
+                        currentlyVisibleLabels.set(markerIndex, labelDiv); // Add to map
+
+                        // Update label position in the animation loop
+                        const updateLabelPosition = () => {
+                            // Convert 3D marker position to 2D screen position
+                            const markerPositionInWorld = new THREE.Vector3().copy(markerMesh.position).applyMatrix4(globe.matrixWorld);
+                            const vector = markerPositionInWorld.clone();
+                            vector.project(camera);
+
+                            // Check if the marker is on the visible side of the globe
+                            const cameraDirection = new THREE.Vector3().subVectors(markerPositionInWorld, camera.position).normalize();
+                            const globeNormal = new THREE.Vector3().copy(markerMesh.position).normalize();
+
+                            if (cameraDirection.dot(globeNormal) < -0.2) { // Only show if visible
+                                labelDiv.style.display = 'block';
+                                const x = (vector.x * 0.5 + 0.5) * window.innerWidth;
+                                const y = (-vector.y * 0.5 + 0.5) * window.innerHeight;
+
+                                labelDiv.style.left = `${x}px`;
+                                labelDiv.style.top = `${y}px`;
+                            } else {
+                                labelDiv.style.display = 'none'; // Hide if not visible
+                            }
+
+                            // If label is still in DOM and active, request next frame
+                            if (currentlyVisibleLabels.has(markerIndex) && labelDiv.parentNode) {
+                                requestAnimationFrame(updateLabelPosition);
+                            }
+                        };
+
+                        updateLabelPosition(); // Start updating position
+
+                        // Animate in
+                        gsap.to(labelDiv, { opacity: 1, duration: 0.3, onComplete: () => {
+                            labelDiv.classList.add('show');
+                        }});
+
+                        // Hide after a few seconds
+                        gsap.to(labelDiv, { opacity: 0, delay: 5, duration: 0.5, onComplete: () => { // Increased delay
+                            labelDiv.classList.remove('show');
+                            if (labelDiv.parentNode) {
+                                labelDiv.parentNode.removeChild(labelDiv);
+                            }
+                            currentlyVisibleLabels.delete(markerIndex); // Remove from map
+                        }});
+                    }
+
+                    // Keep track of which markers currently have active pop-ups
+                    const markersWithPopups = new Set();
+                    const popupAttemptInterval = 1000; // Check every 1 second
+
+                    setInterval(() => {
+                        // Remove markers whose pop-ups have faded out
+                        markersWithPopups.forEach(index => {
+                            if (!currentlyVisibleLabels.has(index)) {
+                                markersWithPopups.delete(index);
+                            }
+                        });
+
+                        // If we have fewer than minPopUpConnections, try to add more
+                        if (markersWithPopups.size < minPopUpConnections) {
+                            const availableMarkers = markers.filter(m => !markersWithPopups.has(m.userData.index));
+
+                            if (availableMarkers.length > 0) {
+                                const randomIndex = Math.floor(Math.random() * availableMarkers.length);
+                                const selectedMarker = availableMarkers[randomIndex];
+                                const parkInfo = selectedMarker.userData;
+
+                                showParkLabel(parkInfo.name, selectedMarker, parkInfo.index);
+                                markersWithPopups.add(parkInfo.index);
+                            }
+                        }
+                    }, popupAttemptInterval);
+
+
+                    // Add mouse controls for interactive rotation
+                    let isDragging = false;
+                    let previousMousePosition = { x: 0, y: 0 };
+
+                    renderer.domElement.addEventListener('mousedown', (event) => {
+                        isDragging = true;
+                    });
+
+                    renderer.domElement.addEventListener('mousemove', (event) => {
+                        if (isDragging) {
+                            const deltaMove = {
+                                x: event.offsetX - previousMousePosition.x,
+                                y: event.offsetY - previousMousePosition.y,
+                            };
+
+                            // Adjust rotation based on mouse movement
+                            globe.rotation.y += deltaMove.x * 0.005;
+                            globe.rotation.x += deltaMove.y * 0.005;
+                        }
+
+                        previousMousePosition = {
+                            x: event.offsetX,
+                            y: event.offsetY,
+                        };
+                    });
+
+                    renderer.domElement.addEventListener('mouseup', () => {
+                        isDragging = false;
+                    });
+
+                    renderer.domElement.addEventListener('mouseleave', () => {
+                        isDragging = false;
+                    });
+                },
+                undefined,
+                (err) => {
+                    console.error('Error loading texture:', err);
+                }
+            );
+        });
     </script>
 </body>
 </html>
