@@ -465,7 +465,6 @@
                         </div>
 
                     <button type="submit" id="submit-blog-button">Submit Blog Post</button>
-                    <div id="loading-indicator" class="hidden text-center text-green-600 mt-2">Uploading images...</div>
                 </form>
             </div>
         </section>
@@ -493,7 +492,6 @@
     </footer>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage-compat.js"></script> <!-- Added Firebase Storage -->
     <script>
         // Firebase Configuration (place before your main script)
         const firebaseConfig = {
@@ -509,7 +507,6 @@
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
-        const storage = firebase.storage(); // Initialize Firebase Storage
 
         // Highlight active navigation link and handle mobile menu
         document.addEventListener('DOMContentLoaded', () => {
@@ -576,76 +573,67 @@
             // Blog Post Cards Dynamic Content (This data will ideally come from Firestore)
             const blogPostsContainer = document.getElementById('blog-posts-container');
 
-            // Define static placeholder blog posts
-            const staticBlogPostsData = [
-                {
-                    image: "assets/forest.jpg",
-                    title: "Whispers of the Ancient Forest",
-                    author: "AstroScout 037",
-                    excerpt: "A deep dive into the serene beauty and hidden sounds of old-growth forests, exploring their vital role in our ecosystem and spiritual well-being.",
-                    tags: ["#Nature", "#Forest", "#Ecology", "#Serenity"],
-                    bgColor: "#1a2a1a", titleColor: "#c2f08a", textColor: "#a3e635", authorColor: "#8bbd4c", tagColor: "#6c8c3e"
-                },
-                {
-                    image: "assets/stars.jpg",
-                    title: "Stargazing Secrets: A Guide to Celestial Wonders",
-                    author: "Dr. Nova",
-                    excerpt: "Unlocking the mysteries of the night sky, from identifying constellations to understanding cosmic phenomena. Perfect for amateur astronomers.",
-                    tags: ["#Astronomy", "#NightSky", "#Stars", "#Stargazing"],
-                    bgColor: "#1e1e3f", titleColor: "#cce0ff", textColor: "#99ccff", authorColor: "#66aaff", tagColor: "#3366cc"
-                },
-                {
-                    image: "assets/desert.jpg",
-                    title: "Desert Blooms: Life Flourishes in Arid Lands",
-                    author: "Wanderer Kate",
-                    excerpt: "Discovering the surprising resilience and vibrant flora and fauna that thrive in seemingly barren desert landscapes. A testament to nature's adaptability.",
-                    tags: ["#Desert", "#Wildlife", "#Botany", "#Adaptation"],
-                    bgColor: "#3a2a1a", titleColor: "#ffe066", textColor: "#ffd700", authorColor: "#e6b800", tagColor: "#cc9900"
-                },
-                {
-                    image: "assets/mountains.jpg",
-                    title: "Conquering Peaks: More Than Just a Climb",
-                    author: "Peak Seeker",
-                    excerpt: "The spiritual and physical journey of mountaineering, detailing the challenges, triumphs, and the unique perspectives gained from high altitudes.",
-                    tags: ["#Mountains", "#Hiking", "#Adventure", "#Mindfulness"],
-                    bgColor: "#2a3a4a", titleColor: "#f0f0f0", textColor: "#e0e0e0", authorColor: "#b0b0b0", tagColor: "#808080"
-                },
-                {
-                    image: "assets/waves.jpg",
-                    title: "Ocean's Embrace: Reflections on the Coastline",
-                    author: "Seashell Scribe",
-                    excerpt: "Meditations on the power and tranquility of the ocean, exploring its rhythm, marine life, and its profound impact on human spirit.",
-                    tags: ["#Ocean", "#Coastal", "#Reflection", "#MarineLife"],
-                    bgColor: "#1a3a3a", titleColor: "#c0ffff", textColor: "#80ffff", authorColor: "#40e0d0", tagColor: "#008080"
-                },
-                {
-                    image: "assets/snow.jpg",
-                    title: "Winter's Silence: Finding Peace in the Cold",
-                    author: "Frosty Explorer",
-                    excerpt: "Embracing the quiet beauty of winter landscapes, from snow-covered trails to the crisp, silent air. A guide to enjoying the colder months.",
-                    tags: ["#Winter", "#Silence", "#Peace", "#ScoutVoices"],
-                    bgColor: "#2a2a3a", titleColor: "#ffffff", textColor: "#f0f8ff", authorColor: "#d3d3d3", tagColor: "#a9a9a9"
-                }
-            ];
-
             const fetchBlogPosts = async () => {
                 try {
                     const blogPostsData = [];
                     const snapshot = await db.collection("blog").orderBy("createdAt", "desc").get(); // Order by creation time
-                    
-                    if (snapshot.empty) {
-                        // If no documents are found, render the static placeholder data
-                        console.log("No blog posts found in Firestore, displaying placeholders.");
-                        renderBlogPosts(staticBlogPostsData);
-                    } else {
-                        snapshot.forEach(doc => {
-                            blogPostsData.push({ id: doc.id, ...doc.data() });
-                        });
-                        renderBlogPosts(blogPostsData);
-                    }
+                    snapshot.forEach(doc => {
+                        blogPostsData.push({ id: doc.id, ...doc.data() });
+                    });
+                    renderBlogPosts(blogPostsData);
                 } catch (error) {
                     console.error("Error fetching blog posts: ", error);
                     // Fallback to static data if Firestore fails
+                    const staticBlogPostsData = [
+                        {
+                            image: "assets/forest.jpg",
+                            title: "Whispers of the Ancient Forest",
+                            author: "AstroScout 037",
+                            excerpt: "A deep dive into the serene beauty and hidden sounds of old-growth forests, exploring their vital role in our ecosystem and spiritual well-being.",
+                            tags: ["#Nature", "#Forest", "#Ecology", "#Serenity"],
+                            bgColor: "#1a2a1a", titleColor: "#c2f08a", textColor: "#a3e635", authorColor: "#8bbd4c", tagColor: "#6c8c3e"
+                        },
+                        {
+                            image: "assets/stars.jpg",
+                            title: "Stargazing Secrets: A Guide to Celestial Wonders",
+                            author: "Dr. Nova",
+                            excerpt: "Unlocking the mysteries of the night sky, from identifying constellations to understanding cosmic phenomena. Perfect for amateur astronomers.",
+                            tags: ["#Astronomy", "#NightSky", "#Stars", "#Stargazing"],
+                            bgColor: "#1e1e3f", titleColor: "#cce0ff", textColor: "#99ccff", authorColor: "#66aaff", tagColor: "#3366cc"
+                        },
+                        {
+                            image: "assets/desert.jpg",
+                            title: "Desert Blooms: Life Flourishes in Arid Lands",
+                            author: "Wanderer Kate",
+                            excerpt: "Discovering the surprising resilience and vibrant flora and fauna that thrive in seemingly barren desert landscapes. A testament to nature's adaptability.",
+                            tags: ["#Desert", "#Wildlife", "#Botany", "#Adaptation"],
+                            bgColor: "#3a2a1a", titleColor: "#ffe066", textColor: "#ffd700", authorColor: "#e6b800", tagColor: "#cc9900"
+                        },
+                        {
+                            image: "assets/mountains.jpg",
+                            title: "Conquering Peaks: More Than Just a Climb",
+                            author: "Peak Seeker",
+                            excerpt: "The spiritual and physical journey of mountaineering, detailing the challenges, triumphs, and the unique perspectives gained from high altitudes.",
+                            tags: ["#Mountains", "#Hiking", "#Adventure", "#Mindfulness"],
+                            bgColor: "#2a3a4a", titleColor: "#f0f0f0", textColor: "#e0e0e0", authorColor: "#b0b0b0", tagColor: "#808080"
+                        },
+                        {
+                            image: "assets/waves.jpg",
+                            title: "Ocean's Embrace: Reflections on the Coastline",
+                            author: "Seashell Scribe",
+                            excerpt: "Meditations on the power and tranquility of the ocean, exploring its rhythm, marine life, and its profound impact on human spirit.",
+                            tags: ["#Ocean", "#Coastal", "#Reflection", "#MarineLife"],
+                            bgColor: "#1a3a3a", titleColor: "#c0ffff", textColor: "#80ffff", authorColor: "#40e0d0", tagColor: "#008080"
+                        },
+                        {
+                            image: "assets/snow.jpg",
+                            title: "Winter's Silence: Finding Peace in the Cold",
+                            author: "Frosty Explorer",
+                            excerpt: "Embracing the quiet beauty of winter landscapes, from snow-covered trails to the crisp, silent air. A guide to enjoying the colder months.",
+                            tags: ["#Winter", "#Silence", "#Peace", "#ScoutVoices"],
+                            bgColor: "#2a2a3a", titleColor: "#ffffff", textColor: "#f0f8ff", authorColor: "#d3d3d3", tagColor: "#a9a9a9"
+                        }
+                    ];
                     renderBlogPosts(staticBlogPostsData);
                 }
             };
@@ -686,9 +674,7 @@
                     contentDiv.appendChild(tagsElem);
 
                     // Use post.image if available, otherwise a placeholder
-                    // Check if post.imageUrls exists and use the first one, else fallback to single image or placeholder
-                    const imageUrl = (post.imageUrls && post.imageUrls.length > 0) ? post.imageUrls[0] : (post.image || 'https://placehold.co/600x400/000/fff?text=No+Image');
-
+                    const imageUrl = post.image || 'https://placehold.co/600x400/000/fff?text=No+Image';
                     card.innerHTML = `
                         <img src="${imageUrl}" alt="${post.title}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/000/fff?text=Image+Error';" class="rounded-t-lg">
                     `;
@@ -716,8 +702,6 @@
 
             // Make the submit button functional with Firestore
             const submitBlogForm = document.getElementById('submit-blog-form');
-            const loadingIndicator = document.getElementById('loading-indicator');
-
             submitBlogForm.addEventListener('submit', async (event) => {
                 event.preventDefault(); // Prevent default form submission
 
@@ -728,7 +712,6 @@
                 const postContent = document.getElementById('post-content').value;
                 const contactEmail = document.getElementById('contact-email').value;
                 const selectedTheme = document.getElementById('theme-select').value;
-                const postImages = document.getElementById('post-images').files;
 
                 // Basic validation
                 if (!postTitle || !postAuthor || !postExcerpt || !postContent) {
@@ -741,42 +724,21 @@
                     return;
                 }
 
-                loadingIndicator.classList.remove('hidden'); // Show loading indicator
-                document.getElementById('submit-blog-button').disabled = true; // Disable button
+                // Get selected theme colors
+                const themeColors = themePresets[selectedTheme];
+
+                const newBlogPost = {
+                    title: postTitle,
+                    author: postAuthor,
+                    excerpt: postExcerpt,
+                    tags: postTags,
+                    content: postContent,
+                    contactEmail: contactEmail, // Not published, but stored
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(), // Timestamp for ordering
+                    ...themeColors // Spread the selected theme colors
+                };
 
                 try {
-                    const imageUrls = [];
-                    // Upload images to Firebase Storage
-                    if (postImages.length > 0) {
-                        for (let i = 0; i < postImages.length; i++) {
-                            const file = postImages[i];
-                            // Create a unique file name using a timestamp and original file name
-                            const fileName = `${Date.now()}-${file.name}`;
-                            const storageRef = storage.ref('blog_images/' + fileName);
-                            const uploadTask = storageRef.put(file);
-
-                            // Wait for the upload to complete and get the download URL
-                            await uploadTask;
-                            const downloadURL = await storageRef.getDownloadURL();
-                            imageUrls.push(downloadURL);
-                        }
-                    }
-
-                    // Get selected theme colors
-                    const themeColors = themePresets[selectedTheme];
-
-                    const newBlogPost = {
-                        title: postTitle,
-                        author: postAuthor,
-                        excerpt: postExcerpt,
-                        tags: postTags,
-                        content: postContent,
-                        contactEmail: contactEmail, // Not published, but stored
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(), // Timestamp for ordering
-                        imageUrls: imageUrls, // Store the array of image URLs
-                        ...themeColors // Spread the selected theme colors
-                    };
-
                     // Add the new blog post to the 'blog' collection
                     await db.collection("blog").add(newBlogPost);
                     alert('Blog post submitted successfully!');
@@ -787,11 +749,8 @@
                     toggleButton.innerText = 'Expand Form';
                     fetchBlogPosts(); // Refresh the displayed blog posts
                 } catch (error) {
-                    console.error("Error submitting blog post or uploading image: ", error);
-                    alert('Error submitting blog post. Please try again. ' + error.message);
-                } finally {
-                    loadingIndicator.classList.add('hidden'); // Hide loading indicator
-                    document.getElementById('submit-blog-button').disabled = false; // Re-enable button
+                    console.error("Error adding document: ", error);
+                    alert('Error submitting blog post. Please try again.');
                 }
             });
 
@@ -835,6 +794,7 @@
             });
 
             // --- Image Upload Handling (Client-side preview only) ---
+            // For actual storage, you would need Firebase Storage and handle the upload process
             const postImagesInput = document.getElementById('post-images');
             const imagePreviewContainer = document.getElementById('image-preview');
             const MAX_IMAGES = 5;
